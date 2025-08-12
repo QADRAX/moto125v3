@@ -1,0 +1,70 @@
+{
+  "kind": "collectionType",
+  "collectionName": "motos",
+  "info": {
+    "singularName": "moto",
+    "pluralName": "motos",
+    "displayName": "Moto",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "modelName": {
+      "type": "string",
+      "required": true
+    },
+    "images": {
+      "type": "media",
+      "multiple": true,
+      "required": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "priece": {
+      "type": "decimal"
+    },
+    "fichaTecnica": {
+      "type": "json"
+    },
+    "motoType": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::moto-type.moto-type",
+      "inversedBy": "motos"
+    },
+    "moto125Id": {
+      "type": "uid",
+      "required": true
+    },
+    "articles": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::article.article",
+      "mappedBy": "relatedMotos"
+    },
+    "company": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::company.company",
+      "inversedBy": "motos"
+    },
+    "active": {
+      "type": "boolean",
+      "required": true,
+      "default": true
+    },
+    "description": {
+      "type": "text"
+    },
+    "fullName": {
+      "type": "string"
+    }
+  }
+}

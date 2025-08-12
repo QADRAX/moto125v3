@@ -1,0 +1,20 @@
+{
+  "collectionName": "components_article_content_fortalezas_debilidades",
+  "info": {
+    "displayName": "FortalezasDebilidades"
+  },
+  "options": {},
+  "attributes": {
+    "Fortalezas": {
+      "type": "component",
+      "component": "list.foralezas-list",
+      "repeatable": true
+    },
+    "Debilidades": {
+      "type": "component",
+      "component": "list.debilidades-list",
+      "repeatable": true
+    }
+  },
+  "config": {}
+}

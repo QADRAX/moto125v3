@@ -1,0 +1,12 @@
+{
+  "collectionName": "components_list_debilidades_lists",
+  "info": {
+    "displayName": "DebilidadesList"
+  },
+  "options": {},
+  "attributes": {
+    "value": {
+      "type": "string"
+    }
+  }
+}

@@ -1,0 +1,49 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: strapi_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DATABASE_USERNAME}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${DATABASE_NAME}
+    volumes:
+      - strapi-db:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  strapi:
+    build: .
+    container_name: strapi_app
+    depends_on:
+      - postgres
+    ports:
+      - "1337:1337"
+    environment:
+      NODE_ENV: production
+      HOST: ${HOST}
+      PORT: ${PORT}
+      APP_KEYS: ${APP_KEYS}
+      API_TOKEN_SALT: ${API_TOKEN_SALT}
+      ADMIN_JWT_SECRET: ${ADMIN_JWT_SECRET}
+      TRANSFER_TOKEN_SALT: ${TRANSFER_TOKEN_SALT}
+      JWT_SECRET: ${JWT_SECRET}
+      DATABASE_CLIENT: ${DATABASE_CLIENT}
+      DATABASE_HOST: postgres
+      DATABASE_PORT: ${DATABASE_PORT}
+      DATABASE_NAME: ${DATABASE_NAME}
+      DATABASE_USERNAME: ${DATABASE_USERNAME}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      DATABASE_SSL: ${DATABASE_SSL}
+      STORAGE_ACCOUNT: ${STORAGE_ACCOUNT}
+      STORAGE_ACCOUNT_KEY: ${STORAGE_ACCOUNT_KEY}
+      STORAGE_CONTAINER_NAME: ${STORAGE_CONTAINER_NAME}
+      RUN_BLOB_IMPORT: ${RUN_BLOB_IMPORT}
+      STORAGE_MIGRATION_CONTAINER_NAME: ${STORAGE_MIGRATION_CONTAINER_NAME}
+
+    volumes:
+      - ./public/uploads:/app/public/uploads
+    restart: unless-stopped
+
+volumes:
+  strapi-db:

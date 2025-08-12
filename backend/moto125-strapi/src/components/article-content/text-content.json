@@ -1,0 +1,14 @@
+{
+  "collectionName": "components_article_content_text_contents",
+  "info": {
+    "displayName": "TextContent",
+    "icon": "pencil",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "Text": {
+      "type": "richtext"
+    }
+  }
+}

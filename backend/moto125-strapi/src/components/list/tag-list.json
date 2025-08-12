@@ -1,0 +1,14 @@
+{
+  "collectionName": "components_list_tag_lists",
+  "info": {
+    "displayName": "TagList",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "Value": {
+      "type": "string",
+      "required": true
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "collectionName": "components_list_foralezas_lists",
+  "info": {
+    "displayName": "ForalezasList"
+  },
+  "options": {},
+  "attributes": {
+    "value": {
+      "type": "string"
+    }
+  }
+}

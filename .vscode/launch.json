@@ -1,0 +1,26 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "type": "node",
+        "request": "launch",
+        "name": "Run migration",
+        "runtimeArgs": [
+          "-r",
+          "ts-node/register"
+        ],
+        "args": [
+          "${workspaceFolder}/backend/migration/src/index.ts"
+        ],
+        "cwd": "${workspaceFolder}/backend/migration",
+        "sourceMaps": true,
+        "outFiles": [
+          "${workspaceFolder}/backend/migration/**/*.js"
+        ],
+        "env": {
+          "TS_NODE_PROJECT": "${workspaceFolder}/backend/migration/tsconfig.json"
+        }
+      }
+    ]
+  }
+  

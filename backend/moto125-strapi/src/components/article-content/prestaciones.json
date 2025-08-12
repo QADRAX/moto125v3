@@ -1,0 +1,13 @@
+{
+  "collectionName": "components_article_content_prestaciones",
+  "info": {
+    "displayName": "prestaciones"
+  },
+  "options": {},
+  "attributes": {
+    "prestaciones": {
+      "type": "json"
+    }
+  },
+  "config": {}
+}

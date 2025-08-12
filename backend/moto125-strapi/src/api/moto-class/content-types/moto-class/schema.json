@@ -1,0 +1,35 @@
+{
+  "kind": "collectionType",
+  "collectionName": "moto_classes",
+  "info": {
+    "singularName": "moto-class",
+    "pluralName": "moto-classes",
+    "displayName": "MotoClass",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images",
+        "files"
+      ]
+    },
+    "motoTypes": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::moto-type.moto-type",
+      "mappedBy": "motoClass"
+    }
+  }
+}

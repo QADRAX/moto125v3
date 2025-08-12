@@ -1,0 +1,84 @@
+{
+  "kind": "collectionType",
+  "collectionName": "articles",
+  "info": {
+    "singularName": "article",
+    "pluralName": "articles",
+    "displayName": "Article",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "slug": {
+      "type": "uid",
+      "required": true
+    },
+    "title": {
+      "type": "string"
+    },
+    "publicationDate": {
+      "type": "date"
+    },
+    "visible": {
+      "type": "boolean",
+      "required": true,
+      "default": true
+    },
+    "coverImage": {
+      "type": "media",
+      "multiple": false,
+      "required": true,
+      "allowedTypes": [
+        "images",
+        "files"
+      ]
+    },
+    "authorPhotos": {
+      "type": "string"
+    },
+    "authorAction": {
+      "type": "string"
+    },
+    "content": {
+      "type": "dynamiczone",
+      "components": [
+        "article-content.text-content",
+        "article-content.image-grid-content",
+        "article-content.prestaciones",
+        "article-content.fortalezas-debilidades"
+      ]
+    },
+    "tags": {
+      "type": "component",
+      "component": "list.tag-list",
+      "repeatable": true
+    },
+    "relatedMotos": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::moto.moto",
+      "inversedBy": "articles"
+    },
+    "relatedCompanies": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::company.company",
+      "inversedBy": "articles"
+    },
+    "authorText": {
+      "type": "string"
+    },
+    "articleType": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::article-type.article-type",
+      "inversedBy": "articles"
+    },
+    "youtubeLink": {
+      "type": "string"
+    }
+  }
+}
