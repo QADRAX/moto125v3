@@ -1,8 +1,9 @@
 name: Moto125 Strapi Backend — Docker Release
 
 on:
-  release:
-    types: [published]
+  push:
+    tags:
+      - "backend-v*"
 
 permissions:
   contents: write
@@ -13,13 +14,16 @@ jobs:
   build-and-push:
     runs-on: ubuntu-latest
     environment: prod
-
     env:
       IMAGE_NAME: qadraxdev/moto125-strapi
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Extract version from tag (strip 'backend-v')
+        id: vars
+        run: echo "VERSION=${GITHUB_REF_NAME#backend-v}" >> $GITHUB_OUTPUT
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -34,11 +38,11 @@ jobs:
           images: ${{ env.IMAGE_NAME }}
           tags: |
             type=raw,value=latest
-            type=ref,event=tag
+            type=raw,value=${{ steps.vars.outputs.VERSION }}
           labels: |
             org.opencontainers.image.title=Moto125 Strapi
             org.opencontainers.image.source=${{ github.repository }}
-            org.opencontainers.image.version=${{ github.event.release.tag_name }}
+            org.opencontainers.image.version=${{ steps.vars.outputs.VERSION }}
             org.opencontainers.image.revision=${{ github.sha }}
 
       - name: Log in to Docker Hub
@@ -61,11 +65,14 @@ jobs:
 
       - name: Save released image as tar.gz
         run: |
-          TAG="${{ github.event.release.tag_name }}"
-          docker pull "${{ env.IMAGE_NAME }}:${TAG}"
-          docker save "${{ env.IMAGE_NAME }}:${TAG}" | gzip > "moto125-strapi-${TAG}.tar.gz"
+          V="${{ steps.vars.outputs.VERSION }}"
+          docker pull "${{ env.IMAGE_NAME }}:${V}"
+          docker save "${{ env.IMAGE_NAME }}:${V}" | gzip > "moto125-strapi-${V}.tar.gz"
 
-      - name: Upload release asset
+      - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          files: moto125-strapi-${{ github.event.release.tag_name }}.tar.gz
+          tag_name: ${{ github.ref_name }}
+          name: Backend ${{ steps.vars.outputs.VERSION }}
+          generate_release_notes: true
+          files: moto125-strapi-${{ steps.vars.outputs.VERSION }}.tar.gz
