@@ -51,17 +51,19 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build & Push
+      - name: Build & Push (monorepo)
         uses: docker/build-push-action@v6
         with:
-          context: backend/moto125-strapi
-          file: backend/moto125-strapi/Dockerfile
+          context: .
+          file: apps/moto125-strapi/Dockerfile
           push: true
           platforms: linux/amd64
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          build-args: |
+            WORKSPACE_PATH=apps/moto125-strapi
 
       - name: Save released image as tar.gz
         run: |

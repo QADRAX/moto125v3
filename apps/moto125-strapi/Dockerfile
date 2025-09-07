@@ -1,39 +1,57 @@
-# Etapa 1: build
-FROM node:20-alpine AS builder
+# apps/moto125-strapi/Dockerfile
+# ------------------------------------------------------------
+# Stage 1 (deps dev): instala deps del workspace @moto125/strapi (incl. dev) para compilar el admin
+# ------------------------------------------------------------
+FROM node:20-alpine AS deps_dev
+WORKDIR /repo
 
-# Set working directory
-WORKDIR /app
+# Copiamos manifest y lock de la RAÍZ + manifest del workspace de Strapi
+COPY package.json package-lock.json ./
+COPY apps/moto125-strapi/package.json apps/moto125-strapi/package.json
 
-# Install dependencies
-COPY package*.json ./
-RUN npm ci
+# Instala SOLO las deps del workspace (con dev para poder hacer el build del admin)
+RUN npm ci -w @moto125/strapi
 
-# Copy source code
+# ------------------------------------------------------------
+# Stage 2 (deps prod): mismas deps pero sin dev para la imagen final
+# ------------------------------------------------------------
+FROM node:20-alpine AS deps_prod
+WORKDIR /repo
+COPY package.json package-lock.json ./
+COPY apps/moto125-strapi/package.json apps/moto125-strapi/package.json
+RUN npm ci --omit=dev -w @moto125/strapi
+
+# ------------------------------------------------------------
+# Stage 3 (build): compila el admin de Strapi
+# ------------------------------------------------------------
+FROM node:20-alpine AS build
+WORKDIR /repo
+
+# Reutilizamos node_modules (con dev) para compilar
+COPY --from=deps_dev /repo/node_modules ./node_modules
+COPY --from=deps_dev /repo/apps/moto125-strapi/package.json apps/moto125-strapi/package.json
+
+# Copiamos TODO el repo (plugins locales, config, etc.) y build
 COPY . .
-
-# Build admin panel
+WORKDIR /repo/apps/moto125-strapi
 RUN npm run build
 
-# Etapa 2: runtime
+# ------------------------------------------------------------
+# Stage 4 (runtime): imagen final, sólo prod deps
+# ------------------------------------------------------------
 FROM node:20-alpine
-
-# Crear usuario no root
-RUN addgroup -g 1001 strapi && adduser -D -G strapi -u 1001 strapi
-
-# Set working directory
+ENV NODE_ENV=production
 WORKDIR /app
 
-# Copy from build stage
-COPY --chown=strapi:strapi --from=builder /app .
+# Copiamos la app ya compilada y deps de producción
+COPY --from=build     /repo/apps/moto125-strapi ./
+COPY --from=deps_prod /repo/node_modules        ./node_modules
 
-# Install production deps only
-RUN npm ci --omit=dev
-
-# Change ownership of the directory
+# Usuario no root
+RUN addgroup -g 1001 strapi && adduser -D -G strapi -u 1001 strapi \
+  && mkdir -p /app/public/uploads \
+  && chown -R strapi:strapi /app
 USER strapi
 
-# Expose default port
 EXPOSE 1337
-
-# Start Strapi
 CMD ["npm", "run", "start"]
