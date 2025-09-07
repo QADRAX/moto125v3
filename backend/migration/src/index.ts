@@ -15,8 +15,12 @@ import {
 } from "./fichasTecnicas";
 import { migrateBlob } from "./migrateBlob";
 import { saveMoto125PostAssets } from "./saveMoto125PostAssets";
+import { uploadArticle, uploadYear } from "./articleUploader";
+import { backfillMotosFromMedia } from "./backfillMotosFromMedia";
+import { backfillArticleMotoRelations } from "./backfillArticleMotoRelation";
 
-const xmlFilePath: string = "./data/moto125.WordPress.2024-10-03.xml";
+//const xmlFilePath: string = "./data/moto125.WordPress.2025-09-04.xml";
+const xmlFilePath: string = "./data/moto125.WordPress.2025-09-04.xml";
 const fileDir: string = "G:moto125Content";
 
 async function stepOne_extractRssPosts() {
@@ -36,12 +40,24 @@ async function stepTwo_normalizeToMoto125Posts(year: number) {
 
   for (const post of posts) {
     console.log(`Parseando post ${post.id}: ${post.title}`);
-    const moto125Post = await parsePostToMoto125Post(post);
-    moto125Posts.push(moto125Post);
-    await saveMoto125PostAssets(moto125Post, year);
-  }
-  writeJsonFile(moto125Posts, `./data/moto125Posts/moto125_${year}.json`);
 
+    // Ignorar posts sin contenido
+    if (!post.content || !post.content.trim()) {
+      console.warn(`Post ${post.id} ignorado: sin content`);
+      continue;
+    }
+
+    try {
+      const moto125Post = await parsePostToMoto125Post(post);
+      moto125Posts.push(moto125Post);
+      await saveMoto125PostAssets(moto125Post, year);
+    } catch (err) {
+      console.warn(`Post ${post.id} falló: ${(err as Error).message}`);
+      continue;
+    }
+  }
+
+  writeJsonFile(moto125Posts, `./data/moto125Posts/moto125_${year}.json`);
   console.log("FIN");
 }
 
@@ -133,9 +149,9 @@ async function stepSix_uploadMotos() {
   //await stepOne_extractRssPosts();
 
   
-  //await stepTwo_normalizeToMoto125Posts(2024);
+  //await stepTwo_normalizeToMoto125Posts(2025);
 
-  await normalizeMoto125PostBySlug(2024, 'superventas-3-ruedas-2023');
+  //await normalizeMoto125PostBySlug(2024, 'superventas-3-ruedas-2023');
 
   //await stepThree_moveFiles();
 
@@ -146,4 +162,12 @@ async function stepSix_uploadMotos() {
   //await stepSix_uploadMotos();
 
   //await migrateBlob();
+
+  //await uploadArticle(2013, "848-hyosung-mh7");
+
+  //await uploadYear(2010);
+
+  //await backfillMotosFromMedia();
+
+  await backfillArticleMotoRelations();
 })();

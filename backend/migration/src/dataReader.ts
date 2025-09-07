@@ -27,6 +27,8 @@ import { getMoto125MainArticleImage } from "./moto125Reader";
 import { readFile } from "fs/promises";
 import { convertHtmlToMarkdown } from "./converHtmlToMarkdown";
 import { extractMarcasModelos } from "./extractMarcasModelos";
+import { getFeaturedImageRelativePathFromDb } from "./wordpressMediaRelative";
+import { rewriteMarkdownUrls } from "./markdownUrlRewriter";
 
 export async function readWPFile(filePath: string): Promise<Post[]> {
   return new Promise<Post[]>((resolve, reject) => {
@@ -122,7 +124,13 @@ function parseRssItemToPost(rssItem: RssItem): Post {
 }
 
 export async function parsePostToMoto125Post(post: Post): Promise<Moto125Post> {
-  const image = await getMoto125MainArticleImage(post.link);
+  let image = "";
+  try {
+    image = await getFeaturedImageRelativePathFromDb(post.id);
+  }catch(e) {
+    console.warn(`Recuperar imagen principal para el post ${post.id} falló: ${(e as Error).message}.`);
+  }
+  
   let htmlContent = sanitizeHtml(post.content);
   const creditos = extractCreditosFromHtml(htmlContent);
   if (creditos) {
@@ -148,9 +156,12 @@ export async function parsePostToMoto125Post(post: Post): Promise<Moto125Post> {
     htmlContent = removeFichaTecnicaTableFromHtml(htmlContent);
   }
 
-  const mdContent = convertHtmlToMarkdown(htmlContent);
+  let mdContent = convertHtmlToMarkdown(htmlContent);
+  
+  const blobBase = process.env.M125_BLOB_BASE!;
+  mdContent = rewriteMarkdownUrls(mdContent, blobBase);
 
-  const marcasModelos = await extractMarcasModelos(mdContent, process.env.GEMINI_API_KEY ?? '');
+  //const marcasModelos = await extractMarcasModelos(mdContent, process.env.GEMINI_API_KEY ?? '');
 
   const moto125Post: Moto125Post = {
     id: post.id,
@@ -167,7 +178,6 @@ export async function parsePostToMoto125Post(post: Post): Promise<Moto125Post> {
     creditos,
     youtubeLink,
     fichaTecnicaId,
-    marcasModelos,
     tags: post.tags.map((t) => t.name),
   };
 
