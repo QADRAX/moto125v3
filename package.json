@@ -1,0 +1,32 @@
+{
+  "name": "moto125v3",
+  "version": "1.0.0",
+  "description": "",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "private": true,
+  "scripts": {
+    "build": "lerna run build --stream",
+    "dev": "lerna run dev --parallel --stream",
+    "lint": "lerna run lint --stream",
+    "clean": "lerna run clean --stream",
+    "list": "lerna list",
+    "changed": "lerna changed"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/QADRAX/moto125v3.git"
+  },
+  "bugs": {
+    "url": "https://github.com/QADRAX/moto125v3/issues"
+  },
+  "homepage": "https://github.com/QADRAX/moto125v3#readme",
+  "devDependencies": {
+    "lerna": "^8.2.3",
+    "rimraf": "^6.0.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.2"
+  }
+}

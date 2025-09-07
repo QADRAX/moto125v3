@@ -135,4 +135,4 @@ build
 # Migration
 ############################
 
-backend/migration/data
+*/migration/data
