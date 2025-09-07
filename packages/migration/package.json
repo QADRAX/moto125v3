@@ -1,5 +1,5 @@
 {
-  "name": "migration-wp-to-strapi",
+  "name": "@moto125/migration",
   "version": "1.0.0",
   "description": "moving moto125 in WP to strapi",
   "main": "index.js",

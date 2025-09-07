@@ -1,7 +1,6 @@
 {
-  "name": "moto-125-strapi",
+  "name": "@moto125/strapi",
   "version": "0.0.1",
-  "private": true,
   "description": "A Strapi application",
   "scripts": {
     "build": "strapi build",
