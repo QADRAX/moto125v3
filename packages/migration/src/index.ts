@@ -16,7 +16,6 @@ import {
 import { migrateBlob } from "./migrateBlob";
 import { saveMoto125PostAssets } from "./saveMoto125PostAssets";
 import { uploadArticle, uploadYear } from "./articleUploader";
-import { backfillMotosFromMedia } from "./backfillMotosFromMedia";
 import { backfillArticleMotoRelations } from "./backfillArticleMotoRelation";
 
 //const xmlFilePath: string = "./data/moto125.WordPress.2025-09-04.xml";
@@ -166,8 +165,6 @@ async function stepSix_uploadMotos() {
   //await uploadArticle(2013, "848-hyosung-mh7");
 
   //await uploadYear(2010);
-
-  //await backfillMotosFromMedia();
 
   await backfillArticleMotoRelations();
 })();

@@ -40,6 +40,26 @@
         "env": {
           "TS_NODE_PROJECT": "${workspaceFolder}/packages/migration/tsconfig.json"
         }
+      },
+      {
+        "type": "node",
+        "request": "launch",
+        "name": "Run admin-smoketest",
+        "runtimeArgs": [
+          "-r",
+          "ts-node/register"
+        ],
+        "args": [
+          "${workspaceFolder}/packages/migration/src/admin-smoketest.ts"
+        ],
+        "cwd": "${workspaceFolder}/packages/migration",
+        "sourceMaps": true,
+        "outFiles": [
+          "${workspaceFolder}/packages/migration/**/*.js"
+        ],
+        "env": {
+          "TS_NODE_PROJECT": "${workspaceFolder}/packages/migration/tsconfig.json"
+        }
       }
     ]
   }
