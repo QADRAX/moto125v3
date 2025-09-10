@@ -8,6 +8,7 @@ export interface StrapiFileFormat {
   size?: number;
   width?: number;
   height?: number;
+  sizeInBytes?: number;
 }
 
 export interface StrapiFileAttributes {
@@ -24,42 +25,16 @@ export interface StrapiFileAttributes {
   url: string;
   previewUrl?: string | null;
   provider: string;
+  provider_metadata?: any;
   createdAt: string;
   updatedAt: string;
+  publishedAt?: string | null;
 }
 
-export interface StrapiMediaRelation {
-  data: null | {
-    id: number;
-    attributes: StrapiFileAttributes;
-  };
-}
-
-export interface StrapiMediaMultiRelation {
-  data: Array<{
-    id: number;
-    attributes: StrapiFileAttributes;
-  }>;
-}
-
-export interface StrapiRelation<TAttrs> {
-  data: null | {
-    id: number;
-    attributes: TAttrs;
-  };
-}
-
-export interface StrapiManyRelation<TAttrs> {
-  data: Array<{
-    id: number;
-    attributes: TAttrs;
-  }>;
-}
-
-export interface StrapiEntry<T> {
+export type StrapiFile = StrapiFileAttributes & {
   id: number;
-  attributes: T;
-}
+  documentId: string;
+};
 
 export interface StrapiMeta {
   pagination?: {
@@ -69,6 +44,8 @@ export interface StrapiMeta {
     total: number;
   };
 }
+
+export type StrapiEntry<T> = T & { id: number; documentId: string };
 
 export interface StrapiCollectionResponse<T> {
   data: Array<StrapiEntry<T>>;
@@ -80,7 +57,6 @@ export interface StrapiSingleResponse<T> {
   meta: StrapiMeta;
 }
 
-/** Loose typing for Strapi filters / sort / populate / fields / pagination. */
 export type StrapiFilters = Record<string, any>;
 export type StrapiPopulate =
   | '*'
@@ -90,7 +66,6 @@ export type StrapiPopulate =
 export type StrapiSort = string | string[];
 export type StrapiFields = string[];
 
-/** Common query params for Strapi REST. */
 export interface StrapiQueryParams {
   filters?: StrapiFilters;
   populate?: StrapiPopulate;

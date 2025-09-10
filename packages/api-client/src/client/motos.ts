@@ -1,11 +1,11 @@
-import { ApiClient } from '../http';
-import { toQueryString } from '../qs';
+import { ApiClient } from '../http.js';
+import { toQueryString } from '../qs.js';
 import {
   StrapiCollectionResponse,
   StrapiQueryParams,
   StrapiSingleResponse,
-} from '../types/strapi';
-import { MotoAttrs } from '../types/entities';
+} from '../types/strapi.js';
+import { Moto } from '../types/entities.js';
 
 export const MOTO_POPULATE: StrapiQueryParams['populate'] = {
   images: true,
@@ -17,7 +17,7 @@ export const MOTO_POPULATE: StrapiQueryParams['populate'] = {
 export async function getMotos(
   api: ApiClient,
   params: StrapiQueryParams = {}
-): Promise<StrapiCollectionResponse<MotoAttrs>> {
+): Promise<StrapiCollectionResponse<Moto>> {
   const qs = toQueryString({
     populate: params.populate ?? MOTO_POPULATE,
     sort: params.sort ?? ['modelName:asc'],
@@ -30,7 +30,7 @@ export async function getMotoByMoto125Id(
   api: ApiClient,
   moto125Id: string,
   params: Omit<StrapiQueryParams, 'filters'> = {}
-): Promise<StrapiCollectionResponse<MotoAttrs>> {
+): Promise<StrapiCollectionResponse<Moto>> {
   const qs = toQueryString({
     populate: params.populate ?? MOTO_POPULATE,
     filters: { moto125Id: { $eq: moto125Id } },
@@ -40,14 +40,14 @@ export async function getMotoByMoto125Id(
   return api.get(`/api/motos`, qs);
 }
 
-export async function getMotoById(
+export async function getMotoByDocumentId(
   api: ApiClient,
-  id: number,
+  documentId: string,
   params: StrapiQueryParams = {}
-): Promise<StrapiSingleResponse<MotoAttrs>> {
+): Promise<StrapiSingleResponse<Moto>> {
   const qs = toQueryString({
     populate: params.populate ?? MOTO_POPULATE,
     ...params,
   });
-  return api.get(`/api/motos/${id}`, qs);
+  return api.get(`/api/motos/${documentId}`, qs);
 }

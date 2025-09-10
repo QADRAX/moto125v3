@@ -1,11 +1,11 @@
 import { ApiClient } from '../http';
 import { toQueryString } from '../qs';
+import { Company } from '../types/entities';
 import {
   StrapiCollectionResponse,
   StrapiQueryParams,
   StrapiSingleResponse,
 } from '../types/strapi';
-import { CompanyAttrs } from '../types/entities';
 
 export const COMPANY_POPULATE: StrapiQueryParams['populate'] = {
   image: true,
@@ -14,7 +14,7 @@ export const COMPANY_POPULATE: StrapiQueryParams['populate'] = {
 export async function getCompanies(
   api: ApiClient,
   params: StrapiQueryParams = {}
-): Promise<StrapiCollectionResponse<CompanyAttrs>> {
+): Promise<StrapiCollectionResponse<Company>> {
   const qs = toQueryString({
     populate: params.populate ?? COMPANY_POPULATE,
     sort: params.sort ?? ['name:asc'],
@@ -25,12 +25,12 @@ export async function getCompanies(
 
 export async function getCompanyById(
   api: ApiClient,
-  id: number,
+  documentId: string,
   params: StrapiQueryParams = {}
-): Promise<StrapiSingleResponse<CompanyAttrs>> {
+): Promise<StrapiSingleResponse<Company>> {
   const qs = toQueryString({
     populate: params.populate ?? COMPANY_POPULATE,
     ...params,
   });
-  return api.get(`/api/companies/${id}`, qs);
+  return api.get(`/api/companies/${documentId}`, qs);
 }

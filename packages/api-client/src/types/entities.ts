@@ -1,18 +1,19 @@
-import {
-  StrapiManyRelation,
-  StrapiRelation,
-} from './strapi';
+import { StrapiEntry, StrapiFile } from "./strapi";
 
-/** Article content blocks (Dynamic Zone) */
-
-export interface TextContentBlock {
-  __component: 'article-content.text-content';
-  Text?: string; // richtext in Strapi; delivered as HTML string
+/** ----- Article Dynamic Zone blocks ----- */
+export interface DZBase {
+  id: number;
+  __component: string;
 }
 
-export interface ImageGridContentBlock {
-  __component: 'article-content.image-grid-content';
-  // No attributes defined yet; extend later if you add images/captions.
+export interface TextContentBlock extends DZBase {
+  __component: "article-content.text-content";
+  Text?: string; // HTML/Markdown string
+}
+
+export interface ImageGridContentBlock extends DZBase {
+  __component: "article-content.image-grid-content";
+  // aún sin atributos definidos en tu schema
   [k: string]: unknown;
 }
 
@@ -27,22 +28,25 @@ export interface ArticlePrestaciones {
   autonomia?: string;
   pesoTotal?: string;
   repartoTrasero?: string;
-  repartoFrontral?: string;
+  repartoFrontral?: string; // typo preservado
 }
 
-export interface PrestacionesContentBlock {
-  __component: 'article-content.prestaciones';
+export interface PrestacionesContentBlock extends DZBase {
+  __component: "article-content.prestaciones";
   prestaciones?: ArticlePrestaciones | null;
 }
 
-/** We don't have the exact shapes of list.foralezas-list / list.debilidades-list.
- * Keep them generic and offer mappers in utils.
- */
-export type FortalezaItem = Record<string, any>;
-export type DebilidadItem = Record<string, any>;
+export interface FortalezaItem {
+  id: number;
+  value: string;
+}
+export interface DebilidadItem {
+  id: number;
+  value: string;
+}
 
-export interface FortalezasDebilidadesContentBlock {
-  __component: 'article-content.fortalezas-debilidades';
+export interface FortalezasDebilidadesContentBlock extends DZBase {
+  __component: "article-content.fortalezas-debilidades";
   Fortalezas?: FortalezaItem[];
   Debilidades?: DebilidadItem[];
 }
@@ -53,51 +57,53 @@ export type ArticleContentBlock =
   | PrestacionesContentBlock
   | FortalezasDebilidadesContentBlock;
 
-/** Component list.tag-list (unknown shape), we normalize in utils. */
-export type TagComponentItem = Record<string, any>;
-
-/** Related entities light attrs */
-export interface CompanyLite {
-  name?: string;
-  url?: string | null;
-  active?: boolean;
-  // description is "blocks" in Strapi; omit here.
-}
-
-export interface MotoTypeLite {
-  name?: string;
-  fullName?: string | null;
-}
-
-export interface MotoClassLite {
+/** ----- Taxonomías / auxiliares ----- */
+export interface ArticleType {
+  id: number;
+  documentId?: string;
   name: string;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt?: string | null;
 }
 
-export interface ArticleTypeAttrs {
-  name?: string;
-  // articles mappedBy
-}
-
-export interface CompanyAttrs extends CompanyLite {
+export interface Company {
+  id: number;
+  documentId?: string;
+  name: string;
   phone?: string | null;
-  image?: any;
-  articles?: StrapiManyRelation<ArticleAttrs>;
-  motos?: StrapiManyRelation<MotoAttrs>;
-  description?: any; // blocks
+  url?: string | null;
+  active: boolean;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt?: string | null;
+  description?: any | null; // blocks
+  image?: StrapiFile | null;
 }
 
-export interface MotoClassAttrs extends MotoClassLite {
-  image?: any;
-  motoTypes?: StrapiManyRelation<MotoTypeAttrs>;
+export interface MotoClass {
+  id: number;
+  documentId?: string;
+  name: string;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt?: string | null;
+  // image?: StrapiFile | null; (no viene en el payload mostrado)
 }
 
-export interface MotoTypeAttrs extends MotoTypeLite {
-  image?: any;
-  motos?: StrapiManyRelation<MotoAttrs>;
-  motoClass?: StrapiRelation<MotoClassAttrs>;
+export interface MotoType {
+  id: number;
+  documentId?: string;
+  name?: string | null;
+  fullName?: string | null;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt?: string | null;
+  motoClass?: MotoClass | null;
+  image?: StrapiFile | null;
 }
 
-/** Ficha técnica types (from your JSON shape) */
+/** ----- Ficha técnica (moto) ----- */
 export interface CombustionEngineSpec {
   powerRPM?: number;
   horsePower?: number;
@@ -152,49 +158,67 @@ export interface MotoFichaTecnica {
   electricEngine?: ElectricEngineSpec;
 }
 
-/** Article */
-export interface ArticleAttrs {
-  slug: string;
-  title?: string | null;
-  publicationDate?: string | null; // date only (YYYY-MM-DD)
-  visible: boolean;
-  coverImage: any; // relation resolved via populate
-  authorPhotos?: string | null;
-  authorAction?: string | null;
-  content?: ArticleContentBlock[];
-  tags?: TagComponentItem[]; // legacy component
-  relatedMotos?: any;        // relation
-  relatedCompanies?: any;    // relation
-  authorText?: string | null;
-  articleType?: any;         // relation
-  youtubeLink?: string | null;
-  createdAt: string;
-  updatedAt: string;
-  publishedAt?: string | null;
-}
-
-/** Moto */
-export interface MotoAttrs {
+/** ----- Moto ----- */
+export interface Moto {
+  id: number;
+  documentId?: string;
   modelName: string;
-  images?: any; // media[]
-  priece?: string | number | null; // "priece" per schema (typo)
+  priece?: number | null; // número en tu payload
   fichaTecnica?: MotoFichaTecnica | null;
-  motoType?: any; // relation
   moto125Id: string;
-  articles?: any; // relation
-  company?: any; // relation
   active: boolean;
   description?: string | null;
   fullName?: string | null;
   createdAt: string;
   updatedAt: string;
   publishedAt?: string | null;
+
+  images?: StrapiFile[]; // media[]
+  company?: Company | null; // relation 1
+  motoType?: MotoType | null; // relation 1
+  articles?: Article[]; // si alguna vez lo pueblas
 }
 
-/** Config (singleType) */
-export interface ConfigAttrs {
-  DefaultAvatar?: any; // media
+export interface TagItem {
+  id: number;
+  Value?: string | null;
+}
+
+/** ----- Article (flat) ----- */
+export interface Article {
+  id: number;
+  documentId?: string;
+  slug: string;
+  title?: string | null;
+  publicationDate?: string | null; // YYYY-MM-DD
+  visible: boolean;
+  authorPhotos?: string | null;
+  authorAction?: string | null;
+  authorText?: string | null;
+  youtubeLink?: string | null;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt?: string | null;
+  tags?: TagItem[];
+  coverImage: StrapiFile;
+  relatedMotos?: Moto[];
+  relatedCompanies?: Company[];
+  articleType?: ArticleType | null;
+  content?: ArticleContentBlock[];
+}
+
+/** ----- Single types ----- */
+export interface Config {
+  id: number;
+  documentId?: string;
+  DefaultAvatar?: StrapiFile | null;
   createdAt: string;
   updatedAt: string;
   publishedAt?: string | null;
 }
+
+/** Aliases de respuestas ya tipadas */
+export type ArticleEntry = StrapiEntry<Article>;
+export type MotoEntry = StrapiEntry<Moto>;
+export type CompanyEntry = StrapiEntry<Company>;
+export type ConfigEntry = StrapiEntry<Config>;

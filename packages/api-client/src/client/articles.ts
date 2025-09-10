@@ -1,11 +1,11 @@
-import { ApiClient } from '../http';
-import { toQueryString } from '../qs';
+import { ApiClient } from '../http.js';
+import { toQueryString } from '../qs.js';
 import {
   StrapiCollectionResponse,
   StrapiQueryParams,
   StrapiSingleResponse,
-} from '../types/strapi';
-import { ArticleAttrs } from '../types/entities';
+} from '../types/strapi.js';
+import { Article } from '../types/entities.js';
 
 export const ARTICLE_POPULATE: StrapiQueryParams['populate'] = {
   coverImage: true,
@@ -13,13 +13,13 @@ export const ARTICLE_POPULATE: StrapiQueryParams['populate'] = {
   relatedCompanies: { populate: ['image'] },
   articleType: true,
   content: { populate: '*' },
+  tags: true,
 };
 
-/** Fetch articles with optional filters/pagination. */
 export async function getArticles(
   api: ApiClient,
   params: StrapiQueryParams = {}
-): Promise<StrapiCollectionResponse<ArticleAttrs>> {
+): Promise<StrapiCollectionResponse<Article>> {
   const qs = toQueryString({
     populate: params.populate ?? ARTICLE_POPULATE,
     sort: params.sort ?? ['publicationDate:desc', 'createdAt:desc'],
@@ -28,12 +28,11 @@ export async function getArticles(
   return api.get(`/api/articles`, qs);
 }
 
-/** Fetch a single article by slug. */
 export async function getArticleBySlug(
   api: ApiClient,
   slug: string,
   params: Omit<StrapiQueryParams, 'filters'> = {}
-): Promise<StrapiSingleResponse<ArticleAttrs>> {
+): Promise<StrapiCollectionResponse<Article>> {
   const qs = toQueryString({
     populate: params.populate ?? ARTICLE_POPULATE,
     filters: { slug: { $eq: slug } },
@@ -43,15 +42,14 @@ export async function getArticleBySlug(
   return api.get(`/api/articles`, qs);
 }
 
-/** Fetch a single article by id. */
-export async function getArticleById(
+export async function getArticleByDocumentId(
   api: ApiClient,
-  id: number,
+  documentId: string,
   params: StrapiQueryParams = {}
-): Promise<StrapiSingleResponse<ArticleAttrs>> {
+): Promise<StrapiSingleResponse<Article>> {
   const qs = toQueryString({
     populate: params.populate ?? ARTICLE_POPULATE,
     ...params,
   });
-  return api.get(`/api/articles/${id}`, qs);
+  return api.get(`/api/articles/${documentId}`, qs);
 }

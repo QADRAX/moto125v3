@@ -11,4 +11,3 @@ export * from './client/taxonomies';
 export * from './client/config';
 
 export * from './utils/prestaciones';
-export * from './utils/tags';

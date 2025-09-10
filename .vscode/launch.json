@@ -10,15 +10,35 @@
           "ts-node/register"
         ],
         "args": [
-          "${workspaceFolder}/backend/migration/src/index.ts"
+          "${workspaceFolder}/packages/migration/src/index.ts"
         ],
-        "cwd": "${workspaceFolder}/backend/migration",
+        "cwd": "${workspaceFolder}/packages/migration",
         "sourceMaps": true,
         "outFiles": [
-          "${workspaceFolder}/backend/migration/**/*.js"
+          "${workspaceFolder}/packages/migration/**/*.js"
         ],
         "env": {
-          "TS_NODE_PROJECT": "${workspaceFolder}/backend/migration/tsconfig.json"
+          "TS_NODE_PROJECT": "${workspaceFolder}/packages/migration/tsconfig.json"
+        }
+      },
+      {
+        "type": "node",
+        "request": "launch",
+        "name": "Run list-articles",
+        "runtimeArgs": [
+          "-r",
+          "ts-node/register"
+        ],
+        "args": [
+          "${workspaceFolder}/packages/migration/src/list-articles.ts"
+        ],
+        "cwd": "${workspaceFolder}/packages/migration",
+        "sourceMaps": true,
+        "outFiles": [
+          "${workspaceFolder}/packages/migration/**/*.js"
+        ],
+        "env": {
+          "TS_NODE_PROJECT": "${workspaceFolder}/packages/migration/tsconfig.json"
         }
       }
     ]

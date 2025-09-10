@@ -1,15 +1,15 @@
 import { ApiClient } from '../http';
 import { toQueryString } from '../qs';
+import { ArticleType, MotoClass, MotoType } from '../types/entities';
 import {
   StrapiCollectionResponse,
   StrapiQueryParams,
 } from '../types/strapi';
-import { ArticleTypeAttrs, MotoTypeAttrs, MotoClassAttrs } from '../types/entities';
 
 export async function getArticleTypes(
   api: ApiClient,
   params: StrapiQueryParams = {}
-): Promise<StrapiCollectionResponse<ArticleTypeAttrs>> {
+): Promise<StrapiCollectionResponse<ArticleType>> {
   const qs = toQueryString({ ...params, sort: params.sort ?? ['name:asc'] });
   return api.get(`/api/article-types`, qs);
 }
@@ -17,7 +17,7 @@ export async function getArticleTypes(
 export async function getMotoTypes(
   api: ApiClient,
   params: StrapiQueryParams = {}
-): Promise<StrapiCollectionResponse<MotoTypeAttrs>> {
+): Promise<StrapiCollectionResponse<MotoType>> {
   const qs = toQueryString({
     populate: params.populate ?? { motoClass: true },
     sort: params.sort ?? ['name:asc'],
@@ -29,7 +29,7 @@ export async function getMotoTypes(
 export async function getMotoClasses(
   api: ApiClient,
   params: StrapiQueryParams = {}
-): Promise<StrapiCollectionResponse<MotoClassAttrs>> {
+): Promise<StrapiCollectionResponse<MotoClass>> {
   const qs = toQueryString({ ...params, sort: params.sort ?? ['name:asc'] });
   return api.get(`/api/moto-classes`, qs);
 }
