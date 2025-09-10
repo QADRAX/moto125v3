@@ -1,18 +1,29 @@
-
 module.exports = ({ env }) => ({
-    'documentation': {
-        enabled: true,
+  documentation: {
+    enabled: true,
+  },
+  upload: {
+    config: {
+      provider: "strapi-provider-upload-azure-storage",
+      providerOptions: {
+        authType: env("STORAGE_AUTH_TYPE", "default"),
+        account: env("STORAGE_ACCOUNT"),
+        accountKey: env("STORAGE_ACCOUNT_KEY"),
+        containerName: env("STORAGE_CONTAINER_NAME"),
+        defaultPath: "assets",
+      },
     },
-    upload: {
-        config: {
-            provider: "strapi-provider-upload-azure-storage",
-            providerOptions: {
-                authType: env("STORAGE_AUTH_TYPE", "default"),
-                account: env("STORAGE_ACCOUNT"),
-                accountKey: env("STORAGE_ACCOUNT_KEY"),
-                containerName: env("STORAGE_CONTAINER_NAME"),
-                defaultPath: "assets",
-            },
-        },
+  },
+  graphql: {
+    enabled: true,
+    config: {
+      endpoint: "/graphql",
+      shadowCRUD: true,
+      v4CompatibilityMode: false,
+      apolloServer: {
+        introspection: true,
+      },
+      maxLimit: -1,
     },
+  },
 });

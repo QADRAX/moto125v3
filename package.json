@@ -13,7 +13,8 @@
     "lint": "lerna run lint --stream",
     "clean": "lerna run clean --stream",
     "list": "lerna list",
-    "changed": "lerna changed"
+    "changed": "lerna changed",
+    "dev:strapi": "lerna run develop --scope=@moto125/strapi --stream"
   },
   "repository": {
     "type": "git",
