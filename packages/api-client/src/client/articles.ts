@@ -6,6 +6,7 @@ import {
   StrapiSingleResponse,
 } from '../types/strapi.js';
 import { Article } from '../types/entities.js';
+import type { ArticleCreateInput, ArticleUpdateInput } from '../types/inputs.js';
 
 export const ARTICLE_POPULATE: StrapiQueryParams['populate'] = {
   coverImage: true,
@@ -16,6 +17,7 @@ export const ARTICLE_POPULATE: StrapiQueryParams['populate'] = {
   tags: true,
 };
 
+/** ===== GET ===== */
 export async function getArticles(
   api: ApiClient,
   params: StrapiQueryParams = {}
@@ -52,4 +54,27 @@ export async function getArticleByDocumentId(
     ...params,
   });
   return api.get(`/api/articles/${documentId}`, qs);
+}
+
+/** ===== POST / PUT ===== */
+
+/** Crear artículo */
+export async function createArticle(
+  api: ApiClient,
+  data: ArticleCreateInput,
+  params: StrapiQueryParams = {}
+): Promise<StrapiSingleResponse<Article>> {
+  const qs = toQueryString(params);
+  return api.post(`/api/articles${qs ? `?${qs}` : ''}`, { data });
+}
+
+/** Actualizar artículo (sobrescribe campos enviados) */
+export async function updateArticleByDocumentId(
+  api: ApiClient,
+  documentId: string,
+  data: ArticleUpdateInput,
+  params: StrapiQueryParams = {}
+): Promise<StrapiSingleResponse<Article>> {
+  const qs = toQueryString(params);
+  return api.put(`/api/articles/${documentId}${qs ? `?${qs}` : ''}`, { data });
 }

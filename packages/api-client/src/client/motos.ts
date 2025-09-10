@@ -6,6 +6,7 @@ import {
   StrapiSingleResponse,
 } from '../types/strapi.js';
 import { Moto } from '../types/entities.js';
+import type { MotoCreateInput, MotoUpdateInput } from '../types/inputs.js';
 
 export const MOTO_POPULATE: StrapiQueryParams['populate'] = {
   images: true,
@@ -14,6 +15,7 @@ export const MOTO_POPULATE: StrapiQueryParams['populate'] = {
   articles: { populate: ['coverImage', 'articleType'] },
 };
 
+/** ===== GET ===== */
 export async function getMotos(
   api: ApiClient,
   params: StrapiQueryParams = {}
@@ -50,4 +52,24 @@ export async function getMotoByDocumentId(
     ...params,
   });
   return api.get(`/api/motos/${documentId}`, qs);
+}
+
+/** ===== POST / PUT ===== */
+export async function createMoto(
+  api: ApiClient,
+  data: MotoCreateInput,
+  params: StrapiQueryParams = {}
+): Promise<StrapiSingleResponse<Moto>> {
+  const qs = toQueryString(params);
+  return api.post(`/api/motos${qs ? `?${qs}` : ''}`, { data });
+}
+
+export async function updateMotoByDocumentId(
+  api: ApiClient,
+  documentId: string,
+  data: MotoUpdateInput,
+  params: StrapiQueryParams = {}
+): Promise<StrapiSingleResponse<Moto>> {
+  const qs = toQueryString(params);
+  return api.put(`/api/motos/${documentId}${qs ? `?${qs}` : ''}`, { data });
 }

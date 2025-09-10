@@ -1,6 +1,5 @@
 import { StrapiEntry, StrapiFile } from "./strapi";
 
-/** ----- Article Dynamic Zone blocks ----- */
 export interface DZBase {
   id: number;
   __component: string;
@@ -8,12 +7,11 @@ export interface DZBase {
 
 export interface TextContentBlock extends DZBase {
   __component: "article-content.text-content";
-  Text?: string; // HTML/Markdown string
+  Text?: string;
 }
 
 export interface ImageGridContentBlock extends DZBase {
   __component: "article-content.image-grid-content";
-  // aún sin atributos definidos en tu schema
   [k: string]: unknown;
 }
 
@@ -28,7 +26,7 @@ export interface ArticlePrestaciones {
   autonomia?: string;
   pesoTotal?: string;
   repartoTrasero?: string;
-  repartoFrontral?: string; // typo preservado
+  repartoFrontral?: string;
 }
 
 export interface PrestacionesContentBlock extends DZBase {
@@ -57,7 +55,6 @@ export type ArticleContentBlock =
   | PrestacionesContentBlock
   | FortalezasDebilidadesContentBlock;
 
-/** ----- Taxonomías / auxiliares ----- */
 export interface ArticleType {
   id: number;
   documentId?: string;
@@ -77,7 +74,7 @@ export interface Company {
   createdAt: string;
   updatedAt: string;
   publishedAt?: string | null;
-  description?: any | null; // blocks
+  description?: any | null;
   image?: StrapiFile | null;
 }
 
@@ -88,7 +85,6 @@ export interface MotoClass {
   createdAt: string;
   updatedAt: string;
   publishedAt?: string | null;
-  // image?: StrapiFile | null; (no viene en el payload mostrado)
 }
 
 export interface MotoType {
@@ -103,7 +99,6 @@ export interface MotoType {
   image?: StrapiFile | null;
 }
 
-/** ----- Ficha técnica (moto) ----- */
 export interface CombustionEngineSpec {
   powerRPM?: number;
   horsePower?: number;
@@ -158,7 +153,6 @@ export interface MotoFichaTecnica {
   electricEngine?: ElectricEngineSpec;
 }
 
-/** ----- Moto ----- */
 export interface Moto {
   id: number;
   documentId?: string;
@@ -184,13 +178,12 @@ export interface TagItem {
   Value?: string | null;
 }
 
-/** ----- Article (flat) ----- */
 export interface Article {
   id: number;
   documentId?: string;
   slug: string;
   title?: string | null;
-  publicationDate?: string | null; // YYYY-MM-DD
+  publicationDate?: string | null;
   visible: boolean;
   authorPhotos?: string | null;
   authorAction?: string | null;
@@ -207,7 +200,6 @@ export interface Article {
   content?: ArticleContentBlock[];
 }
 
-/** ----- Single types ----- */
 export interface Config {
   id: number;
   documentId?: string;
@@ -217,7 +209,6 @@ export interface Config {
   publishedAt?: string | null;
 }
 
-/** Aliases de respuestas ya tipadas */
 export type ArticleEntry = StrapiEntry<Article>;
 export type MotoEntry = StrapiEntry<Moto>;
 export type CompanyEntry = StrapiEntry<Company>;

@@ -3,6 +3,7 @@ export * from './qs';
 
 export * from './types/strapi';
 export * from './types/entities';
+export * from './types/inputs';
 
 export * from './client/articles';
 export * from './client/motos';

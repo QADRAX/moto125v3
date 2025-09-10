@@ -24,13 +24,13 @@
       {
         "type": "node",
         "request": "launch",
-        "name": "Run list-articles",
+        "name": "Run backfillMotosFromMedia",
         "runtimeArgs": [
           "-r",
           "ts-node/register"
         ],
         "args": [
-          "${workspaceFolder}/packages/migration/src/list-articles.ts"
+          "${workspaceFolder}/packages/migration/src/backfillMotosFromMedia.ts"
         ],
         "cwd": "${workspaceFolder}/packages/migration",
         "sourceMaps": true,
