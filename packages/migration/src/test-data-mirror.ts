@@ -11,6 +11,7 @@ import "dotenv/config";
 import { resolve } from "node:path";
 import { createMoto125Api } from "@moto125/api-client";
 import { createAndStartDataMirror } from "@moto125/data-mirror";
+import { STRAPI_URL } from "./constants";
 
 /** Short ISO format: YYYY-MM-DD HH:mm:ss */
 function isoShort(iso?: string | null) {
@@ -162,21 +163,19 @@ function guardEnv() {
 async function main() {
   guardEnv();
 
-  const snapshotPath = resolve(process.cwd(), ".snapshots/mirror.json");
-  const intervalMs = Number(DM_INTERVAL_MS ?? 15_000); // default 15s
+  const snapshotPath = resolve(process.cwd(), "data/cache.json");
+  const intervalMs = Number(DM_INTERVAL_MS ?? 15_000);
 
-  console.log("🟢 Polling runner (single table)");
-  console.log("   • interval:", intervalMs, "ms");
+  console.log("🟢 Moto125 Data Mirror Cache ");
+  console.log("   • pulling interval:", intervalMs, "ms");
   console.log("   • snapshot:", snapshotPath);
   console.log("   • baseUrl :", STRAPI_API_URL);
 
-  const sdk = createMoto125Api({
-    baseUrl: STRAPI_API_URL!,
-    token: STRAPI_API_TOKEN!,
-  });
-
   mirror = await createAndStartDataMirror({
-    sdk,
+    sdkInit: {
+      baseUrl: STRAPI_URL!,
+      token: STRAPI_API_TOKEN!,
+    },
     snapshotPath,
     autosave: true,
     refreshIntervalMs: intervalMs,

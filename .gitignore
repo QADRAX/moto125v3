@@ -137,3 +137,4 @@ build
 
 */migration/data
 /db
+/packages/migration/.snapshots/

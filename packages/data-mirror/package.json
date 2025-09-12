@@ -5,6 +5,12 @@
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
   "types": "./dist/esm/index.d.ts",
+  "imports": {
+    "#resolveWorker": {
+      "require": "./dist/cjs/resolveWorker.cjs.js",
+      "import": "./dist/esm/resolveWorker.esm.js"
+    }
+  },
   "exports": {
     ".": {
       "import": "./dist/esm/index.js",
@@ -21,6 +27,6 @@
     "lint": "echo \"(lint shared)\""
   },
   "dependencies": {
-    "@moto125/api-client": "*"
+    "@moto125/data-mirror-core": "*"
   }
 }

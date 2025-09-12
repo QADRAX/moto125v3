@@ -1,0 +1,22 @@
+{
+  "name": "@moto125/data-mirror-worker",
+  "version": "0.0.1",
+  "type": "commonjs",
+  "main": "./dist/mirror.worker.js",
+  "exports": {
+    "./worker": "./dist/mirror.worker.js"
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "clean": "rimraf dist"
+  },
+  "dependencies": {
+    "@moto125/api-client": "*",
+    "@moto125/data-mirror-core": "*"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.0",
+    "rimraf": "^6.0.0"
+  }
+}
