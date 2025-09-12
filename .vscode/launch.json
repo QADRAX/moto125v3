@@ -60,6 +60,28 @@
         "env": {
           "TS_NODE_PROJECT": "${workspaceFolder}/packages/migration/tsconfig.json"
         }
+      },
+      {
+        "type": "node",
+        "request": "launch",
+        "name": "Run test data mirror",
+        "runtimeArgs": [
+          "--enable-source-maps",
+          "-r", "ts-node/register",
+          "-r", "tsconfig-paths/register"
+        ],
+        "args": [
+          "${workspaceFolder}/packages/migration/src/test-data-mirror.ts"
+        ],
+        "cwd": "${workspaceFolder}/packages/migration",
+        "sourceMaps": true,
+        "outFiles": [
+          "${workspaceFolder}/packages/migration/**/*.js",
+          "${workspaceFolder}/packages/data-mirror/dist/**/*.js"
+        ],
+        "env": {
+          "TS_NODE_PROJECT": "${workspaceFolder}/packages/migration/tsconfig.json"
+        }
       }
     ]
   }

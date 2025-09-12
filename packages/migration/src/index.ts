@@ -16,7 +16,6 @@ import {
 import { migrateBlob } from "./migrateBlob";
 import { saveMoto125PostAssets } from "./saveMoto125PostAssets";
 import { uploadArticle, uploadYear } from "./articleUploader";
-import { backfillArticleMotoRelations } from "./backfillArticleMotoRelation";
 
 //const xmlFilePath: string = "./data/moto125.WordPress.2025-09-04.xml";
 const xmlFilePath: string = "./data/moto125.WordPress.2025-09-04.xml";
@@ -166,5 +165,4 @@ async function stepSix_uploadMotos() {
 
   //await uploadYear(2010);
 
-  await backfillArticleMotoRelations();
 })();

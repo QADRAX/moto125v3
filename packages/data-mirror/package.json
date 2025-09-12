@@ -1,0 +1,26 @@
+{
+  "name": "@moto125/data-mirror",
+  "version": "0.0.2",
+  "type": "module",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/esm/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "types": "./dist/esm/index.d.ts",
+      "require": "./dist/cjs/index.js",
+      "default": "./dist/esm/index.js"
+    }
+  },
+  "files": ["dist/esm", "dist/cjs"],
+  "scripts": {
+    "build": "tsc -p tsconfig.json && tsc -p tsconfig.cjs.json && node ./scripts/postbuild.mjs",
+    "clean": "rimraf dist",
+    "dev": "tsc -w",
+    "lint": "echo \"(lint shared)\""
+  },
+  "dependencies": {
+    "@moto125/api-client": "*"
+  }
+}
