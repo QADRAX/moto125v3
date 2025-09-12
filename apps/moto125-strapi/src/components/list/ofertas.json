@@ -1,0 +1,16 @@
+{
+  "collectionName": "components_list_ofertas",
+  "info": {
+    "displayName": "Oferta"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "content": {
+      "type": "richtext"
+    }
+  },
+  "config": {}
+}

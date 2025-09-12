@@ -1,0 +1,26 @@
+{
+  "collectionName": "components_list_articulos_destacados",
+  "info": {
+    "displayName": "ArticulosDestacados",
+    "icon": "bulletList"
+  },
+  "options": {},
+  "attributes": {
+    "featuredArticle1": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::article.article"
+    },
+    "featuredArticle2": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::article.article"
+    },
+    "featuredArticle3": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::article.article"
+    }
+  },
+  "config": {}
+}

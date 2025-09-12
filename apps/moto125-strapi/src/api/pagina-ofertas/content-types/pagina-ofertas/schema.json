@@ -1,0 +1,27 @@
+{
+  "kind": "singleType",
+  "collectionName": "paginas_ofertas",
+  "info": {
+    "singularName": "pagina-ofertas",
+    "pluralName": "paginas-ofertas",
+    "displayName": "Página de ofertas"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "content": {
+      "type": "richtext"
+    },
+    "ofertas": {
+      "type": "dynamiczone",
+      "components": [
+        "list.ofertas"
+      ]
+    }
+  }
+}

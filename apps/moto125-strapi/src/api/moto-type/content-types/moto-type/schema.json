@@ -4,7 +4,7 @@
   "info": {
     "singularName": "moto-type",
     "pluralName": "moto-types",
-    "displayName": "MotoType",
+    "displayName": "Tipos de moto",
     "description": ""
   },
   "options": {
@@ -37,6 +37,9 @@
     },
     "fullName": {
       "type": "string"
+    },
+    "description": {
+      "type": "richtext"
     }
   }
 }

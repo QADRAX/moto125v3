@@ -1,14 +1,11 @@
-// Relaciones (Strapi v5 con documentId)
 export type ConnectList =
   | { connect: string[]; disconnect?: string[] }
   | { disconnect: string[]; connect?: string[] }
   | { set: string[] };
 
-// Media: acepta id numérico o documentId string (single o múltiple)
 export type MediaId = number | string;
 export type MediaIdList = Array<number | string>;
 
-/** ==== Article: Dynamic Zone (inputs) ==== */
 export type ArticleDZTextInput = {
   __component: 'article-content.text-content';
   Text: string;
@@ -20,7 +17,7 @@ export type ArticleDZImageGridInput = {
 
 export type ArticleDZFortDebInput = {
   __component: 'article-content.fortalezas-debilidades';
-  Fortalezas?: { value: string }[]; // al crear no se envía id
+  Fortalezas?: { value: string }[];
   Debilidades?: { value: string }[];
 };
 
@@ -35,7 +32,6 @@ export type ArticleContentBlockInput =
   | ArticleDZFortDebInput
   | ArticleDZPrestacionesInput;
 
-/** Tags (componente repeatable). En tu proyecto parece 'Value' capitalizado. */
 export type TagItemInput =
   | { Value: string }
   | { value: string }
@@ -43,42 +39,36 @@ export type TagItemInput =
   | { label: string }
   | { text: string };
 
-/** ==== Article inputs ==== */
 export interface ArticleCreateInput {
   slug: string;
   title?: string;
-  publicationDate?: string;      // YYYY-MM-DD
+  publicationDate?: string;
   visible?: boolean;
   authorPhotos?: string | null;
   authorAction?: string | null;
   authorText?: string | null;
   youtubeLink?: string | null;
-
-  // media / componentes / relaciones
-  coverImage?: MediaId | null;   // id o documentId de media
+  coverImage?: MediaId | null;
   content?: ArticleContentBlockInput[];
   tags?: TagItemInput[];
-
-  // relaciones
-  relatedMotos?: ConnectList;        // many-to-many (documentId[])
-  relatedCompanies?: ConnectList;    // many-to-many (documentId[])
-  articleType?: string | null;       // many-to-one (documentId o null)
+  relatedMotos?: ConnectList;
+  relatedCompanies?: ConnectList;
+  articleType?: string | null;
 }
 
 export type ArticleUpdateInput = Partial<ArticleCreateInput>;
 
-/** ==== Company inputs ==== */
 export interface CompanyCreateInput {
   name: string;
   phone?: string | null;
   url?: string | null;
   active?: boolean;
-  description?: any | null;     // blocks
-  image?: MediaId | null;       // media single
+  description?: string | null;
+  image?: MediaId | null;
 }
 export type CompanyUpdateInput = Partial<CompanyCreateInput>;
+export type MotoNormativaInput = "Euro 1" | "Euro 2" | "Euro 3" | "Euro 4" | "Euro 5" | "Euro 5plus";
 
-/** ==== Moto inputs ==== */
 export interface MotoCreateInput {
   modelName: string;
   moto125Id: string;
@@ -87,15 +77,13 @@ export interface MotoCreateInput {
   description?: string | null;
   fullName?: string | null;
   fichaTecnica?: Record<string, unknown> | null;
-
-  images?: MediaIdList;      // media multiple
-  company?: string | null;   // documentId (many-to-one)
-  motoType?: string | null;  // documentId (many-to-one)
-  // articles: se gestionan desde el artículo normalmente
+  normativa?: MotoNormativaInput | null;
+  images?: MediaIdList;
+  company?: string | null;
+  motoType?: string | null;
 }
 export type MotoUpdateInput = Partial<MotoCreateInput>;
 
-/** ==== Taxonomías inputs ==== */
 export interface ArticleTypeCreateInput { name: string }
 export type ArticleTypeUpdateInput = Partial<ArticleTypeCreateInput>;
 
@@ -103,14 +91,58 @@ export interface MotoTypeCreateInput {
   name: string;
   fullName?: string | null;
   image?: MediaId | null;
-  motoClass?: string | null; // documentId
+  motoClass?: string | null;
 }
 export type MotoTypeUpdateInput = Partial<MotoTypeCreateInput>;
 
 export interface MotoClassCreateInput { name: string }
 export type MotoClassUpdateInput = Partial<MotoClassCreateInput>;
 
-/** ==== Single type: Config ==== */
 export interface ConfigUpdateInput {
-  DefaultAvatar?: MediaId | null;
+  siteName?: string | null;
+  logo?: MediaId | null;
+  favicon?: MediaId | null;
+  metaTitleDefault?: string | null;
+  metaDescriptionDefault?: string | null;
+  metaImageDefault?: MediaId | null;
+  twitterHandle?: string | null;
+  openGraphTitle?: string | null;
+  openGraphDescription?: string | null;
+  openGraphImage?: MediaId | null;
+  canonicalUrl?: string | null;
+  googleAnalyticsId?: string | null;
+  heroBannerImage?: MediaId | null;
+  heroBannerTitle?: string | null;
+  heroBannerSubtitle?: string | null;
+}
+
+export interface HomePageUpdateInput {
+  featuredArticles?: {
+    featuredArticle1?: string | null;
+    featuredArticle2?: string | null;
+    featuredArticle3?: string | null;
+  } | null;
+  top10speed?: {
+    top1?: string | null; top1speed?: string | null;
+    top2?: string | null; top2speed?: string | null;
+    top3?: string | null; top3speed?: string | null;
+    top4?: string | null; top4speed?: string | null;
+    top5?: string | null; top5speed?: string | null;
+    top6?: string | null; top6speed?: string | null;
+    top7?: string | null; top7speed?: string | null;
+    top8?: string | null; top8speed?: string | null;
+    top9?: string | null; top9speed?: string | null;
+    top10?: string | null; top10speed?: string | null;
+  } | null;
+}
+
+export type OfertaDZInput = { __component: 'list.ofertas'; title?: string; content?: string; };
+export interface PaginaOfertasUpdateInput {
+  title?: string | null;
+  content?: string | null;
+  ofertas?: OfertaDZInput[];
+}
+
+export interface AboutUsPageUpdateInput {
+  content?: string | null;
 }

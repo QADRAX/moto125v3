@@ -373,10 +373,38 @@ export interface AdminUser extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiAboutUsPageAboutUsPage extends Struct.SingleTypeSchema {
+  collectionName: 'about_us_pages';
+  info: {
+    displayName: 'P\u00E1gina quienes somos';
+    pluralName: 'about-us-pages';
+    singularName: 'about-us-page';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    content: Schema.Attribute.RichText;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::about-us-page.about-us-page'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiArticleTypeArticleType extends Struct.CollectionTypeSchema {
   collectionName: 'article_types';
   info: {
-    displayName: 'ArticleType';
+    displayName: 'Tipos de art\u00EDculo';
     pluralName: 'article-types';
     singularName: 'article-type';
   };
@@ -406,7 +434,7 @@ export interface ApiArticleArticle extends Struct.CollectionTypeSchema {
   collectionName: 'articles';
   info: {
     description: '';
-    displayName: 'Article';
+    displayName: 'Art\u00EDculos';
     pluralName: 'articles';
     singularName: 'article';
   };
@@ -429,8 +457,7 @@ export interface ApiArticleArticle extends Struct.CollectionTypeSchema {
         'article-content.fortalezas-debilidades',
       ]
     >;
-    coverImage: Schema.Attribute.Media<'images' | 'files'> &
-      Schema.Attribute.Required;
+    coverImage: Schema.Attribute.Media<'images'> & Schema.Attribute.Required;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -464,7 +491,7 @@ export interface ApiCompanyCompany extends Struct.CollectionTypeSchema {
   collectionName: 'companies';
   info: {
     description: '';
-    displayName: 'Company';
+    displayName: 'Marcas';
     pluralName: 'companies';
     singularName: 'company';
   };
@@ -479,7 +506,7 @@ export interface ApiCompanyCompany extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    description: Schema.Attribute.Blocks;
+    description: Schema.Attribute.RichText;
     image: Schema.Attribute.Media<'images'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
@@ -501,9 +528,52 @@ export interface ApiCompanyCompany extends Struct.CollectionTypeSchema {
 export interface ApiConfigConfig extends Struct.SingleTypeSchema {
   collectionName: 'configs';
   info: {
-    displayName: 'Config';
+    displayName: 'Configuraci\u00F3n del sitio';
     pluralName: 'configs';
     singularName: 'config';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    canonicalUrl: Schema.Attribute.String;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    favicon: Schema.Attribute.Media<'images' | 'files'>;
+    googleAnalyticsId: Schema.Attribute.String;
+    heroBannerImage: Schema.Attribute.Media<'images' | 'files'>;
+    heroBannerSubtitle: Schema.Attribute.Text;
+    heroBannerTitle: Schema.Attribute.String;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::config.config'
+    > &
+      Schema.Attribute.Private;
+    logo: Schema.Attribute.Media<'images' | 'files'>;
+    metaDescriptionDefault: Schema.Attribute.Text;
+    metaImageDefault: Schema.Attribute.Media<'images' | 'files'>;
+    metaTitleDefault: Schema.Attribute.String;
+    openGraphDescription: Schema.Attribute.Text;
+    openGraphImage: Schema.Attribute.Media<'images' | 'files'>;
+    openGraphTitle: Schema.Attribute.String;
+    publishedAt: Schema.Attribute.DateTime;
+    siteName: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Moto125.cc'>;
+    twitterHandle: Schema.Attribute.String;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiHomePageHomePage extends Struct.SingleTypeSchema {
+  collectionName: 'home_pages';
+  info: {
+    displayName: 'P\u00E1gina principal';
+    pluralName: 'home-pages';
+    singularName: 'home-page';
   };
   options: {
     draftAndPublish: true;
@@ -512,14 +582,18 @@ export interface ApiConfigConfig extends Struct.SingleTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    DefaultAvatar: Schema.Attribute.Media<'images'>;
+    featuredArticles: Schema.Attribute.Component<
+      'list.articulos-destacados',
+      false
+    >;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
-      'api::config.config'
+      'api::home-page.home-page'
     > &
       Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
+    top10speed: Schema.Attribute.Component<'list.top10-motos-speed', false>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -530,7 +604,7 @@ export interface ApiMotoClassMotoClass extends Struct.CollectionTypeSchema {
   collectionName: 'moto_classes';
   info: {
     description: '';
-    displayName: 'MotoClass';
+    displayName: 'Clases de moto';
     pluralName: 'moto-classes';
     singularName: 'moto-class';
   };
@@ -564,7 +638,7 @@ export interface ApiMotoTypeMotoType extends Struct.CollectionTypeSchema {
   collectionName: 'moto_types';
   info: {
     description: '';
-    displayName: 'MotoType';
+    displayName: 'Tipos de moto';
     pluralName: 'moto-types';
     singularName: 'moto-type';
   };
@@ -575,6 +649,7 @@ export interface ApiMotoTypeMotoType extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    description: Schema.Attribute.RichText;
     fullName: Schema.Attribute.String;
     image: Schema.Attribute.Media<'images'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
@@ -600,7 +675,7 @@ export interface ApiMotoMoto extends Struct.CollectionTypeSchema {
   collectionName: 'motos';
   info: {
     description: '';
-    displayName: 'Moto';
+    displayName: 'Motos';
     pluralName: 'motos';
     singularName: 'moto';
   };
@@ -632,8 +707,41 @@ export interface ApiMotoMoto extends Struct.CollectionTypeSchema {
       'manyToOne',
       'api::moto-type.moto-type'
     >;
+    normativa: Schema.Attribute.Enumeration<
+      ['Euro 1', 'Euro 2', 'Euro 3', 'Euro 4', 'Euro 5', 'Euro 5plus']
+    >;
     priece: Schema.Attribute.Decimal;
     publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiPaginaOfertasPaginaOfertas extends Struct.SingleTypeSchema {
+  collectionName: 'paginas_ofertas';
+  info: {
+    displayName: 'P\u00E1gina de ofertas';
+    pluralName: 'paginas-ofertas';
+    singularName: 'pagina-ofertas';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    content: Schema.Attribute.RichText;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::pagina-ofertas.pagina-ofertas'
+    > &
+      Schema.Attribute.Private;
+    ofertas: Schema.Attribute.DynamicZone<['list.ofertas']>;
+    publishedAt: Schema.Attribute.DateTime;
+    title: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1149,13 +1257,16 @@ declare module '@strapi/strapi' {
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
+      'api::about-us-page.about-us-page': ApiAboutUsPageAboutUsPage;
       'api::article-type.article-type': ApiArticleTypeArticleType;
       'api::article.article': ApiArticleArticle;
       'api::company.company': ApiCompanyCompany;
       'api::config.config': ApiConfigConfig;
+      'api::home-page.home-page': ApiHomePageHomePage;
       'api::moto-class.moto-class': ApiMotoClassMotoClass;
       'api::moto-type.moto-type': ApiMotoTypeMotoType;
       'api::moto.moto': ApiMotoMoto;
+      'api::pagina-ofertas.pagina-ofertas': ApiPaginaOfertasPaginaOfertas;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::i18n.locale': PluginI18NLocale;

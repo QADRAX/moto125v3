@@ -1,0 +1,25 @@
+{
+  "kind": "singleType",
+  "collectionName": "home_pages",
+  "info": {
+    "singularName": "home-page",
+    "pluralName": "home-pages",
+    "displayName": "Página principal"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "featuredArticles": {
+      "type": "component",
+      "component": "list.articulos-destacados",
+      "repeatable": false
+    },
+    "top10speed": {
+      "type": "component",
+      "component": "list.top10-motos-speed",
+      "repeatable": false
+    }
+  }
+}
