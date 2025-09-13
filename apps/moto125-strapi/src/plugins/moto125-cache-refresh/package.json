@@ -1,0 +1,16 @@
+{
+  "name": "moto125-cache-refresh",
+  "version": "0.1.0",
+  "private": true,
+  "strapi": {
+    "type": "plugin",
+    "name": "moto125-cache-refresh",
+    "displayName": "Moto125 Cache Refresh"
+  },
+  "main": "strapi-server.js",
+  "module": "strapi-server.js",
+  "engines": {
+    "node": ">=18.0.0",
+    "strapi": ">=5.0.0-0 <6"
+  }
+}

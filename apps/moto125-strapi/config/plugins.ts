@@ -26,4 +26,15 @@ module.exports = ({ env }) => ({
       maxLimit: -1,
     },
   },
+  "moto125-cache-refresh": {
+    enabled: true,
+    resolve: './src/plugins/moto125-cache-refresh',
+    config: {
+      refreshUrl: env("M125_REFRESH_URL"),
+      refreshKey: env("M125_REFRESH_KEY"),
+      method: env("M125_REFRESH_METHOD", "POST"),
+      headerName: env("M125_REFRESH_HEADER", "x-refresh-key"),
+      timeoutMs: env.int("M125_REFRESH_TIMEOUT_MS", 10000),
+    },
+  },
 });
