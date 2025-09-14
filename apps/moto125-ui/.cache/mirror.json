@@ -1,0 +1,96 @@
+{
+  "version": "api-client@0.0.2",
+  "generatedAt": "2025-09-13T18:03:43.990Z",
+  "data": {
+    "articles": [],
+    "motos": [],
+    "companies": [],
+    "taxonomies": {
+      "articleTypes": [],
+      "motoTypes": [],
+      "motoClasses": []
+    },
+    "pages": {}
+  },
+  "timings": {
+    "hydrate": {
+      "startedAt": "2025-09-13T18:03:43.985Z",
+      "endedAt": "2025-09-13T18:03:43.990Z",
+      "totalMs": 5,
+      "bySource": {
+        "articles": 4,
+        "motos": 4,
+        "companies": 4,
+        "taxonomies.articleTypes": 4,
+        "taxonomies.motoTypes": 4,
+        "taxonomies.motoClasses": 4,
+        "pages.home": 4,
+        "pages.ofertas": 4,
+        "config": 4,
+        "pages.aboutUs": 4
+      }
+    }
+  },
+  "errors": [
+    {
+      "time": "2025-09-13T18:03:43.989Z",
+      "source": "articles",
+      "code": "UNKNOWN",
+      "message": "fetch failed"
+    },
+    {
+      "time": "2025-09-13T18:03:43.989Z",
+      "source": "motos",
+      "code": "UNKNOWN",
+      "message": "fetch failed"
+    },
+    {
+      "time": "2025-09-13T18:03:43.989Z",
+      "source": "companies",
+      "code": "UNKNOWN",
+      "message": "fetch failed"
+    },
+    {
+      "time": "2025-09-13T18:03:43.989Z",
+      "source": "taxonomies.articleTypes",
+      "code": "UNKNOWN",
+      "message": "fetch failed"
+    },
+    {
+      "time": "2025-09-13T18:03:43.989Z",
+      "source": "taxonomies.motoTypes",
+      "code": "UNKNOWN",
+      "message": "fetch failed"
+    },
+    {
+      "time": "2025-09-13T18:03:43.989Z",
+      "source": "taxonomies.motoClasses",
+      "code": "UNKNOWN",
+      "message": "fetch failed"
+    },
+    {
+      "time": "2025-09-13T18:03:43.989Z",
+      "source": "pages.home",
+      "code": "UNKNOWN",
+      "message": "fetch failed"
+    },
+    {
+      "time": "2025-09-13T18:03:43.990Z",
+      "source": "pages.ofertas",
+      "code": "UNKNOWN",
+      "message": "fetch failed"
+    },
+    {
+      "time": "2025-09-13T18:03:43.990Z",
+      "source": "config",
+      "code": "UNKNOWN",
+      "message": "fetch failed"
+    },
+    {
+      "time": "2025-09-13T18:03:43.990Z",
+      "source": "pages.aboutUs",
+      "code": "UNKNOWN",
+      "message": "fetch failed"
+    }
+  ]
+}
