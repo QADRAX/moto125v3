@@ -1,4 +1,5 @@
 import {
+  MirrorError,
   MirrorState,
   MirrorWorkerIn,
   MirrorWorkerOut,
@@ -64,14 +65,20 @@ export class MirrorWorkerClient {
       payload: { stateBin: ArrayBuffer; size: number };
     }>({ type: "hydrate", sdkInit }, "hydrate:done");
     const buf = Buffer.from(new Uint8Array(res.payload.stateBin));
-    const state = v8.deserialize(buf) as MirrorState;
+    const state = v8.deserialize(buf) as MirrorState & { errors?: MirrorError[] };;
+    const errs = Array.isArray(state.errors)
+      ? state.errors.filter(Boolean)
+      : [];
+      
+    if (errs.length > 0) {
+      const agg = new AggregateError(errs, "Hydration returned errors");
+      (agg as any).__mirrorErrors = errs;
+      throw agg;
+    }
     return state;
   }
 
-  async saveSnapshot(
-    path: string,
-    state: MirrorState
-  ): Promise<void> {
+  async saveSnapshot(path: string, state: MirrorState): Promise<void> {
     const buf: Buffer = v8.serialize(state);
     const ab: ArrayBuffer = buf.buffer.slice(
       buf.byteOffset,

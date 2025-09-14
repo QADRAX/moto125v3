@@ -1,4 +1,6 @@
-export async function resolveWorkerEntry(): Promise<URL> {
-  const spec = await import.meta.resolve("@moto125/data-mirror-worker/worker");
-  return new URL(spec, import.meta.url);
+import { createRequire } from "node:module";
+
+export async function resolveWorkerEntry(): Promise<string> {
+  const require = createRequire(import.meta.url);
+  return require.resolve("@moto125/data-mirror-worker/worker");
 }

@@ -100,13 +100,20 @@ export function createDataMirror(): DataMirror {
         await worker.saveSnapshot(snapshotPath, next);
       }
     } catch (e: any) {
+      // hydrate lanzó AggregateError con los errores de la API
+      const apiErrors: MirrorError[] | undefined = e?.__mirrorErrors;
+      if (Array.isArray(apiErrors) && apiErrors.length > 0) {
+        for (const err of apiErrors) emitError(err);
+      }
+
+      // Errores no tipados (I/O, worker, etc.). Emitimos uno genérico.
       emitError({
         time: new Date().toISOString(),
-        source: "config",
+        source: "unknown",
         code: "UNKNOWN",
         status: undefined,
         message: e?.message ?? String(e),
-        detail: undefined,
+        detail: e?.stack ?? undefined,
       });
     } finally {
       refreshing = false;

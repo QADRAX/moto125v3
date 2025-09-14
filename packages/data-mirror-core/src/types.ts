@@ -33,6 +33,7 @@ export type MirrorWorkerOut =
 export interface MirrorError {
   time: string;
   source:
+    | "unknown"
     | "articles"
     | "motos"
     | "companies"

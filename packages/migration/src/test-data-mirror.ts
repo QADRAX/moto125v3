@@ -10,7 +10,7 @@
 import "dotenv/config";
 import { resolve } from "node:path";
 import { createMoto125Api } from "@moto125/api-client";
-import { createAndStartDataMirror } from "@moto125/data-mirror";
+import { createDataMirror } from "@moto125/data-mirror";
 import { STRAPI_URL } from "./constants";
 
 /** Short ISO format: YYYY-MM-DD HH:mm:ss */
@@ -24,7 +24,7 @@ function isoShort(iso?: string | null) {
   ).padStart(2, "0")}:${String(d.getSeconds()).padStart(2, "0")}`;
 }
 
-type Mirror = Awaited<ReturnType<typeof createAndStartDataMirror>>;
+type Mirror = ReturnType<typeof createDataMirror>;
 let mirror: Mirror;
 
 function mirrorState() {
@@ -60,34 +60,6 @@ function timingsOf() {
     startedAt: t.hydrate.startedAt,
     endedAt: t.hydrate.endedAt,
   };
-}
-
-/** Map row metric -> timings.bySource key */
-function timingKeyForMetric(metric: string): string | null {
-  switch (metric) {
-    case "articles":
-      return "articles";
-    case "motos":
-      return "motos";
-    case "companies":
-      return "companies";
-    case "articleTypes":
-      return "taxonomies.articleTypes";
-    case "motoTypes":
-      return "taxonomies.motoTypes";
-    case "motoClasses":
-      return "taxonomies.motoClasses";
-    case "hasHome":
-      return "pages.home";
-    case "hasOfertas":
-      return "pages.ofertas";
-    case "hasAboutUs":
-      return "pages.aboutUs";
-    case "hasConfig":
-      return "config";
-    default:
-      return null;
-  }
 }
 
 /** One divider line with title */
@@ -171,24 +143,10 @@ async function main() {
   console.log("   • snapshot:", snapshotPath);
   console.log("   • baseUrl :", STRAPI_API_URL);
 
-  mirror = await createAndStartDataMirror({
-    sdkInit: {
-      baseUrl: STRAPI_URL!,
-      token: STRAPI_API_TOKEN!,
-    },
-    snapshotPath,
-    autosave: true,
-    refreshIntervalMs: intervalMs,
-    forceHydrateOnInit: true,
-  });
+  // Create mirror and attach listeners BEFORE init to catch errors emitted during init/refresh.
+  mirror = createDataMirror();
 
-  const s0 = mirror.state();
-  if (!s0) {
-    console.error("❌ Mirror state is null after init");
-    process.exit(1);
-  }
-
-  let prevCounts = countsOf(s0);
+  let prevCounts: ReturnType<typeof countsOf> | undefined;
   let seenInitialPush = false;
   let tick = 0;
 
@@ -211,13 +169,9 @@ async function main() {
 
     hr(`POLL #${tick} @ ${isoShort(nowCounts.generatedAt)}`);
     if (t) {
-      console.log(
-        "   window:",
-        `${isoShort(t.startedAt)} → ${isoShort(t.endedAt)}`
-      );
+      console.log("   window:", `${isoShort(t.startedAt)} → ${isoShort(t.endedAt)}`);
     }
 
-    // unified table
     const table = buildUnifiedTable(nowCounts, prevCounts, t);
     console.table(table);
 
@@ -240,6 +194,35 @@ async function main() {
       )
     );
   });
+
+  try {
+    await mirror.init({
+      sdkInit: {
+        baseUrl: STRAPI_URL!, // usa tu constante resuelta (equivalente a STRAPI_API_URL)
+        token: STRAPI_API_TOKEN!,
+      },
+      snapshotPath,
+      autosave: true,
+      refreshIntervalMs: intervalMs,
+      forceHydrateOnInit: true, // si falla, lo atrapamos abajo y seguimos
+    });
+  } catch (e: any) {
+    // Aceptamos fallos: no salimos del proceso.
+    hr("INIT ERROR (tolerated)");
+    // Si el createDataMirror.refresh lanzó AggregateError con __mirrorErrors, ya se emitieron por onError.
+    console.error("⚠️  init failed but continuing with polling…");
+    // Si había snapshot, el estado ya se cargó antes del refresh; si no, state() puede ser null hasta el próximo poll OK.
+    // Arrancamos el polling manualmente (init no llegó a hacerlo).
+    mirror.start();
+  }
+
+  const s0 = mirror.state();
+  if (!s0) {
+    hr("BOOT");
+    console.log("ℹ️  No initial state available (no snapshot or hydrate failed). Waiting for next successful poll…");
+  } else {
+    prevCounts = countsOf(s0);
+  }
 }
 
 main().catch((e) => {
