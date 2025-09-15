@@ -52,7 +52,7 @@ export default function MobileHeaderClient({
 
         <button
           type="button"
-          className="inline-flex items-center justify-center w-10 h-10 rounded-md border border-[#e6e6e6] bg-white hover:bg-black/5 transition"
+          className="inline-flex items-center justify-center w-10 h-10 border border-[#e6e6e6] bg-white hover:bg-black/5 transition"
           aria-label="Abrir menú"
           aria-controls="mobile-drawer"
           aria-expanded={open}
@@ -93,7 +93,7 @@ export default function MobileHeaderClient({
           <span className="font-heading text-lg font-semibold">{siteName}</span>
           <button
             type="button"
-            className="w-10 h-10 rounded-md border border-[#e6e6e6] bg-white hover:bg-black/5 transition"
+            className="w-10 h-10 border border-[#e6e6e6] bg-white hover:bg-black/5 transition"
             aria-label="Cerrar menú"
             onClick={() => setOpen(false)}
           >
@@ -129,7 +129,7 @@ export default function MobileHeaderClient({
                       <li key={c.key}>
                         <Link
                           href={c.href}
-                          className="block px-3 py-2 rounded-lg hover:bg-black/5 transition"
+                          className="block px-3 py-2 hover:bg-black/5 transition"
                           onClick={() => setOpen(false)}
                         >
                           {c.label}
@@ -142,7 +142,7 @@ export default function MobileHeaderClient({
                 <li key={item.key}>
                   <Link
                     href={item.href!}
-                    className="block px-3 py-2 rounded-lg hover:bg-black/5 transition"
+                    className="block px-3 py-2 hover:bg-black/5 transition"
                     onClick={() => setOpen(false)}
                   >
                     {item.label}

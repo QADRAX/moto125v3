@@ -29,7 +29,7 @@ export default function HeaderBrand({
   siteName,
   logoUrl,
   alt,
-  size = "xl",
+  size = "lg",
   height,
 }: Props) {
   const heightClass = height ? "" : IMG_HEIGHTS[size];

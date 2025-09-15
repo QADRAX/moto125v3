@@ -12,7 +12,7 @@ export default function NavDropdown({ items, label }: Props) {
       <div className="group/dropdown relative inline-block">
         <button
           type="button"
-          className="px-3 py-1.5 rounded-full hover:bg-black/5 transition flex items-center gap-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-black/20"
+          className="px-3 py-1.5 hover:bg-black/5 transition flex items-center gap-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-black/20"
         >
           {label.toUpperCase()}
           <svg
@@ -37,8 +37,9 @@ export default function NavDropdown({ items, label }: Props) {
             group-focus-within/dropdown:pointer-events-auto
             group-focus-within/dropdown:opacity-100
             group-focus-within/dropdown:translate-y-0
+            z-10
             transition
-            absolute left-0 mt-2 min-w-56 rounded-xl border border-[#e6e6e6] bg-white shadow-md p-2"
+            absolute left-0 mt-2 min-w-56 border border-[#e6e6e6] bg-white shadow-md p-2"
           tabIndex={-1}
         >
           <ul className="max-h-[60vh] overflow-auto">
@@ -47,7 +48,7 @@ export default function NavDropdown({ items, label }: Props) {
                 <li key={link.key}>
                   <Link
                     href={link.href}
-                    className="block px-3 py-2 rounded-lg hover:bg-black/5 transition"
+                    className="block px-3 py-2 hover:bg-black/5 transition"
                   >
                     {link.label}
                   </Link>

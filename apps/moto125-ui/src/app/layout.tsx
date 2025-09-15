@@ -1,20 +1,20 @@
 import type { ReactNode } from "react";
 import "./globals.css";
-import { Barlow_Condensed, Manrope } from "next/font/google";
+import { Roboto_Condensed, Lato } from "next/font/google";
 import CompactHeader from "@/components/header/CompactHeader";
 import HeaderWatcher from "@/components/header/HeaderWatcher";
 import Header from "@/components/header/Header";
 
-const heading = Barlow_Condensed({
+const heading = Roboto_Condensed({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
   variable: "--font-heading",
   display: "swap",
 });
 
-const body = Manrope({
+const body = Lato({
   subsets: ["latin"],
-  weight: ["400", "500"],
+  weight: ["400"],
   variable: "--font-body",
   display: "swap",
 });
@@ -38,7 +38,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 
         <HeaderWatcher />
 
-        <main className="min-h-[80vh]">
+        <main>
           {children}
         </main>
 

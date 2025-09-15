@@ -84,14 +84,17 @@
 
 @layer components {
   .compact-header {
-    position: sticky;
+    position: fixed;       /* <- antes sticky */
     top: 0;
+    left: 0;
+    right: 0;
     z-index: 60;
     transform: translateY(-100%);
     opacity: 0;
     pointer-events: none;
-    transition: transform 400ms ease-out, opacity 200ms ease-out;
+    transition: transform 300ms ease-out, opacity 200ms ease-out;
     will-change: transform, opacity;
+    padding-top: env(safe-area-inset-top);
   }
 
   body.show-compact-header .compact-header {
@@ -101,8 +104,6 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .compact-header {
-      transition: none;
-    }
+    .compact-header { transition: none; }
   }
 }

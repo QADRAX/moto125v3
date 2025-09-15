@@ -36,7 +36,7 @@ export default function HeaderHero({
       src={imgUrl}
       alt={tooltip}
       title={tooltip}
-      className={`${heightClasses} w-auto rounded-lg border border-[#e6e6e6] object-contain bg-white block`}
+      className={`${heightClasses} w-auto border border-[#e6e6e6] object-contain bg-white block`}
       loading="lazy"
     />
   );
@@ -51,7 +51,7 @@ export default function HeaderHero({
 
   const linkProps = {
     className:
-      "focus:outline-none focus-visible:ring-2 focus-visible:ring-black/20 rounded-lg inline-block",
+      "focus:outline-none focus-visible:ring-2 focus-visible:ring-black/20 inline-block",
     title: tooltip,
     "aria-label": tooltip,
   } as const;

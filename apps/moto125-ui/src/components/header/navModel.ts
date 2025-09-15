@@ -25,7 +25,8 @@ export function buildNav(types: ArticleType[]): NavItem[] {
   ];
 
   return [
-    //{ key: "motos", label: "Motos", href: "/motos" },
+    { key: "motos", label: "Motos", href: "/motos" },
+    { key: "marcas", label: "Marcas", href: "/marcas" },
     { key: "articulos", label: "Artículos", children: articles },
     { key: "ofertas", label: "Ofertas", href: "/ofertas" },
     { key: "about", label: "Acerca de nosotros", href: "/about-us" },

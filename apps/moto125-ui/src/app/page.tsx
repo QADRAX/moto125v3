@@ -1,34 +1,28 @@
 import { getMirrorState } from "@/server/dataMirror";
 import { pickLatestArticles } from "@/server/selectors";
 import ArticleCard from "@/components/ArticleCard";
+import HomeFeatured from "@/components/home/HomeFeatured";
 
 export default async function Home() {
   const state = await getMirrorState();
   const latest = pickLatestArticles(state, 10);
 
   return (
-    <main style={{ padding: 24 }}>
-      <h1 style={{ marginBottom: 16 }}>Últimos artículos</h1>
+    <>
+      <HomeFeatured />
 
-      {!state && (
-        <p>Inicializando cache…</p>
-      )}
+      <section className="mx-auto max-w-page px-4 sm:px-6 py-6 sm:py-8">
+        <h2 className="text-2xl font-heading mb-4">Últimos artículos</h2>
 
-      {state && latest.length === 0 && (
-        <p>No hay artículos disponibles.</p>
-      )}
+        {!state && <p>Inicializando cache…</p>}
+        {state && latest.length === 0 && <p>No hay artículos disponibles.</p>}
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))",
-          gap: 16
-        }}
-      >
-        {latest.map((a) => (
-          <ArticleCard key={a.documentId ?? a.id} article={a} />
-        ))}
-      </div>
-    </main>
+        <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {latest.map((a: any) => (
+            <ArticleCard key={a.documentId ?? a.id} article={a} />
+          ))}
+        </div>
+      </section>
+    </>
   );
 }
