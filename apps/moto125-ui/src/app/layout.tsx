@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import "./globals.css";
 
 /**
  * Root layout of the app.
@@ -6,47 +7,27 @@ import type { ReactNode } from "react";
  */
 export const metadata = {
   title: "moto125-ui",
-  description: "Next.js app consuming DataMirror cache"
+  description: "Next.js app consuming DataMirror cache",
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="es">
-      <head>
-        {/* You can add favicons, fonts, analytics scripts here */}
-      </head>
-      <body
-        style={{
-          margin: 0,
-          fontFamily: "system-ui, sans-serif",
-          background: "#fafafa",
-          color: "#111"
-        }}
-      >
-        <header
-          style={{
-            padding: "1rem 2rem",
-            borderBottom: "1px solid #ddd",
-            background: "white",
-            position: "sticky",
-            top: 0,
-            zIndex: 100
-          }}
-        >
-          <h1 style={{ margin: 0, fontSize: "1.5rem" }}>moto125-ui</h1>
+      <body className="bg-[#fafafa] text-[#111] font-body antialiased">
+        <header className="sticky top-0 z-50 bg-white border-b border-[#ddd]">
+          <div className="mx-auto max-w-page px-4 sm:px-6 h-14 flex items-center">
+            <h1 className="m-0 text-xl font-heading tracking-wide">moto125-ui</h1>
+          </div>
         </header>
 
-        <main style={{ minHeight: "80vh" }}>{children}</main>
+        <main className="min-h-[80vh]">
+          {children}
+        </main>
 
-        <footer
-          style={{
-            padding: "1rem 2rem",
-            borderTop: "1px solid #ddd",
-            background: "white",
-            textAlign: "center"
-          }}
-        >
-          <small>© {new Date().getFullYear()} moto125</small>
+        <footer className="bg-white border-t border-[#ddd]">
+          <div className="mx-auto max-w-page px-4 sm:px-6 py-4 text-center text-sm">
+            © {new Date().getFullYear()} moto125.cc
+          </div>
         </footer>
       </body>
     </html>
