@@ -1,18 +1,108 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
-/* ---- Design tokens (Tailwind v4) ---- */
+/* --- Tokens de color, tamaños, etc. (lo que ya tenías) --- */
 @theme {
-  /* Colors */
-  --color-primary: #F39C12;
-  --color-text: #747474;
-  --color-heading: #000000;
+  --color-bg: #fafafa;
+  --color-surface: #ffffff;
   --color-border: #e6e6e6;
+  --color-text: #444444;
+  --color-heading: #111111;
+  --color-primary: #F39C12;
+  --color-primary-dark: #d35400;
 
-  /* Font families (usando las variables de next/font) */
-  --font-heading: var(--font-heading), system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-  --font-body: var(--font-body), system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --max-w-page: 1200px;
+  --max-w-content: 72ch;
+
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.05);
+  --shadow-md: 0 4px 12px rgba(0,0,0,.1);
+
+  --text-base: clamp(0.95rem, 0.35vw + 0.85rem, 1.05rem);
+  --text-lg:   clamp(1.05rem, 0.45vw + 0.95rem, 1.2rem);
+  --text-xl:   clamp(1.25rem, 0.9vw + 1.05rem, 1.5rem);
+  --text-2xl:  clamp(1.5rem, 1.4vw + 1.1rem, 2rem);
+  --text-3xl:  clamp(1.9rem, 2vw + 1.2rem, 2.6rem);
+  --text-4xl:  clamp(2.3rem, 3vw + 1.3rem, 3.2rem);
+
+  --tracking-wide-1: 0.01em;
 }
 
-/* (opcional) ajustes mínimos */
-.prose { max-width: 72ch; }
+@layer base {
+  html, body {
+    background: var(--color-bg);
+    color: var(--color-text);
+  }
+
+  body {
+    font-family: var(--font-body), system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+    font-size: var(--text-base);
+    line-height: 1.6;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading), system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+    color: var(--color-heading);
+    letter-spacing: var(--tracking-wide-1);
+    line-height: 1.25;
+    margin-top: 1.2em;
+    margin-bottom: 0.6em;
+  }
+}
+
+@layer base {
+  .prose {
+    max-width: var(--max-w-content);
+    --tw-prose-body: var(--color-text);
+    --tw-prose-headings: var(--color-heading);
+    --tw-prose-links: var(--color-primary);
+    --tw-prose-bold: var(--color-heading);
+    --tw-prose-hr: var(--color-border);
+    --tw-prose-quotes: var(--color-heading);
+    --tw-prose-quote-borders: var(--color-primary);
+    --tw-prose-captions: #666666;
+    --tw-prose-code: var(--color-heading);
+    --tw-prose-th-borders: var(--color-border);
+    --tw-prose-td-borders: var(--color-border);
+  }
+  .prose :where(h1,h2,h3,h4,h5,h6){
+    font-family: var(--font-heading), system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+  }
+  .prose :where(p,li){
+    font-family: var(--font-body), system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+    font-size: var(--text-base);
+  }
+}
+
+@layer utilities {
+  .font-heading {
+    font-family: var(--font-heading), system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+  }
+  .font-body {
+    font-family: var(--font-body), system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+  }
+}
+
+@layer components {
+  .compact-header {
+    position: sticky;
+    top: 0;
+    z-index: 60;
+    transform: translateY(-100%);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 400ms ease-out, opacity 200ms ease-out;
+    will-change: transform, opacity;
+  }
+
+  body.show-compact-header .compact-header {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .compact-header {
+      transition: none;
+    }
+  }
+}

@@ -1,88 +1,135 @@
 {
-    "version": "0.2.0",
-    "configurations": [
-      {
-        "type": "node",
-        "request": "launch",
-        "name": "Run migration",
-        "runtimeArgs": [
-          "-r",
-          "ts-node/register"
-        ],
-        "args": [
-          "${workspaceFolder}/packages/migration/src/index.ts"
-        ],
-        "cwd": "${workspaceFolder}/packages/migration",
-        "sourceMaps": true,
-        "outFiles": [
-          "${workspaceFolder}/packages/migration/**/*.js"
-        ],
-        "env": {
-          "TS_NODE_PROJECT": "${workspaceFolder}/packages/migration/tsconfig.json"
-        }
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Next dev:ui (server)",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "dev:ui"
+      ],
+      "envFile": "${workspaceFolder}/apps/moto125-ui/.env.local",
+      "env": {
+        "NODE_OPTIONS": "--inspect"
       },
-      {
-        "type": "node",
-        "request": "launch",
-        "name": "Run backfillMotosFromMedia",
-        "runtimeArgs": [
-          "-r",
-          "ts-node/register"
-        ],
-        "args": [
-          "${workspaceFolder}/packages/migration/src/backfillMotosFromMedia.ts"
-        ],
-        "cwd": "${workspaceFolder}/packages/migration",
-        "sourceMaps": true,
-        "outFiles": [
-          "${workspaceFolder}/packages/migration/**/*.js"
-        ],
-        "env": {
-          "TS_NODE_PROJECT": "${workspaceFolder}/packages/migration/tsconfig.json"
-        }
-      },
-      {
-        "type": "node",
-        "request": "launch",
-        "name": "Run scan-article-moto-refs",
-        "runtimeArgs": [
-          "-r",
-          "ts-node/register"
-        ],
-        "args": [
-          "${workspaceFolder}/packages/migration/src/scan-article-moto-refs.ts"
-        ],
-        "cwd": "${workspaceFolder}/packages/migration",
-        "sourceMaps": true,
-        "outFiles": [
-          "${workspaceFolder}/packages/migration/**/*.js"
-        ],
-        "env": {
-          "TS_NODE_PROJECT": "${workspaceFolder}/packages/migration/tsconfig.json"
-        }
-      },
-      {
-        "type": "node",
-        "request": "launch",
-        "name": "Run test data mirror",
-        "runtimeArgs": [
-          "--enable-source-maps",
-          "-r", "ts-node/register",
-          "-r", "tsconfig-paths/register"
-        ],
-        "args": [
-          "${workspaceFolder}/packages/migration/src/test-data-mirror.ts"
-        ],
-        "cwd": "${workspaceFolder}/packages/migration",
-        "sourceMaps": true,
-        "outFiles": [
-          "${workspaceFolder}/packages/migration/**/*.js",
-          "${workspaceFolder}/packages/data-mirror/dist/**/*.js"
-        ],
-        "env": {
-          "TS_NODE_PROJECT": "${workspaceFolder}/packages/migration/tsconfig.json"
-        }
+      "autoAttachChildProcesses": true,
+      "console": "integratedTerminal",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "resolveSourceMapLocations": [
+        "**",
+        "!**/node_modules/**"
+      ]
+    },
+    {
+      "name": "Chrome: http://localhost:3000",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:3000",
+      "webRoot": "${workspaceFolder}",
+      "sourceMaps": true,
+      "sourceMapPathOverrides": {
+        "webpack:///./*": "${webRoot}/*",
+        "webpack://_N_E/*": "${webRoot}/*",
+        "webpack:///apps/moto125-ui/*": "${webRoot}/apps/moto125-ui/*",
+        "webpack:///src/*": "${webRoot}/apps/moto125-ui/src/*"
       }
-    ]
-  }
-  
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Run migration",
+      "runtimeArgs": [
+        "-r",
+        "ts-node/register"
+      ],
+      "args": [
+        "${workspaceFolder}/packages/migration/src/index.ts"
+      ],
+      "cwd": "${workspaceFolder}/packages/migration",
+      "sourceMaps": true,
+      "outFiles": [
+        "${workspaceFolder}/packages/migration/**/*.js"
+      ],
+      "env": {
+        "TS_NODE_PROJECT": "${workspaceFolder}/packages/migration/tsconfig.json"
+      }
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Run backfillMotosFromMedia",
+      "runtimeArgs": [
+        "-r",
+        "ts-node/register"
+      ],
+      "args": [
+        "${workspaceFolder}/packages/migration/src/backfillMotosFromMedia.ts"
+      ],
+      "cwd": "${workspaceFolder}/packages/migration",
+      "sourceMaps": true,
+      "outFiles": [
+        "${workspaceFolder}/packages/migration/**/*.js"
+      ],
+      "env": {
+        "TS_NODE_PROJECT": "${workspaceFolder}/packages/migration/tsconfig.json"
+      }
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Run scan-article-moto-refs",
+      "runtimeArgs": [
+        "-r",
+        "ts-node/register"
+      ],
+      "args": [
+        "${workspaceFolder}/packages/migration/src/scan-article-moto-refs.ts"
+      ],
+      "cwd": "${workspaceFolder}/packages/migration",
+      "sourceMaps": true,
+      "outFiles": [
+        "${workspaceFolder}/packages/migration/**/*.js"
+      ],
+      "env": {
+        "TS_NODE_PROJECT": "${workspaceFolder}/packages/migration/tsconfig.json"
+      }
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Run test data mirror",
+      "runtimeArgs": [
+        "--enable-source-maps",
+        "-r",
+        "ts-node/register",
+        "-r",
+        "tsconfig-paths/register"
+      ],
+      "args": [
+        "${workspaceFolder}/packages/migration/src/test-data-mirror.ts"
+      ],
+      "cwd": "${workspaceFolder}/packages/migration",
+      "sourceMaps": true,
+      "outFiles": [
+        "${workspaceFolder}/packages/migration/**/*.js",
+        "${workspaceFolder}/packages/data-mirror/dist/**/*.js"
+      ],
+      "autoAttachChildProcesses": true,
+      "env": {
+        "TS_NODE_PROJECT": "${workspaceFolder}/packages/migration/tsconfig.json"
+      }
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Next dev:ui (server + Chrome)",
+      "configurations": ["Next dev:ui (server)", "Chrome: http://localhost:3000"],
+      "stopAll": true
+    }
+  ]
+}

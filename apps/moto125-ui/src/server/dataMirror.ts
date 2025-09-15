@@ -30,7 +30,6 @@ function buildInitOptions(): DataMirrorInitOptions {
     snapshotPath: process.env.CACHE_SNAPSHOT_PATH,
     refreshIntervalMs: 120_000,
     autosave: true,
-    // ⚠️ Importante: desactivamos la hidratación en init para no bloquear
     forceHydrateOnInit: false,
   };
 }
@@ -40,7 +39,6 @@ async function ensureMirror(): Promise<DataMirror> {
     const mirror = createDataMirror();
     globalRef.instance = mirror;
 
-    // cobertura de logs: onUpdate + onError
     mirror.onUpdate((s) => {
       if (!DEBUG) return;
       const count = s?.data?.articles?.length ?? 0;

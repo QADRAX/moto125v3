@@ -1,5 +1,23 @@
 import type { ReactNode } from "react";
 import "./globals.css";
+import { Barlow_Condensed, Manrope } from "next/font/google";
+import CompactHeader from "@/components/header/CompactHeader";
+import HeaderWatcher from "@/components/header/HeaderWatcher";
+import Header from "@/components/header/Header";
+
+const heading = Barlow_Condensed({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-heading",
+  display: "swap",
+});
+
+const body = Manrope({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  variable: "--font-body",
+  display: "swap",
+});
 
 /**
  * Root layout of the app.
@@ -12,13 +30,13 @@ export const metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="es">
+    <html lang="es" className={`${heading.variable} ${body.variable}`}>
       <body className="bg-[#fafafa] text-[#111] font-body antialiased">
-        <header className="sticky top-0 z-50 bg-white border-b border-[#ddd]">
-          <div className="mx-auto max-w-page px-4 sm:px-6 h-14 flex items-center">
-            <h1 className="m-0 text-xl font-heading tracking-wide">moto125-ui</h1>
-          </div>
-        </header>
+        <Header />
+
+        <CompactHeader />
+
+        <HeaderWatcher />
 
         <main className="min-h-[80vh]">
           {children}
