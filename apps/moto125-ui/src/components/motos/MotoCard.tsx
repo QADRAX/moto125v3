@@ -1,0 +1,34 @@
+import type { Moto } from "@moto125/api-client";
+import Link from "next/link";
+import { mediaUrl } from "@/utils/utils";
+
+export interface MotoCardProps {
+  classSlug: string;
+  typeSlug: string;
+  moto: Moto;
+}
+
+export default function MotoCard({ classSlug, typeSlug, moto }: MotoCardProps) {
+  const img = moto.images?.[0]?.url ? mediaUrl(moto.images[0].url) : undefined;
+  const title = moto.fullName ?? moto.modelName;
+  return (
+    <Link
+      href={`/motos/${classSlug}/${typeSlug}/${moto.moto125Id}`}
+      className="rounded-2xl border p-4 transition hover:shadow-md"
+    >
+      {img ? (
+        <img
+          src={img}
+          alt={title}
+          className="mb-3 aspect-video w-full rounded-xl object-cover"
+        />
+      ) : (
+        <div className="mb-3 aspect-video w-full rounded-xl bg-neutral-100" />
+      )}
+      <h4 className="text-base font-semibold">{title}</h4>
+      {moto.company?.name ? (
+        <p className="text-sm opacity-70">{moto.company.name}</p>
+      ) : null}
+    </Link>
+  );
+}
