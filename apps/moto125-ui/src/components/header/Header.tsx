@@ -29,7 +29,7 @@ export default async function Header() {
   const heroLink = cfg?.heroBannerSubtitle ?? null;
 
   return (
-    <header id="main-header" className="z-50 bg-white border-b border-[#e6e6e6]">
+    <header id="main-header" className="z-50 bg-white border-b-2 border-primary">
       {/* Mobile bar + drawer */}
       <div className="md:hidden">
         <MobileHeader />

@@ -30,7 +30,7 @@ export default function MobileHeaderClient({
   return (
     <>
       {/* Top bar móvil */}
-      <div className="md:hidden h-12 px-3 flex items-center justify-between bg-white border-b border-[#e6e6e6]">
+      <div className="h-12 px-3 flex items-center justify-between bg-white border-b-2 border-primary">
         <Link
           href="/"
           className="inline-flex items-center gap-2"
