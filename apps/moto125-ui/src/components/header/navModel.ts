@@ -28,6 +28,5 @@ export function buildNav(types: ArticleType[]): NavItem[] {
     { key: "motos", label: "Motos", href: "/motos" },
     { key: "marcas", label: "Marcas", href: "/marcas" },
     { key: "articulos", label: "Artículos", children: articles },
-    { key: "ofertas", label: "Ofertas", href: "/ofertas" },
   ];
 }
