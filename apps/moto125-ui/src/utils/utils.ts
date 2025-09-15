@@ -28,6 +28,14 @@ export function slugify(input?: string | null): string {
     .toLowerCase();
 }
 
+export function matchesType(a: Article, typeFilter?: string): boolean {
+  if (!typeFilter) return true;
+  const name = a.articleType?.name ?? "";
+  if (!name) return false;
+  return slugify(name) === slugify(typeFilter);
+}
+
+
 export function isExternalUrl(url?: string | null): boolean {
   return !!url && /^https?:\/\//i.test(url);
 }

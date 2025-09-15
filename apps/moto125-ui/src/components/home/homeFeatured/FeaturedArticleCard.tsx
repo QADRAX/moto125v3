@@ -30,7 +30,7 @@ const PRESET = {
     border: "border border-[var(--color-border)]",
     overlayPadding: "p-3 sm:p-4",
     titleClass:
-      "font-heading font-bold text-white text-lg sm:text-xl leading-snug uppercase line-clamp-2",
+      "font-heading font-bold text-white text-xl sm:text-xl leading-snug uppercase line-clamp-2",
     badgeClass:
       "inline-block bg-[var(--color-primary)] text-white text-[10px] sm:text-xs font-semibold uppercase tracking-wide px-2 py-0.5 ml-2",
     dateClass: "text-white/85 text-xs",

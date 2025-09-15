@@ -2,10 +2,29 @@ import "server-only";
 
 import type { Article } from "@moto125/api-client";
 import type { MirrorRootState } from "@moto125/data-mirror-core";
+import { matchesType } from "@/utils/utils";
 
-export function pickLatestArticles(state: MirrorRootState, limit = 10): Article[] {
+export function pickLatestArticles(
+  state: MirrorRootState,
+  limitOrType?: number | string,
+  maybeType?: string
+): Article[] {
   if (!state?.data?.articles?.length) return [];
-  const items = state.data.articles.filter(a => a.visible !== false);
+
+  // Desambiguar parámetros
+  let limit = 10;
+  let typeFilter: string | undefined = undefined;
+
+  if (typeof limitOrType === "number") {
+    limit = limitOrType ?? 10;
+    typeFilter = maybeType;
+  } else if (typeof limitOrType === "string") {
+    typeFilter = limitOrType;
+  }
+
+  const items = state.data.articles.filter(
+    (a) => a.visible !== false && matchesType(a, typeFilter)
+  );
 
   const getDate = (a: Article) =>
     a.publicationDate ?? a.publishedAt ?? a.updatedAt ?? a.createdAt;
@@ -13,10 +32,8 @@ export function pickLatestArticles(state: MirrorRootState, limit = 10): Article[
   return items
     .slice()
     .sort((a, b) => {
-      const da = getDate(a);
-      const db = getDate(b);
-      const ta = da ? Date.parse(da) : 0;
-      const tb = db ? Date.parse(db) : 0;
+      const ta = getDate(a) ? Date.parse(getDate(a) as string) : 0;
+      const tb = getDate(b) ? Date.parse(getDate(b) as string) : 0;
       return tb - ta;
     })
     .slice(0, limit);
