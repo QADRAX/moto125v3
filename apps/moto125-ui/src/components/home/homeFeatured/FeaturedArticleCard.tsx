@@ -66,7 +66,7 @@ export default function FeaturedArticleCard({
     <article className={`relative w-full overflow-hidden ${P.border}`}>
       <Link
         href={href}
-        className="group block focus:outline-none focus-visible:ring-2 focus-visible:ring-black/20"
+        className="group block hover-primary focus-primary"
         aria-label={article.title ?? "Ver artículo"}
         style={{
           height: height ?? P.height,
@@ -78,11 +78,11 @@ export default function FeaturedArticleCard({
 
         <div className={`absolute inset-x-0 bottom-0 ${P.overlayPadding}`}>
           {variant === "hero" ? (
-            <h2 className={`m-0 ${P.titleClass}`}>
+            <h2 className={`m-0 ${P.titleClass} hover-primary focus-primary`}>
               {article.title ?? "Artículo"}
             </h2>
           ) : (
-            <h3 className={`m-0 ${P.titleClass}`}>
+            <h3 className={`m-0 ${P.titleClass} hover-primary focus-primary`}>
               {article.title ?? "Artículo"}
             </h3>
           )}

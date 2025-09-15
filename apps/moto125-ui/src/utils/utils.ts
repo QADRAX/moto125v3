@@ -3,8 +3,7 @@ import { Article } from "@moto125/api-client";
 export function mediaUrl(url?: string | null): string | null {
   if (!url) return null;
   if (/^https?:\/\//i.test(url)) return url;
-  const base = process.env.STRAPI_API_URL ?? "";
-  return base ? `${base}${url}` : url;
+  return null;
 }
 
 export function toUpperCamelCase(input?: string | null): string {
@@ -42,7 +41,7 @@ export function isExternalUrl(url?: string | null): boolean {
 
 export function resolveArticleHref(a: Article): string {
   const slug = a.slug ?? String(a.documentId ?? a.id ?? "");
-  return `/articulos/${slug}`;
+  return `/${slug}`;
 }
 
 export function getImage(a: Article) {
