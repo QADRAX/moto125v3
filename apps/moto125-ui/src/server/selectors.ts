@@ -38,3 +38,14 @@ export function pickLatestArticles(
     })
     .slice(0, limit);
 }
+
+export function pickArticleBySlug(
+  state: MirrorRootState,
+  slug: string
+): Article | null {
+  if (!state?.data?.articles?.length) return null;
+  return (
+    state.data.articles.find((a) => a.slug === slug && a.visible !== false) ??
+    null
+  );
+}
