@@ -12,9 +12,14 @@ type Props = {
   maxHeight?: string;
 };
 
+const COMMON = {
+  borderClass: "border border-[var(--color-border)]",
+  darkenHoverGradient:
+    "linear-gradient(180deg, rgba(0,0,0,0.00) 0%, rgba(0,0,0,0.22) 50%, rgba(0,0,0,0.45) 100%)",
+} as const;
+
 const PRESET = {
   hero: {
-    border: "border border-[var(--color-border)]",
     overlayPadding: "p-4 sm:p-6",
     titleClass:
       "font-heading font-bold text-white text-2xl sm:text-3xl md:text-4xl leading-tight uppercase line-clamp-2 drop-shadow",
@@ -27,7 +32,6 @@ const PRESET = {
       "linear-gradient(180deg, rgba(0,0,0,0.00) 0%, rgba(0,0,0,0.35) 45%, rgba(0,0,0,0.75) 100%)",
   },
   small: {
-    border: "border border-[var(--color-border)]",
     overlayPadding: "p-3 sm:p-4",
     titleClass:
       "font-heading font-bold text-white text-xl sm:text-xl leading-snug uppercase line-clamp-2",
@@ -51,32 +55,44 @@ export default function FeaturedArticleCard({
   const href = resolveArticleHref(article);
   const P = PRESET[variant];
 
-  const bgStyle: React.CSSProperties | undefined = img.url
+  const bgImageStyle: React.CSSProperties | undefined = img.url
     ? {
-        backgroundImage: `${P.gradient}, url(${img.url})`,
+        backgroundImage: `url(${img.url})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
       }
-    : {
-        backgroundImage: P.gradient,
-      };
+    : undefined;
 
   return (
-    <article className={`relative w-full overflow-hidden ${P.border}`}>
+    <article className={`relative w-full overflow-hidden ${COMMON.borderClass}`}>
       <Link
         href={href}
-        className="group block hover-primary focus-primary"
+        className="group relative block hover-primary focus-primary"
         aria-label={article.title ?? "Ver artículo"}
         style={{
           height: height ?? P.height,
           maxHeight: maxHeight ?? P.maxHeight,
-          ...bgStyle,
+          ...bgImageStyle,
         }}
       >
+        <div
+          aria-hidden
+          className="absolute inset-0 pointer-events-none transition-opacity duration-300 ease-in-out opacity-90"
+          style={{ background: P.gradient }}
+        />
+
+        <div
+          aria-hidden
+          className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out"
+          style={{ background: COMMON.darkenHoverGradient }}
+        />
+
         <span className="sr-only">{img.alt}</span>
 
-        <div className={`absolute inset-x-0 bottom-0 ${P.overlayPadding}`}>
+        <div
+          className={`absolute inset-x-0 bottom-0 ${P.overlayPadding} transform-gpu transition-transform duration-300 ease-out group-hover:translate-x-1 sm:group-hover:translate-x-2`}
+        >
           {variant === "hero" ? (
             <h2 className={`m-0 ${P.titleClass} hover-primary focus-primary`}>
               {article.title ?? "Artículo"}
