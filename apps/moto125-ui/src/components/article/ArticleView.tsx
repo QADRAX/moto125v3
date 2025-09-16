@@ -9,10 +9,12 @@ export interface ArticleViewProps {
 
 export default function ArticleView({ article }: ArticleViewProps) {
   return (
-    <article className="container mx-auto max-w-3xl px-4 py-8">
+    <>
       <ArticleHeader article={article} />
-      <ArticleContent blocks={article.content} />
-      <ArticleFooter article={article} />
-    </article>
+      <article className="container mx-auto max-w-3xl px-4 py-8">
+        <ArticleContent blocks={article.content} />
+        <ArticleFooter article={article} />
+      </article>
+    </>
   );
 }

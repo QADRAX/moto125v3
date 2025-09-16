@@ -1,46 +1,115 @@
 import type { Article } from "@moto125/api-client";
-import { mediaUrl } from "@/utils/utils";
+import { getImage } from "@/utils/utils";
+import SeoDate from "../common/SeoDate";
+import ArticleTypeBadge from "../common/ArticleTypeBadge";
 
 export interface ArticleHeaderProps {
   article: Article;
 }
 
-function getBestDate(a: Article): string | undefined {
+function getBestDateISO(a: Article): string | undefined {
   return a.publicationDate || a.publishedAt || a.updatedAt || a.createdAt;
 }
 
 export default function ArticleHeader({ article }: ArticleHeaderProps) {
-  const isoDate = getBestDate(article);
-  const displayDate = isoDate
-    ? new Date(isoDate).toLocaleDateString(undefined, {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      })
-    : undefined;
+  const iso = getBestDateISO(article);
+  const { url: bgUrl, alt } = getImage(article);
+  const title = article.title ?? article.slug;
+  const articleType = article.articleType?.name ?? undefined;
 
-  const coverUrl = mediaUrl(article.coverImage.url);
+  // Metadatos “autoría”
+  const metaItems: Array<[label: string, value?: string | null]> = [
+    ["Autor del texto", article.authorText],
+    ["Fotos", article.authorPhotos],
+    ["Acción", article.authorAction],
+  ];
+  const hasAnyMeta = metaItems.some(([, v]) => v && String(v).trim());
+
+  const P = {
+    overlayPadding: "p-4 sm:p-6",
+    titleClass:
+      "font-heading font-bold text-white text-2xl sm:text-3xl md:text-4xl leading-tight uppercase drop-shadow",
+    metaLineClass:
+      "mt-2 text-white/90 text-[13px] sm:text-sm flex flex-wrap items-center gap-2",
+    sepClass: "opacity-70 select-none",
+    height: "clamp(260px, 45vw, 700px)",
+    maxHeight: "90vh",
+    gradient:
+      "linear-gradient(180deg, rgba(0,0,0,0.00) 0%, rgba(0,0,0,0.35) 45%, rgba(0,0,0,0.75) 100%)",
+  } as const;
+
+  // Construimos la línea de metadatos: Fecha | Tipo | Autor del texto: X | Fotos: Y | Acción: Z
+  const pieces: React.ReactNode[] = [];
+  if (iso) {
+    pieces.push(
+      <SeoDate
+        key="date"
+        iso={iso}
+        itemProp="datePublished"
+        className="text-white/85"
+      />
+    );
+  }
+
+  metaItems
+    .filter(([, v]) => v && String(v).trim().length > 0)
+    .forEach(([label, value], idx) => {
+      pieces.push(
+        <span key={`meta-${idx}`} className="text-white/90">
+          <span className="font-semibold">{label}:</span> {value}
+        </span>
+      );
+    });
+
+  if (articleType) {
+    pieces.push(<ArticleTypeBadge key="type" name={articleType} />);
+  }
+
+  // Intercalar separadores “|”
+  const metaLine = pieces.flatMap((node, i) =>
+    i === 0
+      ? [node]
+      : [
+          <span key={`sep-${i}`} className={P.sepClass}>
+            |
+          </span>,
+          node,
+        ]
+  );
 
   return (
-    <header className="mb-6">
-      <h1 className="text-3xl font-semibold leading-tight">
-        {article.title ?? article.slug}
-      </h1>
-      {displayDate && (
-        <time dateTime={isoDate} className="mt-2 block text-sm opacity-70">
-          {displayDate}
-        </time>
-      )}
-      {article.authorText && (
-        <p className="mt-2 text-sm opacity-80">{article.authorText}</p>
-      )}
-      {coverUrl && (
-        <img
-          src={coverUrl}
-          alt={article.title ?? article.slug}
-          className="mt-4 w-full"
+    <header className="mx-auto max-w-page max-w-screen-xl">
+      <div
+        className="relative block"
+        aria-label={title}
+        style={{
+          height: P.height,
+          maxHeight: P.maxHeight,
+          backgroundImage: `url(${bgUrl})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+        }}
+      >
+        {/* Degradado overlay */}
+        <div
+          aria-hidden
+          className="absolute inset-0 pointer-events-none opacity-90"
+          style={{ background: P.gradient }}
         />
-      )}
+
+        {/* Contenido */}
+        <div className={`absolute inset-x-0 bottom-0 ${P.overlayPadding}`}>
+          <h1 className={`m-0 ${P.titleClass}`}>{title}</h1>
+
+          {(pieces.length > 0 || hasAnyMeta) && (
+            <p className={P.metaLineClass}>{metaLine}</p>
+          )}
+        </div>
+      </div>
+
+      {/* Texto alternativo accesible */}
+      <span className="sr-only">{alt ?? title}</span>
     </header>
   );
 }

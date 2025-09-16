@@ -17,7 +17,7 @@ export default async function HomeFeatured() {
   return (
     <section
       aria-label="Destacados"
-      className="mx-auto max-w-page max-w-screen-2xl"
+      className="mx-auto max-w-page max-w-screen-xl"
     >
       <FeaturedHero article={first} />
 

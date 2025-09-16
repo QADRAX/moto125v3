@@ -26,7 +26,7 @@ const PRESET = {
     badgeClass:
       "inline-block bg-[var(--color-primary)] text-white text-xs font-bold uppercase tracking-wide px-2 py-1 mb-2 ml-2",
     dateClass: "text-white/85 text-sm",
-    height: "clamp(260px, 45vw, 560px)",
+    height: "clamp(260px, 45vw, 600px)",
     maxHeight: "70vh",
     gradient:
       "linear-gradient(180deg, rgba(0,0,0,0.00) 0%, rgba(0,0,0,0.35) 45%, rgba(0,0,0,0.75) 100%)",
