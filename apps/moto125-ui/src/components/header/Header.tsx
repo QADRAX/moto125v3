@@ -35,7 +35,7 @@ export default async function Header() {
   return (
     <header
       id="main-header"
-      className="z-50 bg-white border-b-2 border-primary"
+      className="z-50 bg-white border-b-3 border-primary"
     >
       {/* Mobile bar + drawer */}
       <div className="md:hidden">

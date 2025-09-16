@@ -18,7 +18,7 @@ export default async function CompactHeader() {
 
   return (
     <div
-      className="compact-header bg-white border-b-2 border-primary"
+      className="compact-header bg-white border-b-3 border-primary"
       aria-hidden="true"
     >
       <div className="mx-auto max-w-page px-4 sm:px-6">

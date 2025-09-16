@@ -28,7 +28,7 @@ function buildInitOptions(): DataMirrorInitOptions {
       token: process.env.STRAPI_API_TOKEN,
     },
     snapshotPath: process.env.CACHE_SNAPSHOT_PATH,
-    refreshIntervalMs: 120_000,
+    refreshIntervalMs: process.env.CACHE_REFRESH_INTERVAL_MS ? Number(process.env.CACHE_REFRESH_INTERVAL_MS) : undefined,
     autosave: true,
     forceHydrateOnInit: false,
   };
@@ -41,9 +41,11 @@ async function ensureMirror(): Promise<DataMirror> {
 
     mirror.onUpdate((s) => {
       if (!DEBUG) return;
-      const count = s?.data?.articles?.length ?? 0;
+      const countArticles = s?.data?.articles?.length ?? 0;
+      const countMotos = s?.data?.motos?.length ?? 0;
+      const countMarcas = s?.data?.companies?.length ?? 0;
       console.log(
-        `[DataMirror] onUpdate: articles=${count}, generatedAt=${s?.generatedAt ?? "-"}`
+        `[DataMirror] onUpdate: articles=${countArticles} motos=${countMotos} marcas=${countMarcas}, generatedAt=${s?.generatedAt ?? "-"}`
       );
     });
     mirror.onError((err: any) => {
@@ -52,23 +54,8 @@ async function ensureMirror(): Promise<DataMirror> {
   }
 
   if (!globalRef.initialized && globalRef.instance) {
-    const t0 = Date.now();
     await globalRef.instance.init(buildInitOptions());
     globalRef.initialized = true;
-    if (DEBUG) console.log(`[DataMirror] init done in ${Date.now() - t0}ms`);
-
-    // Lanzar hidratación sin bloquear la response inicial
-    // (si hay snapshot, ya pintas algo; si no, la página muestra "Inicializando…")
-    const t1 = Date.now();
-    globalRef.instance
-      .refresh()
-      .then(() => {
-        if (DEBUG)
-          console.log(`[DataMirror] refresh done in ${Date.now() - t1}ms`);
-      })
-      .catch((e) => {
-        console.error("[DataMirror] refresh error:", e);
-      });
   }
 
   if (!globalRef.started && globalRef.instance) {
