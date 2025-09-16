@@ -15,7 +15,8 @@
     "list": "lerna list",
     "changed": "lerna changed",
     "dev:strapi": "lerna run develop --scope=@moto125/strapi --stream",
-    "dev:ui": "lerna run dev --scope=@moto125/moto125-ui --stream"
+    "dev:ui": "lerna run dev --scope=@moto125/moto125-ui --stream",
+    "start:ui": "lerna run dev --scope=@moto125/moto125-ui --stream"
   },
   "repository": {
     "type": "git",

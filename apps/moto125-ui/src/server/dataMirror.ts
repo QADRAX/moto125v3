@@ -1,4 +1,5 @@
 import "server-only";
+
 import type {
   DataMirror,
   DataMirrorInitOptions,
@@ -6,13 +7,13 @@ import type {
 import { createDataMirror } from "@moto125/data-mirror";
 
 const DEBUG = process.env.DEBUG_MIRROR === "1";
+const IS_BUILD = process.env.NEXT_PHASE === "phase-production-build";
 
 declare global {
   var __MOTO125_MIRROR__:
     | { instance: DataMirror | null; started: boolean; initialized: boolean }
     | undefined;
 }
-
 const globalRef =
   globalThis.__MOTO125_MIRROR__ ??
   (globalThis.__MOTO125_MIRROR__ = {
@@ -24,11 +25,13 @@ const globalRef =
 function buildInitOptions(): DataMirrorInitOptions {
   return {
     sdkInit: {
-      baseUrl: process.env.STRAPI_API_URL!,
+      baseUrl: process.env.STRAPI_API_URL!, // se leerá en runtime dentro del contenedor
       token: process.env.STRAPI_API_TOKEN,
     },
     snapshotPath: process.env.CACHE_SNAPSHOT_PATH,
-    refreshIntervalMs: process.env.CACHE_REFRESH_INTERVAL_MS ? Number(process.env.CACHE_REFRESH_INTERVAL_MS) : undefined,
+    refreshIntervalMs: process.env.CACHE_REFRESH_INTERVAL_MS
+      ? Number(process.env.CACHE_REFRESH_INTERVAL_MS)
+      : undefined,
     autosave: true,
     forceHydrateOnInit: false,
   };
@@ -36,32 +39,38 @@ function buildInitOptions(): DataMirrorInitOptions {
 
 async function ensureMirror(): Promise<DataMirror> {
   if (!globalRef.instance) {
-    const mirror = createDataMirror();
-    globalRef.instance = mirror;
+    globalRef.instance = createDataMirror();
 
-    mirror.onUpdate((s) => {
+    globalRef.instance.onUpdate((s) => {
       if (!DEBUG) return;
-      const countArticles = s?.data?.articles?.length ?? 0;
-      const countMotos = s?.data?.motos?.length ?? 0;
-      const countMarcas = s?.data?.companies?.length ?? 0;
+      const a = s?.data?.articles?.length ?? 0;
+      const m = s?.data?.motos?.length ?? 0;
+      const c = s?.data?.companies?.length ?? 0;
       console.log(
-        `[DataMirror] onUpdate: articles=${countArticles} motos=${countMotos} marcas=${countMarcas}, generatedAt=${s?.generatedAt ?? "-"}`
+        `[DataMirror] onUpdate: articles=${a} motos=${m} marcas=${c}, generatedAt=${s?.generatedAt ?? "-"}`
       );
     });
-    mirror.onError((err: any) => {
+    globalRef.instance.onError((err: any) => {
       console.error("[DataMirror] error:", err);
     });
   }
 
-  if (!globalRef.initialized && globalRef.instance) {
-    await globalRef.instance.init(buildInitOptions());
+  if (IS_BUILD) {
+    if (DEBUG)
+      console.log("[DataMirror] Skipping init/start during Next build");
+    return globalRef.instance!;
+  }
+
+  if (!globalRef.initialized) {
+    await globalRef.instance!.init(buildInitOptions());
     globalRef.initialized = true;
   }
 
-  if (!globalRef.started && globalRef.instance) {
-    globalRef.instance.start();
+  if (!globalRef.started) {
+    globalRef.instance!.start();
     globalRef.started = true;
     if (DEBUG) console.log("[DataMirror] started periodic refresh");
+    registerShutdown();
   }
 
   return globalRef.instance!;
@@ -107,4 +116,3 @@ function registerShutdown() {
     process.once("beforeExit", stop);
   }
 }
-registerShutdown();
