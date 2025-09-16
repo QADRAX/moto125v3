@@ -7,8 +7,6 @@ import HeaderNav from "./HeaderNav";
 import { mediaUrl } from "@/utils/utils";
 import MobileHeader from "./MobileHeader";
 
-const ROW_MAX = "max-w-screen-xl pt-4";
-
 function pickHeaderData(state: Awaited<ReturnType<typeof getMirrorState>>) {
   const cfg: Config | undefined | null = state?.data?.config;
   const types: ArticleType[] =
@@ -35,7 +33,7 @@ export default async function Header() {
   return (
     <header
       id="main-header"
-      className="z-50 bg-white border-b-3 border-primary"
+      className="z-50 bg-white border-b-3 border-primary mx-auto max-w-page px-4 sm:px-6"
     >
       {/* Mobile bar + drawer */}
       <div className="md:hidden">
@@ -43,24 +41,40 @@ export default async function Header() {
       </div>
 
       {/* Desktop header */}
-      <div className={`hidden md:block mx-auto w-full ${ROW_MAX}`}>
-        <div
-          className={`flex items-center gap-6 ${hasHero ? "justify-between" : "justify-center"}`}
-        >
-          <HeaderBrand
-            siteName={siteName}
-            logoUrl={logoUrl}
-            alt={cfg?.logo?.alternativeText}
-          />
-          {/* Renders null if no imgUrl */}
-          <HeaderHero
-            imgUrl={heroImg}
-            title={heroTitle}
-            linkUrl={heroLink}
-            siteName={siteName}
-          />
-        </div>
-        <HeaderNav types={types} />
+      <div className={`hidden md:block mx-auto w-full`}>
+        {hasHero ? (
+          <>
+            <div className="flex items-center gap-6 justify-between">
+              <HeaderBrand
+                siteName={siteName}
+                logoUrl={logoUrl}
+                alt={cfg?.logo?.alternativeText}
+                size="md"
+              />
+              <HeaderHero
+                imgUrl={heroImg}
+                title={heroTitle}
+                linkUrl={heroLink}
+                siteName={siteName}
+              />
+            </div>
+            {/* Menú debajo, centrado (stacked) */}
+            <HeaderNav types={types} />
+          </>
+        ) : (
+          // SIN hero: brand + nav EN LA MISMA LÍNEA
+          <div className="h-12 hidden sm:flex items-center gap-4">
+            <HeaderBrand
+              siteName={siteName}
+              logoUrl={logoUrl}
+              alt={cfg?.logo?.alternativeText}
+              size="sm"
+            />
+            <div className="flex-1 min-w-0">
+              <HeaderNav types={types} layout="stacked" />
+            </div>
+          </div>
+        )}
       </div>
     </header>
   );

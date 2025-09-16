@@ -4,6 +4,7 @@ import { Roboto_Condensed, Lato } from "next/font/google";
 import CompactHeader from "@/components/header/CompactHeader";
 import HeaderWatcher from "@/components/header/HeaderWatcher";
 import Header from "@/components/header/Header";
+import Footer from "@/components/footer/Footer";
 
 const heading = Roboto_Condensed({
   subsets: ["latin"],
@@ -42,11 +43,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           {children}
         </main>
 
-        <footer className="bg-white border-t border-[#ddd]">
-          <div className="mx-auto max-w-page px-4 sm:px-6 py-4 text-center text-sm">
-            © {new Date().getFullYear()} moto125.cc
-          </div>
-        </footer>
+        <Footer />
       </body>
     </html>
   );

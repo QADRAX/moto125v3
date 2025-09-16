@@ -3,13 +3,29 @@ import type { ArticleType } from "@moto125/api-client";
 import NavDropdown from "./NavDropdown";
 import { buildNav } from "./navModel";
 
-type Props = { types: ArticleType[] };
+type Props = {
+  types: ArticleType[];
+  /** Layout: 'stacked' (debajo, centrado) o 'inline' (en fila, a la izquierda) */
+  layout?: "stacked" | "inline";
+};
 
-export default function HeaderNav({ types }: Props) {
+export default function HeaderNav({ types, layout = "stacked" }: Props) {
   const nav = buildNav(types);
+  const isInline = layout === "inline";
+
   return (
-    <nav className="mt-3 sm:mt-4 font-heading font-bold text-lg uppercase pb-2">
-      <ul className="flex flex-wrap items-center justify-center gap-2 sm:gap-4">
+    <nav
+      className={[
+        isInline ? "mt-0 pb-0" : "mt-3 sm:mt-4 pb-2",
+        "font-heading font-bold text-lg uppercase",
+      ].join(" ")}
+    >
+      <ul
+        className={[
+          "flex flex-wrap items-center gap-2 sm:gap-4",
+          isInline ? "justify-start" : "justify-center",
+        ].join(" ")}
+      >
         {nav.map((item) =>
           item.children?.length ? (
             <NavDropdown key={item.key} items={item.children} label={item.label} />
