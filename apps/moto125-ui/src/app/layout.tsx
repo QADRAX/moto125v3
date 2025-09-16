@@ -5,6 +5,9 @@ import CompactHeader from "@/components/header/CompactHeader";
 import HeaderWatcher from "@/components/header/HeaderWatcher";
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
+import type { Metadata } from "next";
+import { getMirrorState } from "@/server/dataMirror";
+import { buildSiteMetadataFromConfig } from "@/server/seo";
 
 const heading = Roboto_Condensed({
   subsets: ["latin"],
@@ -20,14 +23,11 @@ const body = Lato({
   display: "swap",
 });
 
-/**
- * Root layout of the app.
- * Wraps all routes with common HTML, <head> metadata and shared UI.
- */
-export const metadata = {
-  title: "moto125-ui",
-  description: "Next.js app consuming DataMirror cache",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const state = await getMirrorState();
+  const cfg = state?.data?.config ?? null;
+  return buildSiteMetadataFromConfig(cfg);
+}
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
