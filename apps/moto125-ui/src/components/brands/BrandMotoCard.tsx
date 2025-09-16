@@ -23,16 +23,16 @@ export default function BrandMotoCard({ moto }: BrandMotoCardProps) {
   return (
     <Link
       href={href}
-      className="rounded-2xl border p-4 transition hover:shadow-md"
+      className="border p-4 transition hover:shadow-md"
     >
       {img ? (
         <img
           src={img}
           alt={title}
-          className="mb-3 aspect-video w-full rounded-xl object-cover"
+          className="mb-3 aspect-video w-full object-cover"
         />
       ) : (
-        <div className="mb-3 aspect-video w-full rounded-xl bg-neutral-100" />
+        <div className="mb-3 aspect-video w-full bg-neutral-100" />
       )}
       <h4 className="text-base font-semibold">{title}</h4>
       {moto.company?.name ? (

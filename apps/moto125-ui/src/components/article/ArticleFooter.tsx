@@ -12,7 +12,7 @@ export default function ArticleFooter({ article }: ArticleFooterProps) {
           {article.tags.map((t) => (
             <span
               key={t.id}
-              className="rounded-full bg-neutral-100 px-3 py-1 text-xs"
+              className="bg-neutral-100 px-3 py-1 text-xs"
             >
               {t.Value ?? "#tag"}
             </span>

@@ -18,7 +18,7 @@ export default function ClassGrid({ classes }: ClassGridProps) {
         <Link
           key={c.documentId}
           href={`/motos/${slugify(c.name)}`}
-          className="rounded-2xl border p-6 transition hover:shadow-md"
+          className="border p-6 transition hover:shadow-md"
         >
           <h2 className="text-xl font-semibold">{c.name}</h2>
           <p className="opacity-70">Explorar tipos</p>

@@ -38,7 +38,7 @@ export default function ArticleHeader({ article }: ArticleHeaderProps) {
         <img
           src={coverUrl}
           alt={article.title ?? article.slug}
-          className="mt-4 w-full rounded-2xl"
+          className="mt-4 w-full"
         />
       )}
     </header>

@@ -15,7 +15,7 @@ export default function MotoHeader({ moto }: MotoHeaderProps) {
         <p className="mt-1 text-sm opacity-80">{moto.company.name}</p>
       ) : null}
       {img ? (
-        <img src={img} alt={title} className="mt-4 w-full rounded-2xl" />
+        <img src={img} alt={title} className="mt-4 w-full" />
       ) : null}
       {moto.description ? (
         <p className="mt-4 leading-relaxed">{moto.description}</p>

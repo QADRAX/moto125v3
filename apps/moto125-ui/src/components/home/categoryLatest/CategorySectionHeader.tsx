@@ -1,11 +1,6 @@
 import "server-only";
 import type { ReactNode } from "react";
 
-/**
- * Section header as a bordered card (no rounded):
- * - Only the title has primary background + white text.
- * - Optional right-side action on normal background.
- */
 export default function CategorySectionHeader({
   title,
   action,

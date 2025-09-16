@@ -17,7 +17,7 @@ export default function TypeGrid({ classSlug, types }: TypeGridProps) {
         <Link
           key={t.documentId}
           href={`/motos/${classSlug}/${slugify(t.name ?? "")}`}
-          className="rounded-2xl border p-6 transition hover:shadow-md"
+          className="border p-6 transition hover:shadow-md"
         >
           <h3 className="text-lg font-semibold">{t.fullName ?? t.name}</h3>
           <p className="opacity-70">Ver motos</p>

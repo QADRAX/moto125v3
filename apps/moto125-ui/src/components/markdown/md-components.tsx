@@ -55,13 +55,13 @@ export const mdComponents: Components = {
   img: ({ src, alt, ...props }) => {
     const url = src ? mediaUrl(src) : undefined;
     if (!url) return null;
-    return <img src={url} alt={alt ?? ""} loading="lazy" className="my-4 rounded-xl" {...props} />;
+    return <img src={url} alt={alt ?? ""} loading="lazy" className="my-4" {...props} />;
   },
   code: ({ className, children }) => {
     const txt = String(children).replace(/\n$/, "");
     const lang = /language-([\w-]+)/.exec(className || "")?.[1];
     return (
-      <pre className="my-4 overflow-x-auto rounded-xl bg-neutral-950 p-4 text-neutral-100">
+      <pre className="my-4 overflow-x-auto bg-neutral-950 p-4 text-neutral-100">
         <code className={lang ? `language-${lang}` : undefined}>{txt}</code>
       </pre>
     );

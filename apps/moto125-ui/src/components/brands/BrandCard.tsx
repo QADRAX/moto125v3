@@ -12,7 +12,7 @@ export default function BrandCard({ company }: BrandCardProps) {
   return (
     <Link
       href={href}
-      className="rounded-2xl border p-4 transition hover:shadow-md"
+      className="border p-4 transition hover:shadow-md"
     >
       <div className="flex flex-col items-center text-center">
         {img ? (
@@ -22,7 +22,7 @@ export default function BrandCard({ company }: BrandCardProps) {
             className="mb-3 h-20 w-auto object-contain"
           />
         ) : (
-          <div className="mb-3 h-20 w-full rounded-xl bg-neutral-100" />
+          <div className="mb-3 h-20 w-full bg-neutral-100" />
         )}
         <h3 className="text-base font-semibold">{company.name}</h3>
       </div>
