@@ -47,4 +47,4 @@ jobs:
         run: npm ci
 
       - name: Build UI workspace
-        run: npx lerna run build --scope @moto125/moto125-ui --stream
+        run: npx lerna run build --scope @moto125/moto125-ui --include-dependencies --stream
