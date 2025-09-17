@@ -9,7 +9,7 @@ COPY . .
 RUN --mount=type=cache,target=/root/.npm \
     npm ci
 
-RUN npx lerna run build --scope @moto125/moto125-ui --stream
+RUN npx lerna run build --scope @moto125/moto125-ui --include-dependencies --stream
 
 ########### RUNTIME ###########
 FROM node:20-bookworm AS runner
