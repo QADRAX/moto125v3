@@ -58,7 +58,7 @@ services:
     container_name: moto125_ui
     environment:
       NODE_ENV: production
-      CACHE_SNAPSHOT_PATH: ${CACHE_SNAPSHOT_PATH}
+      CACHE_SNAPSHOT_PATH: /app/.cache/snapshot.json
       CACHE_REFRESH_INTERVAL_MS: ${CACHE_REFRESH_INTERVAL_MS}
       STRAPI_API_URL: ${STRAPI_API_URL}
       STRAPI_API_TOKEN: ${STRAPI_API_TOKEN}
