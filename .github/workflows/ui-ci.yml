@@ -1,0 +1,50 @@
+name: Moto125 Monorepo — UI CI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "apps/moto125-ui/**"
+      - "packages/**"
+      - "package.json"
+      - "package-lock.json"
+      - "lerna.json"
+      - ".github/workflows/ui-ci.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "apps/moto125-ui/**"
+      - "packages/**"
+      - "package.json"
+      - "package-lock.json"
+      - "lerna.json"
+      - ".github/workflows/ui-ci.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ui-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build UI (Node 20)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install (root workspaces)
+        run: npm ci
+
+      - name: Build UI workspace
+        run: npm run -w @moto125/ui build
