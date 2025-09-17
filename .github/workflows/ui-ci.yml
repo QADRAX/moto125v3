@@ -47,4 +47,4 @@ jobs:
         run: npm ci
 
       - name: Build UI workspace
-        run: npm run -w @moto125/ui build
+        run: npm run -w @moto125/moto125-ui build
