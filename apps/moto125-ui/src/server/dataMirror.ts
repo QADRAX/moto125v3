@@ -25,7 +25,7 @@ const globalRef =
 function buildInitOptions(): DataMirrorInitOptions {
   return {
     sdkInit: {
-      baseUrl: process.env.STRAPI_API_URL!, // se leerá en runtime dentro del contenedor
+      baseUrl: process.env.STRAPI_API_URL!,
       token: process.env.STRAPI_API_TOKEN,
     },
     snapshotPath: process.env.CACHE_SNAPSHOT_PATH,
@@ -33,7 +33,7 @@ function buildInitOptions(): DataMirrorInitOptions {
       ? Number(process.env.CACHE_REFRESH_INTERVAL_MS)
       : undefined,
     autosave: true,
-    forceHydrateOnInit: false,
+    forceHydrateOnInit: true,
   };
 }
 

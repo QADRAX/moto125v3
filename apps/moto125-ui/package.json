@@ -7,7 +7,7 @@
   },
   "scripts": {
     "dev": "next dev -p 1338",
-    "build": "next build",
+    "build": "next build && node scripts/copy-standalone-workspaces.mjs",
     "start": "next start -p 3000",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "typecheck:scripts": "tsc -p tsconfig.scripts.json --noEmit"
