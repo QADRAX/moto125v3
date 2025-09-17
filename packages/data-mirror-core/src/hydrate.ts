@@ -1,17 +1,12 @@
 import type { Moto125Sdk } from "@moto125/api-client";
 import type {
-  HydrateOpts,
   MirrorData,
   MirrorError,
-  MirrorState,
   MirrorTimings,
 } from "./types";
 import { fetchAllCollection, safeSingle } from "./strapi";
 import { performance } from "node:perf_hooks";
-import { saveSnapshot } from "./snapshot";
 import { timed, toMirrorError } from "./utils";
-
-const SNAPSHOT_VERSION = "api-client@0.0.2";
 
 export async function hydrateAllResilient(sdk: Moto125Sdk): Promise<{
   data: MirrorData;
@@ -175,32 +170,4 @@ export async function hydrateAllResilient(sdk: Moto125Sdk): Promise<{
       },
     },
   };
-}
-
-export async function hydrateAll(
-  sdk: Moto125Sdk,
-  opts: HydrateOpts = {}
-): Promise<{ errors: MirrorError[]; mirrorState: MirrorState }> {
-  const { data, errors, timings } = await hydrateAllResilient(sdk);
-
-  const mirrorState: MirrorState = {
-    version: SNAPSHOT_VERSION,
-    generatedAt: new Date().toISOString(),
-    data,
-    timings,
-  };
-
-  if (opts.autosave && opts.snapshotPath) {
-    const t0 = performance.now();
-    try {
-      await saveSnapshot(opts.snapshotPath, mirrorState);
-    } finally {
-      const saveMs = Math.round(performance.now() - t0);
-      if (mirrorState.timings) {
-        mirrorState.timings.snapshotSaveMs = saveMs;
-      }
-    }
-  }
-
-  return { errors, mirrorState };
 }

@@ -56,7 +56,6 @@ function timingsOf() {
   return {
     bySource: t.hydrate.bySource ?? ({} as Record<string, number>),
     totalMs: t.hydrate.totalMs,
-    snapshotSaveMs: t.snapshotSaveMs ?? null,
     startedAt: t.hydrate.startedAt,
     endedAt: t.hydrate.endedAt,
   };
@@ -112,7 +111,6 @@ function buildUnifiedTable(
     metric: "snapshotSave",
     value: "",
     delta: "",
-    timingMs: timings?.snapshotSaveMs != null ? Math.round(timings.snapshotSaveMs) : "",
   });
 
   return rows;

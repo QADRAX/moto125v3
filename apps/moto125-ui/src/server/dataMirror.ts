@@ -6,7 +6,6 @@ import type {
 } from "@moto125/data-mirror-core";
 import { createDataMirror } from "@moto125/data-mirror";
 
-const DEBUG = process.env.DEBUG_MIRROR === "1";
 const IS_BUILD = process.env.NEXT_PHASE === "phase-production-build";
 
 declare global {
@@ -34,6 +33,7 @@ function buildInitOptions(): DataMirrorInitOptions {
       : undefined,
     autosave: true,
     forceHydrateOnInit: true,
+    workerDebugLogging: true,
   };
 }
 
@@ -41,23 +41,12 @@ async function ensureMirror(): Promise<DataMirror> {
   if (!globalRef.instance) {
     globalRef.instance = createDataMirror();
 
-    globalRef.instance.onUpdate((s) => {
-      if (!DEBUG) return;
-      const a = s?.data?.articles?.length ?? 0;
-      const m = s?.data?.motos?.length ?? 0;
-      const c = s?.data?.companies?.length ?? 0;
-      console.log(
-        `[DataMirror] onUpdate: articles=${a} motos=${m} marcas=${c}, generatedAt=${s?.generatedAt ?? "-"}`
-      );
-    });
     globalRef.instance.onError((err: any) => {
       console.error("[DataMirror] error:", err);
     });
   }
 
   if (IS_BUILD) {
-    if (DEBUG)
-      console.log("[DataMirror] Skipping init/start during Next build");
     return globalRef.instance!;
   }
 
@@ -69,7 +58,6 @@ async function ensureMirror(): Promise<DataMirror> {
   if (!globalRef.started) {
     globalRef.instance!.start();
     globalRef.started = true;
-    if (DEBUG) console.log("[DataMirror] started periodic refresh");
     registerShutdown();
   }
 
@@ -87,9 +75,7 @@ export async function getMirrorState() {
 
 export async function refreshMirror() {
   const mirror = await getDataMirror();
-  const t0 = Date.now();
   await mirror.refresh();
-  if (DEBUG) console.log(`[DataMirror] manual refresh in ${Date.now() - t0}ms`);
 }
 
 function registerShutdown() {

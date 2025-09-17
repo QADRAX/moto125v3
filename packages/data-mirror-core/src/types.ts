@@ -13,12 +13,9 @@ import type {
 
 export type MirrorWorkerIn =
   | { type: "hydrate"; sdkInit: SdkInit }
-  | {
-      type: "saveSnapshot";
-      path: string;
-      stateBin: ArrayBufferLike;
-    }
+  | { type: "saveSnapshot"; path: string; stateBin: ArrayBufferLike }
   | { type: "loadSnapshot"; path: string }
+  | { type: "setDebug"; enabled: boolean }
   | { type: "dispose" };
 
 export type MirrorWorkerOut =
@@ -83,7 +80,6 @@ export interface MirrorTimings {
     totalMs: number;
     bySource: Record<string, number>;
   };
-  snapshotSaveMs?: number;
 }
 
 export interface MirrorState {
@@ -104,6 +100,7 @@ export interface DataMirrorInitOptions {
   refreshIntervalMs?: number;
   autosave?: boolean;
   forceHydrateOnInit?: boolean;
+  workerDebugLogging?: boolean;
 }
 
 export type UpdateListener = (next: MirrorRootState) => void;
@@ -120,6 +117,7 @@ export interface DataMirror {
   stop(): void;
   saveSnapshot(): Promise<void>;
   loadSnapshot(): Promise<void>;
+  setWorkerDebugLogging(enabled: boolean): void;
   configure(
     opts: Partial<Omit<DataMirrorInitOptions, "forceHydrateOnInit">>
   ): void;

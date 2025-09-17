@@ -37,6 +37,9 @@ export function createDataMirror(): DataMirror {
   async function init(opts: DataMirrorInitOptions): Promise<void> {
     await worker.init();
 
+    if (opts.workerDebugLogging !== undefined) {
+      worker.setDebugLogging(!!opts.workerDebugLogging);
+    }
     sdkInit = opts.sdkInit;
     snapshotPath = opts.snapshotPath;
     autosave = !!opts.autosave;
@@ -204,6 +207,10 @@ export function createDataMirror(): DataMirror {
     }
   }
 
+  function setWorkerDebugLogging(enabled: boolean): void {
+    worker.setDebugLogging(enabled);
+  }
+
   function dispose(): void {
     stop();
     unsubStore();
@@ -226,6 +233,7 @@ export function createDataMirror(): DataMirror {
     saveSnapshot,
     loadSnapshot,
     configure,
+    setWorkerDebugLogging,
     dispose,
   };
 }

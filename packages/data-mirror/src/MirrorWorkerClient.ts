@@ -85,14 +85,15 @@ export class MirrorWorkerClient {
    * - Throws AggregateError with `__mirrorErrors` if API returned errors.
    */
   async hydrate(sdkInit: SdkInit): Promise<MirrorState> {
-    const res = await this.rpc(
-      { type: "hydrate", sdkInit },
-      "hydrate:done"
-    );
+    const res = await this.rpc({ type: "hydrate", sdkInit }, "hydrate:done");
     const buf = Buffer.from(new Uint8Array(res.payload.stateBin));
-    const state = v8.deserialize(buf) as MirrorState & { errors?: MirrorError[] };
+    const state = v8.deserialize(buf) as MirrorState & {
+      errors?: MirrorError[];
+    };
 
-    const errs = Array.isArray(state.errors) ? state.errors.filter(Boolean) : [];
+    const errs = Array.isArray(state.errors)
+      ? state.errors.filter(Boolean)
+      : [];
     if (errs.length > 0) {
       const agg = new AggregateError(errs, "Hydration returned errors");
       (agg as any).__mirrorErrors = errs;
@@ -146,5 +147,9 @@ export class MirrorWorkerClient {
     }
 
     throw new Error(`Unexpected worker response: ${res.type}`);
+  }
+
+  setDebugLogging(enabled: boolean): void {
+    this.worker?.postMessage({ type: "setDebug", enabled } as MirrorWorkerIn);
   }
 }
