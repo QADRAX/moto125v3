@@ -10,6 +10,8 @@ const config = {
   reactStrictMode: true,
   output: "standalone",
   experimental: {
+    serverActions: { allowedOrigins: ["*"] },
+    /*
     outputFileTracingRoot: monorepoRoot,
     outputFileTracingIncludes: {
       "*": [
@@ -17,7 +19,7 @@ const config = {
         "packages/data-mirror-core/**",
         "packages/data-mirror-worker/**",
       ],
-    },
+    },*/
   },
 };
 

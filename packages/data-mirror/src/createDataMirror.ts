@@ -8,11 +8,7 @@ import {
   type UpdateListener,
 } from "@moto125/data-mirror-core";
 
-import { 
-  getMirrorState, 
-  setState, 
-  subscribe 
-} from "./store";
+import { getMirrorState, setState, subscribe } from "./store";
 import { MirrorWorkerClient } from "./MirrorWorkerClient";
 
 export function createDataMirror(): DataMirror {
@@ -52,12 +48,28 @@ export function createDataMirror(): DataMirror {
         const loaded = await worker.loadSnapshot(snapshotPath);
         setState(loaded);
         loadedFromSnapshot = true;
-      } catch { }
+      } catch (e: any) {
+        const apiErrors: MirrorError[] | undefined = e?.__mirrorErrors;
+        if (Array.isArray(apiErrors) && apiErrors.length > 0) {
+          for (const err of apiErrors) emitError(err);
+        } else {
+          emitError({
+            time: new Date().toISOString(),
+            source: "snapshot",
+            code: "UNKNOWN",
+            status: undefined,
+            message: e?.message ?? String(e),
+            detail: e?.stack ?? undefined,
+          });
+        }
+      }
     }
 
     if (!loadedFromSnapshot || opts.forceHydrateOnInit) {
       if (!sdkInit) {
-        throw new Error("dataMirror.init: no snapshot available and no sdk provided to hydrate.");
+        throw new Error(
+          "dataMirror.init: no snapshot available and no sdk provided to hydrate."
+        );
       }
       await refresh();
     }
@@ -100,21 +112,19 @@ export function createDataMirror(): DataMirror {
         await worker.saveSnapshot(snapshotPath, next);
       }
     } catch (e: any) {
-      // hydrate lanzó AggregateError con los errores de la API
       const apiErrors: MirrorError[] | undefined = e?.__mirrorErrors;
       if (Array.isArray(apiErrors) && apiErrors.length > 0) {
         for (const err of apiErrors) emitError(err);
+      } else {
+        emitError({
+          time: new Date().toISOString(),
+          source: "unknown",
+          code: "UNKNOWN",
+          status: undefined,
+          message: e?.message ?? String(e),
+          detail: e?.stack ?? undefined,
+        });
       }
-
-      // Errores no tipados (I/O, worker, etc.). Emitimos uno genérico.
-      emitError({
-        time: new Date().toISOString(),
-        source: "unknown",
-        code: "UNKNOWN",
-        status: undefined,
-        message: e?.message ?? String(e),
-        detail: e?.stack ?? undefined,
-      });
     } finally {
       refreshing = false;
     }
@@ -122,24 +132,62 @@ export function createDataMirror(): DataMirror {
 
   function start(): void {
     if (timer || intervalMs <= 0) return;
-    timer = setInterval(() => { void refresh(); }, intervalMs);
+    timer = setInterval(() => {
+      void refresh();
+    }, intervalMs);
   }
 
   function stop(): void {
-    if (timer) { clearInterval(timer); timer = null; }
+    if (timer) {
+      clearInterval(timer);
+      timer = null;
+    }
   }
 
   async function saveSnapshot(): Promise<void> {
     if (!snapshotPath) return;
     const current = getMirrorState();
     if (!current) return;
-    await worker.saveSnapshot(snapshotPath, current);
+    try {
+      await worker.saveSnapshot(snapshotPath, current);
+    } catch (e: any) {
+      const apiErrors: MirrorError[] | undefined = e?.__mirrorErrors;
+      if (Array.isArray(apiErrors) && apiErrors.length > 0) {
+        for (const err of apiErrors) emitError(err);
+        return; // already emitted
+      }
+      emitError({
+        time: new Date().toISOString(),
+        source: "snapshot",
+        code: "UNKNOWN",
+        status: undefined,
+        message: e?.message ?? String(e),
+        detail: e?.stack ?? undefined,
+      });
+    }
   }
 
   async function loadSnapshot(): Promise<void> {
-    if (!snapshotPath) throw new Error("dataMirror.loadSnapshot: snapshotPath not configured.");
-    const loaded = await worker.loadSnapshot(snapshotPath);
-    setState(loaded);
+    if (!snapshotPath)
+      throw new Error("dataMirror.loadSnapshot: snapshotPath not configured.");
+    try {
+      const loaded = await worker.loadSnapshot(snapshotPath);
+      setState(loaded);
+    } catch (e: any) {
+      const apiErrors: MirrorError[] | undefined = e?.__mirrorErrors;
+      if (Array.isArray(apiErrors) && apiErrors.length > 0) {
+        for (const err of apiErrors) emitError(err);
+      } else {
+        emitError({
+          time: new Date().toISOString(),
+          source: "snapshot",
+          code: "UNKNOWN",
+          status: undefined,
+          message: e?.message ?? String(e),
+          detail: e?.stack ?? undefined,
+        });
+      }
+    }
   }
 
   function configure(

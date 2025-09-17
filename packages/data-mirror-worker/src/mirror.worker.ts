@@ -41,22 +41,45 @@ async function handle(msg: MirrorWorkerIn): Promise<MirrorWorkerOut | void> {
     }
 
     case "saveSnapshot": {
-      const view = new Uint8Array(msg.stateBin);
-      const buf = Buffer.from(view);
-      const stateObj = v8.deserialize(buf) as MirrorState;
-      await saveSnapshot(msg.path, stateObj);
-      return { type: "saveSnapshot:done" };
+      try {
+        const view = new Uint8Array(msg.stateBin);
+        const buf = Buffer.from(view);
+        const stateObj = v8.deserialize(buf) as MirrorState;
+        await saveSnapshot(msg.path, stateObj);
+        return { type: "saveSnapshot:done" };
+      } catch (e: any) {
+        const err = {
+          time: new Date().toISOString(),
+          source: "snapshot" as const,
+          code: "UNKNOWN" as const,
+          status: undefined,
+          message: e?.message ?? String(e),
+          detail: e?.stack ?? e,
+        };
+        return { type: "saveSnapshot:error", error: err };
+      }
     }
 
     case "loadSnapshot": {
-      const json = await loadSnapshot(msg.path);
-      const stateBin = toBuffer(json);
-      return {
-        type: "loadSnapshot:done",
-        payload: { stateBin, size: stateBin.byteLength },
-      };
+      try {
+        const json = await loadSnapshot(msg.path);
+        const stateBin = toBuffer(json);
+        return {
+          type: "loadSnapshot:done",
+          payload: { stateBin, size: stateBin.byteLength },
+        };
+      } catch (e: any) {
+        const err = {
+          time: new Date().toISOString(),
+          source: "snapshot" as const,
+          code: "UNKNOWN" as const,
+          status: undefined,
+          message: e?.message ?? String(e),
+          detail: e?.stack ?? e,
+        };
+        return { type: "loadSnapshot:error", error: err };
+      }
     }
-
     case "dispose":
       return;
   }

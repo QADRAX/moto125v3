@@ -28,6 +28,8 @@ export type MirrorWorkerOut =
       type: "loadSnapshot:done";
       payload: { stateBin: ArrayBuffer; size: number };
     }
+  | { type: "saveSnapshot:error"; error: MirrorError }
+  | { type: "loadSnapshot:error"; error: MirrorError }
   | { type: "error"; error: string };
 
 export interface MirrorError {
@@ -43,7 +45,9 @@ export interface MirrorError {
     | "pages.home"
     | "pages.ofertas"
     | "pages.aboutUs"
-    | "config";
+    | "config"
+    // NEW: file I/O & snapshot serialization errors
+    | "snapshot";
   code: "HTTP_404" | "HTTP_4XX" | "HTTP_5XX" | "NETWORK" | "PARSE" | "UNKNOWN";
   status?: number;
   message: string;
