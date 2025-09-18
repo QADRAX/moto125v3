@@ -31,6 +31,7 @@
   },
   "dependencies": {
     "@moto125/data-mirror-core": "*",
-    "@moto125/data-mirror-worker": "*"
+    "@moto125/data-mirror-worker": "*",
+    "cron-parser": "^5.4.0"
   }
 }

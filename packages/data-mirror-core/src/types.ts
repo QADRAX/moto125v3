@@ -98,6 +98,8 @@ export interface DataMirrorInitOptions {
   sdkInit?: SdkInit;
   snapshotPath?: string;
   refreshIntervalMs?: number;
+  refreshCron?: string;
+  cronTimezone?: string;
   autosave?: boolean;
   forceHydrateOnInit?: boolean;
   workerDebugLogging?: boolean;

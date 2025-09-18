@@ -12,7 +12,7 @@ import { getMirrorState, setState, subscribe } from "./store";
 import { SnapshotManager } from "./SnapshotManager";
 import { MirrorWorkerClient } from "./MirrorWorkerClient";
 import { MirrorErrorBus } from "./MirrorErrorBus";
-import { RefreshScheduler } from "./RefreshScheduler";
+import { createScheduler } from "./scheduler/SchedulerFactory";
 
 export class DataMirrorImpl implements DataMirror {
   private sdkInit?: SdkInit;
@@ -22,7 +22,12 @@ export class DataMirrorImpl implements DataMirror {
 
   private readonly worker = new MirrorWorkerClient();
   private readonly errors = new MirrorErrorBus();
-  private readonly scheduler = new RefreshScheduler(() => this.refresh());
+
+  private readonly scheduler = createScheduler(
+    { refreshIntervalMs: 0, refreshCron: undefined, cronTimezone: undefined },
+    () => this.refresh()
+  );
+
   private readonly updateListeners = new Set<UpdateListener>();
   private readonly unsubStore: () => void;
 
@@ -43,7 +48,11 @@ export class DataMirrorImpl implements DataMirror {
     this.snapshotPath = opts.snapshotPath;
     this.autosave = !!opts.autosave;
 
-    this.scheduler.setInterval(opts.refreshIntervalMs ?? 0);
+    this.scheduler.reconfigure({
+      refreshCron: opts.refreshCron,
+      cronTimezone: opts.cronTimezone,
+      refreshIntervalMs: opts.refreshIntervalMs,
+    });
 
     const snapshot = new SnapshotManager(this.worker, this.errors);
 
@@ -136,8 +145,16 @@ export class DataMirrorImpl implements DataMirror {
     if (opts.snapshotPath !== undefined) this.snapshotPath = opts.snapshotPath;
     if (opts.autosave !== undefined) this.autosave = !!opts.autosave;
 
-    if (opts.refreshIntervalMs !== undefined) {
-      this.scheduler.setInterval(opts.refreshIntervalMs);
+    if (
+      opts.refreshCron !== undefined ||
+      opts.refreshIntervalMs !== undefined ||
+      opts.cronTimezone !== undefined
+    ) {
+      this.scheduler.reconfigure({
+        refreshCron: opts.refreshCron,
+        cronTimezone: opts.cronTimezone,
+        refreshIntervalMs: opts.refreshIntervalMs,
+      });
     }
   }
 
