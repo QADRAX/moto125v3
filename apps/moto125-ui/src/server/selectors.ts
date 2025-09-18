@@ -11,7 +11,6 @@ export function pickLatestArticles(
 ): Article[] {
   if (!state?.data?.articles?.length) return [];
 
-  // Desambiguar parámetros
   let limit = 10;
   let typeFilter: string | undefined = undefined;
 

@@ -1,19 +1,12 @@
 import "server-only";
+
 import Link from "next/link";
 import { getMirrorState } from "@/server/dataMirror";
 import { pickLatestArticles } from "@/server/selectors";
-import type { Article } from "@moto125/api-client";
 import { slugify } from "@/utils/utils";
 import CategorySectionHeader from "./CategorySectionHeader";
 import CategoryGrid from "./CategoryGrid";
 
-/**
- * Server component: Latest N articles for a given category (article type).
- * @param articleType Category name or slug (e.g., "pruebas" or "pruebas-de-conduccion").
- * @param limit Max number of articles to show (default 8).
- * @param title Optional custom title for the section header.
- * @param containerClass Optional extra classes for the outer <section>.
- */
 export default async function CategoryLatest(props: {
   articleType: string;
   limit?: number;
