@@ -3,7 +3,7 @@ import type { Article } from "@moto125/api-client";
 import ArticleBody from "./ArticleBody";
 import ArticleImage from "./ArticleImage";
 
-export default function CategoryCard({
+export default function ArticleCard({
   article,
   emphasis = false,
 }: {

@@ -5,7 +5,7 @@ import { getMirrorState } from "@/server/dataMirror";
 import { pickLatestArticles } from "@/server/selectors";
 import { slugify } from "@/utils/utils";
 import CategorySectionHeader from "./CategorySectionHeader";
-import CategoryGrid from "./CategoryGrid";
+import ArticleGrid from "../../common/ArticleGrid";
 
 export default async function CategoryLatest(props: {
   articleType: string;
@@ -40,7 +40,7 @@ export default async function CategoryLatest(props: {
         }
       />
 
-      <CategoryGrid articles={articles} />
+      <ArticleGrid articles={articles} />
     </section>
   );
 }
