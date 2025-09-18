@@ -6,7 +6,7 @@
 
 [![License: BUSL-1.1](https://img.shields.io/badge/License-BUSL--1.1-orange.svg)](LICENSE)
 
-Este repositorio contiene el código fuente del proyecto [moto125.cc](https://www.moto125.cc), una revista en español dedicada a motocicletas de 125cc. La web está activa desde **2010** y ha pasado por varias etapas técnicas: primero en **Joomla** customizado, después en **WordPress**, y ahora en esta **tercera iteración** que utiliza **Strapi como headless CMS** y un **frontend en Next.js** potenciado con una **caché de contenido en memoria** para mayor rendimiento.
+Este repositorio contiene el código fuente de [moto125.cc](https://www.moto125.cc), una revista en español dedicada a motocicletas de 125cc. La web está activa desde **2010** y ha pasado por varias etapas técnicas: primero en **Joomla** customizado, después en **WordPress**, y ahora en esta **tercera iteración** que utiliza **Strapi como headless CMS** y un **frontend en Next.js** potenciado con una **caché de contenido en memoria** para mayor rendimiento.
 
 ⚠️ Importante: este repositorio incluye únicamente la arquitectura técnica del proyecto.
 Es decir, contiene el código de la web y de los diferentes procesos internos de moto125.cc, pero no incluye el contenido editorial (artículos, imágenes y base de datos real).
