@@ -7,6 +7,7 @@ import ArticleGrid from "@/components/common/ArticleGrid";
 import Pagination from "@/components/common/Pagination";
 import { paginate } from "@/server/pagination";
 import { slugify, toUpperCamelCase } from "@/utils/utils";
+import { Container } from "@/components/common/Container";
 
 export const revalidate = 60;
 const PAGE_SIZE = 12;
@@ -47,7 +48,7 @@ export default async function ArticulosTipoPagedPage({ params }: Props) {
   const human = toUpperCamelCase(params.tipo);
 
   return (
-    <section className="mx-auto max-w-screen-2xl px-4 sm:px-6 py-6 sm:py-8">
+    <Container>
       <h1 className="mb-4 text-2xl font-heading font-bold uppercase">
         {human} — Página {info.page}
       </h1>
@@ -57,6 +58,6 @@ export default async function ArticulosTipoPagedPage({ params }: Props) {
         page={info.page}
         totalPages={info.totalPages}
       />
-    </section>
+    </Container>
   );
 }

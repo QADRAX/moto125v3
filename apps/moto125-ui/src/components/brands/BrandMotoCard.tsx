@@ -1,19 +1,13 @@
 import type { Moto } from "@moto125/api-client";
 import Link from "next/link";
-import { mediaUrl, slugify } from "@/utils/utils";
+import { mediaUrl } from "@/utils/utils";
 
 export interface BrandMotoCardProps {
   moto: Moto;
 }
 
 function getMotoCanonicalPath(m: Moto): string {
-  const typeSlug = m.motoType ? slugify(m.motoType.name ?? "") : "";
-  const classSlug = m.motoType?.motoClass
-    ? slugify(m.motoType.motoClass.name)
-    : "";
-  if (typeSlug && classSlug)
-    return `/motos/${classSlug}/${typeSlug}/${m.moto125Id}`;
-  return `/motos/${m.moto125Id}`;
+  return `/moto/${m.moto125Id}`;
 }
 
 export default function BrandMotoCard({ moto }: BrandMotoCardProps) {

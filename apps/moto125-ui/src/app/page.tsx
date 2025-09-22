@@ -1,12 +1,13 @@
 import HomeFeatured from "@/components/home/homeFeatured/HomeFeatured";
 import CategoryLatest from "@/components/home/categoryLatest/CategoryLatest";
+import { Container } from "@/components/common/Container";
 
 export default async function Home() {
   return (
     <>
       <HomeFeatured />
 
-      <section className="mx-auto max-w-screen-2xl px-4 sm:px-6 py-6 sm:py-8">
+      <Container>
         <CategoryLatest
             articleType="PRUEBAS"
             limit={10}
@@ -18,11 +19,11 @@ export default async function Home() {
             headerText="ÚLTIMAS NOVEDADES"
           />
           <CategoryLatest
-            articleType="REPORTAJES"
+            articleType="INICIACIÓN"
             limit={10}
             headerText="ÚLTIMOS REPORTAJES"
           />
-      </section>
+      </Container>
     </>
   );
 }

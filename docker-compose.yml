@@ -62,7 +62,6 @@ services:
       CACHE_REFRESH_INTERVAL_MS: ${CACHE_REFRESH_INTERVAL_MS}
       STRAPI_API_URL: ${STRAPI_API_URL}
       STRAPI_API_TOKEN: ${STRAPI_API_TOKEN}
-      DEBUG_MIRROR: ${DEBUG_MIRROR}
     volumes:
       - moto125-cache:/app/.cache
     ports:

@@ -2,14 +2,10 @@ import type { Moto } from "@moto125/api-client";
 import MotoCard from "./MotoCard";
 
 export interface MotoListProps {
-  classSlug: string;
-  typeSlug: string;
   motos: Moto[];
 }
 
 export default function MotoList({
-  classSlug,
-  typeSlug,
   motos,
 }: MotoListProps) {
   return (
@@ -17,8 +13,6 @@ export default function MotoList({
       {motos.map((m) => (
         <MotoCard
           key={m.documentId}
-          classSlug={classSlug}
-          typeSlug={typeSlug}
           moto={m}
         />
       ))}

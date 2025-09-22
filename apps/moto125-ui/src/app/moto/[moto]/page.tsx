@@ -7,6 +7,7 @@ import { slugify } from "@/utils/utils";
 import MotoHeader from "@/components/motos/MotoHeader";
 import MotoSpecs from "@/components/motos/MotoSpecs";
 import Breadcrumbs from "@/components/common/Breadcrumbs";
+import { Container } from "@/components/common/Container";
 
 export const revalidate = 60;
 
@@ -50,29 +51,31 @@ export async function generateMetadata({
 export default async function MotoDetailPage({
   params,
 }: {
-  params: { class: string; type: string; moto: string };
+  params: { moto: string };
 }) {
   const state: MirrorRootState = await getMirrorState();
-  const mc = findClassBySlug(state, params.class);
-  const mt = findTypeBySlug(state, params.type);
   const moto = findMotoByParam(state, params.moto);
-  if (!mc || !mt || !moto) notFound();
+  
+  const mc = moto.motoType?.motoClass;
+  const mt = moto.motoType;
+
+  if (!moto) notFound();
 
   return (
-    <div className="container mx-auto max-w-4xl px-4 py-8">
+    <Container>
       <Breadcrumbs
         items={[
           { label: "Motos", href: "/motos" },
-          { label: mc.name, href: `/motos/${params.class}` },
+          { label: mc.name, href: `/motos/${slugify(mc.name)}` },
           {
             label: mt.fullName ?? mt.name,
-            href: `/motos/${params.class}/${params.type}`,
+            href: `/motos/${slugify(mc.name)}/${slugify(mt.name)}`,
           },
           { label: moto.fullName ?? moto.modelName },
         ]}
       />
       <MotoHeader moto={moto} />
       <MotoSpecs ficha={moto.fichaTecnica ?? {}} />
-    </div>
+    </Container>
   );
 }

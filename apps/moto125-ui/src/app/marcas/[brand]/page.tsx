@@ -8,6 +8,7 @@ import Breadcrumbs from "@/components/common/Breadcrumbs";
 import { slugify } from "@/utils/utils";
 import BrandHeader from "@/components/brands/BrandHeader";
 import BrandMotoList from "@/components/brands/BrandMotoList";
+import { Container } from "@/components/common/Container";
 
 export const revalidate = 60;
 
@@ -58,7 +59,7 @@ export default async function BrandDetailPage({
   const motos = getMotosByCompany(state, company);
 
   return (
-    <div className="container mx-auto max-w-6xl px-4 py-8">
+    <Container>
       <Breadcrumbs
         items={[{ label: "Marcas", href: "/marcas" }, { label: company.name }]}
       />
@@ -75,6 +76,6 @@ export default async function BrandDetailPage({
           No hay motos publicadas de esta marca todavía.
         </p>
       )}
-    </div>
+    </Container>
   );
 }

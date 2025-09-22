@@ -5,6 +5,7 @@ import type { Company } from "@moto125/api-client";
 import { getMirrorState } from "@/server/dataMirror";
 import Breadcrumbs from "@/components/common/Breadcrumbs";
 import BrandGrid from "@/components/brands/BrandGrid";
+import { Container } from "@/components/common/Container";
 
 export const revalidate = 60;
 
@@ -24,11 +25,11 @@ export default async function BrandsIndexPage() {
   if (!companies.length) notFound();
 
   return (
-    <div className="container mx-auto max-w-5xl px-4 py-8">
+    <Container>
       <Breadcrumbs items={[{ label: "Marcas" }]} />
       <h1 className="mb-6 text-3xl font-semibold">Marcas</h1>
       <BrandGrid companies={companies} />
-    </div>
+    </Container>
   );
 }
 

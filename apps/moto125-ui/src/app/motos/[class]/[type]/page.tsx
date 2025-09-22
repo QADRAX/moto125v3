@@ -6,6 +6,7 @@ import { getMirrorState } from "@/server/dataMirror";
 import { slugify } from "@/utils/utils";
 import MotoList from "@/components/motos/MotoList";
 import Breadcrumbs from "@/components/common/Breadcrumbs";
+import { Container } from "@/components/common/Container";
 
 export const revalidate = 60;
 
@@ -60,7 +61,7 @@ export default async function MotosByTypePage({
   const motos = getMotosByType(state, mt);
 
   return (
-    <div className="container mx-auto max-w-6xl px-4 py-8">
+    <Container>
       <Breadcrumbs
         items={[
           { label: "Motos", href: "/motos" },
@@ -69,7 +70,7 @@ export default async function MotosByTypePage({
         ]}
       />
       <h1 className="mb-6 text-3xl font-semibold">{mt.fullName ?? mt.name}</h1>
-      <MotoList classSlug={params.class} typeSlug={params.type} motos={motos} />
-    </div>
+      <MotoList motos={motos} />
+    </Container>
   );
 }

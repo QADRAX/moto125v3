@@ -3,17 +3,15 @@ import Link from "next/link";
 import { mediaUrl } from "@/utils/utils";
 
 export interface MotoCardProps {
-  classSlug: string;
-  typeSlug: string;
   moto: Moto;
 }
 
-export default function MotoCard({ classSlug, typeSlug, moto }: MotoCardProps) {
+export default function MotoCard({ moto }: MotoCardProps) {
   const img = moto.images?.[0]?.url ? mediaUrl(moto.images[0].url) : undefined;
   const title = moto.fullName ?? moto.modelName;
   return (
     <Link
-      href={`/motos/${classSlug}/${typeSlug}/${moto.moto125Id}`}
+      href={`/moto/${moto.moto125Id}`}
       className="border p-4 transition hover:shadow-md"
     >
       {img ? (

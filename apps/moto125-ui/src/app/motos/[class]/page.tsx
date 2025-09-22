@@ -6,6 +6,7 @@ import { getMirrorState } from "@/server/dataMirror";
 import { slugify } from "@/utils/utils";
 import TypeGrid from "@/components/motos/TypeGrid";
 import Breadcrumbs from "@/components/common/Breadcrumbs";
+import { Container } from "@/components/common/Container";
 
 export const revalidate = 60;
 
@@ -58,12 +59,12 @@ export default async function MotosTypesByClassPage({
   }
 
   return (
-    <div className="container mx-auto max-w-5xl px-4 py-8">
+    <Container>
       <Breadcrumbs
         items={[{ label: "Motos", href: "/motos" }, { label: mc.name }]}
       />
       <h1 className="mb-6 text-3xl font-semibold">Tipos de {mc.name}</h1>
       <TypeGrid classSlug={params.class} types={types} />
-    </div>
+    </Container>
   );
 }
