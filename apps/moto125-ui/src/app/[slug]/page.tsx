@@ -6,6 +6,7 @@ import { pickArticleBySlug } from "@/server/selectors";
 import { getMirrorState } from "@/server/dataMirror";
 import { mediaUrl } from "@/utils/utils";
 import ArticleView from "@/components/article/ArticleView";
+import { computeArticleDescription } from "@/utils/extractArticleDescription";
 
 export const revalidate = 60;
 
@@ -17,9 +18,8 @@ export async function generateMetadata({
   const state = await getMirrorState();
   const article = pickArticleBySlug(state, params.slug);
   if (!article) return { title: "Artículo no encontrado" };
-
+  const description = computeArticleDescription(article, { maxLength: 700});
   const title = article.title || article.slug;
-  const description = article.authorText || undefined;
   const cover = mediaUrl(article.coverImage.url);
 
   return {

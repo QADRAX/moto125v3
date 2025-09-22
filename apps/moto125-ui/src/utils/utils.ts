@@ -6,6 +6,12 @@ export function mediaUrl(url?: string | null): string | null {
   return null;
 }
 
+export function absoluteUrl(base: string | null | undefined, path: string) {
+  const b = (base ?? "").replace(/\/$/, "");
+  const p = path.startsWith("/") ? path : `/${path}`;
+  return `${b}${p}`;
+}
+
 export function toUpperCamelCase(input?: string | null): string {
   if (!input) return "";
   return input
