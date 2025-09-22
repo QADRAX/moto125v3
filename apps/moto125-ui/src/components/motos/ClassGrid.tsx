@@ -1,28 +1,12 @@
-import { slugify } from "@/utils/utils";
+import "server-only";
 import type { MotoClass } from "@moto125/api-client";
-import Link from "next/link";
+import ClassCard from "./ClassCard";
 
-
-export interface ClassGridProps {
-  /** Available moto classes (e.g., Scooter, Moto) */
-  classes: MotoClass[];
-}
-
-/**
- * Grid of moto classes.
- */
-export default function ClassGrid({ classes }: ClassGridProps) {
+export default function ClassGrid({ classes }: { classes: MotoClass[] }) {
   return (
-    <div className="grid gap-4 sm:grid-cols-2">
-      {classes.map((c) => (
-        <Link
-          key={c.documentId}
-          href={`/motos/${slugify(c.name)}`}
-          className="border p-6 transition hover:shadow-md"
-        >
-          <h2 className="text-xl font-semibold">{c.name}</h2>
-          <p className="opacity-70">Explorar tipos</p>
-        </Link>
+    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {classes.map((clazz) => (
+        <ClassCard key={clazz.documentId} clazz={clazz} />
       ))}
     </div>
   );

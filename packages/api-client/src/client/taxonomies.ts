@@ -15,12 +15,23 @@ import type {
   MotoClassUpdateInput,
 } from '../types/inputs.js';
 
+export const MOTO_CLASS_POPULATE: StrapiQueryParams['populate'] = {
+  image: true
+};
+
+export const MOTO_TYPE_POPULATE: StrapiQueryParams['populate'] = {
+  image: true
+};
+
 /** ===== GET ===== */
 export async function getArticleTypes(
   api: ApiClient,
   params: StrapiQueryParams = {}
 ): Promise<StrapiCollectionResponse<ArticleType>> {
-  const qs = toQueryString({ ...params, sort: params.sort ?? ['name:asc'] });
+  const qs = toQueryString({ 
+    ...params, 
+    sort: params.sort ?? ['name:asc'] 
+  });
   return api.get(`/api/article-types`, qs);
 }
 
@@ -29,7 +40,7 @@ export async function getMotoTypes(
   params: StrapiQueryParams = {}
 ): Promise<StrapiCollectionResponse<MotoType>> {
   const qs = toQueryString({
-    populate: params.populate ?? { motoClass: true },
+    populate: params.populate ?? { motoClass: true, image: true },
     sort: params.sort ?? ['name:asc'],
     ...params,
   });
@@ -40,7 +51,11 @@ export async function getMotoClasses(
   api: ApiClient,
   params: StrapiQueryParams = {}
 ): Promise<StrapiCollectionResponse<MotoClass>> {
-  const qs = toQueryString({ ...params, sort: params.sort ?? ['name:asc'] });
+  const qs = toQueryString({ 
+    ...params, 
+    sort: params.sort ?? ['name:asc'],
+    populate: params.populate ?? { image: true },
+  });
   return api.get(`/api/moto-classes`, qs);
 }
 

@@ -85,6 +85,7 @@ export interface MotoClass {
   createdAt: string;
   updatedAt: string;
   publishedAt?: string | null;
+  image?: StrapiFile | null;
 }
 
 export interface MotoType {
