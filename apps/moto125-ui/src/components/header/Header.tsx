@@ -49,7 +49,6 @@ export default async function Header() {
                 siteName={siteName}
                 logoUrl={logoUrl}
                 alt={cfg?.logo?.alternativeText}
-                size="md"
               />
               <HeaderHero
                 imgUrl={heroImg}
@@ -68,7 +67,6 @@ export default async function Header() {
               siteName={siteName}
               logoUrl={logoUrl}
               alt={cfg?.logo?.alternativeText}
-              size="sm"
             />
             <div className="flex-1 min-w-0">
               <HeaderNav types={types} layout="stacked" />

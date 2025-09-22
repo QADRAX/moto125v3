@@ -9,7 +9,7 @@ export interface TypeGridProps {
 
 export default function TypeGrid({ classSlug, types }: TypeGridProps) {
   return (
-    <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
+    <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3">
       {types.map((t) => (
         <TypeCard key={t.documentId} type={t} classSlug={classSlug} />
       ))}
