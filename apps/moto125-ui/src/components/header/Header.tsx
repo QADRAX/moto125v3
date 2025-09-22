@@ -35,12 +35,10 @@ export default async function Header() {
       id="main-header"
       className="z-50 bg-white border-b-3 border-primary mx-auto max-w-page px-4 sm:px-6"
     >
-      {/* Mobile bar + drawer */}
       <div className="md:hidden">
         <MobileHeader />
       </div>
 
-      {/* Desktop header */}
       <div className={`hidden md:block mx-auto w-full`}>
         {hasHero ? (
           <>
@@ -57,11 +55,9 @@ export default async function Header() {
                 siteName={siteName}
               />
             </div>
-            {/* Menú debajo, centrado (stacked) */}
             <HeaderNav types={types} />
           </>
         ) : (
-          // SIN hero: brand + nav EN LA MISMA LÍNEA
           <div className="h-12 hidden sm:flex items-center gap-4">
             <HeaderBrand
               siteName={siteName}

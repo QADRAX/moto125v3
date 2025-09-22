@@ -8,9 +8,9 @@ import Pagination from "@/components/common/Pagination";
 import { paginate } from "@/server/pagination";
 import { slugify, toUpperCamelCase } from "@/utils/utils";
 import { Container } from "@/components/common/Container";
+import { PAGE_SIZE } from "@/constants";
 
 export const revalidate = 60;
-const PAGE_SIZE = 12;
 
 type Props = { params: { tipo: string; page: string } };
 

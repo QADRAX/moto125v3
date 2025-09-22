@@ -6,10 +6,9 @@ import ArticleGrid from "@/components/common/ArticleGrid";
 import Pagination from "@/components/common/Pagination";
 import { paginate } from "@/server/pagination";
 import { Container } from "@/components/common/Container";
+import { PAGE_SIZE } from "@/constants";
 
 export const revalidate = 60;
-
-const PAGE_SIZE = 12;
 
 export const metadata: Metadata = {
   title: "Artículos",
