@@ -692,6 +692,9 @@ export interface ApiMotoMoto extends Struct.CollectionTypeSchema {
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     description: Schema.Attribute.Text;
+    engineType: Schema.Attribute.Enumeration<
+      ['combusti\u00F3n', 'el\u00E9ctrico', 'hibrido']
+    >;
     fichaTecnica: Schema.Attribute.JSON;
     fullName: Schema.Attribute.String;
     images: Schema.Attribute.Media<
@@ -715,6 +718,7 @@ export interface ApiMotoMoto extends Struct.CollectionTypeSchema {
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    year: Schema.Attribute.Integer;
   };
 }
 

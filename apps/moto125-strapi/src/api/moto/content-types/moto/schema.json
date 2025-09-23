@@ -12,9 +12,31 @@
   },
   "pluginOptions": {},
   "attributes": {
+    "moto125Id": {
+      "type": "uid",
+      "required": true
+    },
+    "company": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::company.company",
+      "inversedBy": "motos"
+    },
+    "fullName": {
+      "type": "string"
+    },
     "modelName": {
       "type": "string",
       "required": true
+    },
+    "motoType": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::moto-type.moto-type",
+      "inversedBy": "motos"
+    },
+    "description": {
+      "type": "text"
     },
     "images": {
       "type": "media",
@@ -30,18 +52,11 @@
     "priece": {
       "type": "decimal"
     },
+    "year": {
+      "type": "integer"
+    },
     "fichaTecnica": {
       "type": "json"
-    },
-    "motoType": {
-      "type": "relation",
-      "relation": "manyToOne",
-      "target": "api::moto-type.moto-type",
-      "inversedBy": "motos"
-    },
-    "moto125Id": {
-      "type": "uid",
-      "required": true
     },
     "articles": {
       "type": "relation",
@@ -49,22 +64,10 @@
       "target": "api::article.article",
       "mappedBy": "relatedMotos"
     },
-    "company": {
-      "type": "relation",
-      "relation": "manyToOne",
-      "target": "api::company.company",
-      "inversedBy": "motos"
-    },
     "active": {
       "type": "boolean",
       "required": true,
       "default": true
-    },
-    "description": {
-      "type": "text"
-    },
-    "fullName": {
-      "type": "string"
     },
     "normativa": {
       "type": "enumeration",
@@ -75,6 +78,14 @@
         "Euro 4",
         "Euro 5",
         "Euro 5plus"
+      ]
+    },
+    "engineType": {
+      "type": "enumeration",
+      "enum": [
+        "combustión",
+        "eléctrico",
+        "hibrido"
       ]
     }
   }
