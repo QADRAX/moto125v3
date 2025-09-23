@@ -31,6 +31,9 @@ function buildInitOptions(): DataMirrorInitOptions {
     refreshIntervalMs: process.env.CACHE_REFRESH_INTERVAL_MS
       ? Number(process.env.CACHE_REFRESH_INTERVAL_MS)
       : undefined,
+    refreshCron: process.env.CACHE_REFRESH_INTERVAL_CRON
+      ? process.env.CACHE_REFRESH_INTERVAL_CRON
+      : undefined,
     autosave: true,
     forceHydrateOnInit: true,
     workerDebugLogging: true,

@@ -13,6 +13,7 @@ function absoluteUrl(base: string, path: string) {
   return `${cleanBase}${path.startsWith("/") ? "" : "/"}${path}`;
 }
 
+export const dynamic = "force-dynamic"; 
 export const revalidate = 60 * 60 * 24; // 24h
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -31,9 +32,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority?: number;
   }> = [
     { path: "/", changefreq: "hourly", priority: 1 },
-    { path: "/articulos", changefreq: "daily", priority: 0.9 },
-    { path: "/marcas", changefreq: "weekly", priority: 0.7 },
-    { path: "/motos", changefreq: "weekly", priority: 0.7 },
+    { path: "/articulos", changefreq: "daily", priority: 0.8 },
+    { path: "/marcas", changefreq: "weekly", priority: 0.3 },
+    { path: "/motos", changefreq: "weekly", priority: 0.5 },
   ];
 
   for (const r of staticRoutes) {
@@ -57,8 +58,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     items.push({
       url: absoluteUrl(base, `/${slug}`),
       lastModified: last,
-      changeFrequency: "weekly",
-      priority: 0.9,
+      changeFrequency: "monthly",
+      priority: 0.8,
     });
   }
 
@@ -68,7 +69,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       items.push({
         url: absoluteUrl(base, `/articulos/p/${p}`),
         lastModified: now,
-        changeFrequency: "daily",
+        changeFrequency: "weekly",
         priority: 0.6,
       });
     }
@@ -87,7 +88,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     items.push({
       url: absoluteUrl(base, `/articulos/tipo/${typeSlug}`),
       lastModified: last,
-      changeFrequency: "daily",
+      changeFrequency: "weekly",
       priority: 0.8,
     });
 
@@ -101,7 +102,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         items.push({
           url: absoluteUrl(base, `/articulos/tipo/${typeSlug}/p/${p}`),
           lastModified: last,
-          changeFrequency: "daily",
+          changeFrequency: "weekly",
           priority: 0.6,
         });
       }
@@ -172,7 +173,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     items.push({
       url: absoluteUrl(base, `/moto/${id}`),
       lastModified: last,
-      changeFrequency: "monthly",
+      changeFrequency: "weekly",
       priority: 0.6,
     });
   }
