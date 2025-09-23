@@ -11,7 +11,7 @@
     "@moto125/admin-api-client": "*",
     "@moto125/data-mirror": "*",
     "@moto125/data-mirror-worker": "*",
-    "axios": "^1.9.0",
+    "axios": "^1.12.2",
     "cheerio": "^1.0.0",
     "dompurify": "^3.1.7",
     "dotenv": "^16.5.0",
