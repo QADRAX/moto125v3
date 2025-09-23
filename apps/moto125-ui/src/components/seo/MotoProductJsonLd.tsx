@@ -18,6 +18,7 @@ type Props = {
   specs?: Spec[];
 };
 
+
 export default function MotoProductJsonLd({
   url, name, description, images,
   sku, brandName, category, releaseDate, normative, specs

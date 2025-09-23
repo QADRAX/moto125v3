@@ -9,6 +9,7 @@ import { slugify } from "@/utils/utils";
 import BrandHeader from "@/components/brands/BrandHeader";
 import BrandMotoList from "@/components/brands/BrandMotoList";
 import { Container } from "@/components/common/Container";
+import { BrandJsonLdFromCompany } from "@/components/seo/BrandJsonLd";
 
 export const revalidate = 60;
 
@@ -60,6 +61,7 @@ export default async function BrandDetailPage({
 
   return (
     <Container>
+      <BrandJsonLdFromCompany company={company} />
       <Breadcrumbs
         items={[{ label: "Marcas", href: "/marcas" }, { label: company.name }]}
       />

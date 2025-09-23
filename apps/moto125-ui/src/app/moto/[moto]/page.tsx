@@ -8,6 +8,7 @@ import MotoHeader from "@/components/motos/MotoHeader";
 import MotoSpecs from "@/components/motos/MotoSpecs";
 import Breadcrumbs from "@/components/common/Breadcrumbs";
 import { Container } from "@/components/common/Container";
+import { MotoProductJsonLdFromMoto } from "@/components/seo/MotoProductJsonLd";
 
 export const revalidate = 60;
 
@@ -63,6 +64,7 @@ export default async function MotoDetailPage({
 
   return (
     <Container>
+      <MotoProductJsonLdFromMoto moto={moto} />
       <Breadcrumbs
         items={[
           { label: "Motos", href: "/motos" },
