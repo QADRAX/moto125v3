@@ -10,10 +10,21 @@ type Props = {
   onClose: () => void;
   siteName: string;
   logoUrl: string | null;
-  nav: Array<{ key: string; label: string; href?: string; children?: MenuLink[] }>;
+  nav: Array<{
+    key: string;
+    label: string;
+    href?: string;
+    children?: MenuLink[];
+  }>;
 };
 
-export default function MobileDrawer({ open, onClose, siteName, logoUrl, nav }: Props) {
+export default function MobileDrawer({
+  open,
+  onClose,
+  siteName,
+  logoUrl,
+  nav,
+}: Props) {
   useEffect(() => {
     if (!open) return;
     const prevOverflow = document.body.style.overflow;
@@ -44,11 +55,18 @@ export default function MobileDrawer({ open, onClose, siteName, logoUrl, nav }: 
       >
         <div className="h-12 flex items-center justify-between px-3 border-b border-[#e6e6e6]">
           {/* Logo en lugar de texto */}
-          <Link href="/" className="inline-flex items-center gap-2" aria-label={siteName} onClick={onClose}>
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2"
+            aria-label={siteName}
+            onClick={onClose}
+          >
             {logoUrl ? (
               <img src={logoUrl} alt={siteName} className="h-7 w-auto" />
             ) : (
-              <span className="font-heading text-lg font-semibold">{siteName}</span>
+              <span className="font-heading text-lg font-semibold">
+                {siteName}
+              </span>
             )}
           </Link>
 
@@ -58,14 +76,47 @@ export default function MobileDrawer({ open, onClose, siteName, logoUrl, nav }: 
             aria-label="Cerrar menú"
             onClick={onClose}
           >
-            <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" className="mx-auto">
-              <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" fill="none" />
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+              className="mx-auto"
+            >
+              <path
+                d="M6 6l12 12M18 6L6 18"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                fill="none"
+              />
             </svg>
           </button>
         </div>
 
         <nav className="p-2 overflow-y-auto scrollbar">
           <ul className="space-y-1">
+            <li>
+              <Link
+                href="/buscar"
+                className="flex items-center gap-2 px-3 py-2 hover:bg-black/5 transition"
+                onClick={onClose}
+              >
+                <svg
+                  aria-hidden="true"
+                  viewBox="0 0 24 24"
+                  width="18"
+                  height="18"
+                  className="shrink-0"
+                >
+                  <path
+                    d="M11 4a7 7 0 015.657 11.313l3.515 3.515a1 1 0 01-1.414 1.414l-3.515-3.515A7 7 0 1111 4zm0 2a5 5 0 100 10 5 5 0 000-10z"
+                    fill="currentColor"
+                  />
+                </svg>
+                <span>Buscar</span>
+              </Link>
+            </li>
             {nav.map((item) =>
               item.children?.length ? (
                 <li key={item.key}>

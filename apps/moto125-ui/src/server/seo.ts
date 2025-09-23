@@ -130,7 +130,7 @@ export function buildArticleMetadata(article: Article, cfg?: Config | null): Met
         : (siteDefaults.twitter as any)?.images,
     },
     alternates: {
-      canonical: `${(siteDefaults.metadataBase ?? new URL("https://www.moto125.cc")).toString().replace(/\/$/, "")}/articulos/${article.slug}`,
+      canonical: `${(siteDefaults.metadataBase ?? new URL("https://www.moto125.cc")).toString().replace(/\/$/, "")}/${article.slug}`,
     },
   };
 }

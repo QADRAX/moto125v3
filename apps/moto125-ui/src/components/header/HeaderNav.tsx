@@ -2,10 +2,10 @@ import Link from "next/link";
 import type { ArticleType } from "@moto125/api-client";
 import NavDropdown from "./NavDropdown";
 import { buildNav } from "./navModel";
+import SearchNavItem from "./SearchNavItem";
 
 type Props = {
   types: ArticleType[];
-  /** Layout: 'stacked' (debajo, centrado) o 'inline' (en fila, a la izquierda) */
   layout?: "stacked" | "inline";
 };
 
@@ -40,6 +40,7 @@ export default function HeaderNav({ types, layout = "stacked" }: Props) {
             </li>
           )
         )}
+        <SearchNavItem />
       </ul>
     </nav>
   );
