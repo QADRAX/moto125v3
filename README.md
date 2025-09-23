@@ -2,7 +2,7 @@
 
 ![](./logo.png)
 
-# Moto125.cc (v3)
+---
 
 [![License: BUSL-1.1](https://img.shields.io/badge/License-BUSL--1.1-orange.svg)](LICENSE)
 
