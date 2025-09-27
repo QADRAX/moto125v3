@@ -4,6 +4,7 @@ import { getMirrorState } from "@/server/dataMirror";
 import type { Config } from "@moto125/api-client";
 import { mediaUrl, isExternalUrl } from "@/utils/utils";
 import { YouTubeIcon } from "./YoutubeIcon";
+import ResetConsentButton from "../googleAnalytics/ResetConsentButton";
 
 type FooterProps = {
   aboutHref?: string;
@@ -65,34 +66,45 @@ export default async function Footer({
             </Link>
 
             {siteDescription && (
-              <p className="mt-3 text-sm text-white/80 max-w-prose" itemProp="description">
+              <p
+                className="mt-3 text-sm text-white/80 max-w-prose"
+                itemProp="description"
+              >
                 {siteDescription}
               </p>
             )}
           </section>
 
           <nav aria-label="Enlaces" className="sm:justify-self-center">
-            <h2 className="text-sm font-semibold uppercase tracking-wide mb-3">Enlaces</h2>
+            <h2 className="text-sm font-semibold uppercase tracking-wide mb-3">
+              Enlaces
+            </h2>
             <ul className="space-y-2">
               <li>
-                <Link href="/motos" className="hover:underline">
-                  Motos
-                </Link>
-              </li>
-              <li>
-                <Link href="/marcas" className="hover:underline">
-                  Marcas
-                </Link>
-              </li>
-              <li>
-                <Link href="/articulos" className="hover:underline">
-                  Artículos
-                </Link>
-              </li>
-              <li>
-                <Link href={aboutHref} className="hover:underline">
+                <Link href="/sobre-nosotros" className="hover:underline">
                   Sobre nosotros
                 </Link>
+              </li>
+              <li>
+                <Link
+                  href="/politica-de-privacidad"
+                  className="hover:underline"
+                >
+                  Política de privacidad
+                </Link>
+              </li>
+              <li>
+                <Link href="/politica-de-cookies" className="hover:underline">
+                  Política de cookies
+                </Link>
+              </li>
+              <li>
+                <Link href="/aviso-legal" className="hover:underline">
+                  Aviso legal
+                </Link>
+              </li>
+              <li>
+                <ResetConsentButton />
               </li>
             </ul>
           </nav>
@@ -172,7 +184,9 @@ export default async function Footer({
       {/* Bottom bar */}
       <div className="border-t border-white/10">
         <div className="mx-auto max-w-page px-4 sm:px-6 py-4 text-xs text-white/70 flex flex-wrap items-center justify-center">
-          <span>© {year} {siteName}</span>
+          <span>
+            © {year} {siteName}
+          </span>
         </div>
       </div>
     </footer>
