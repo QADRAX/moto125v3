@@ -1,1 +1,4 @@
 export const PAGE_SIZE = 12;
+
+export const COOKIES_CONSENT_DENY_TTL_HOURS = 24;
+export const COOKIES_CONSENT_GRANT_TTL_DAYS = 180;

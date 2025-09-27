@@ -8,6 +8,14 @@ import Footer from "@/components/footer/Footer";
 import type { Metadata } from "next";
 import { getMirrorState } from "@/server/dataMirror";
 import { buildSiteMetadataFromConfig } from "@/server/seo";
+import GATag from "@/components/googleAnalytics/GATag";
+import GAListener from "@/components/googleAnalytics/GAListener";
+import ConsentDialog from "@/components/googleAnalytics/ConsentDialog";
+import ConsentBootstrap from "@/components/googleAnalytics/ConsentBootstrap";
+import {
+  COOKIES_CONSENT_DENY_TTL_HOURS,
+  COOKIES_CONSENT_GRANT_TTL_DAYS,
+} from "@/constants";
 
 const heading = Roboto_Condensed({
   subsets: ["latin"],
@@ -32,21 +40,43 @@ export async function generateMetadata(): Promise<Metadata> {
   return buildSiteMetadataFromConfig(cfg);
 }
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default async function RootLayout({
+  children,
+}: {
+  children: ReactNode;
+}) {
+  const state = await getMirrorState();
+  const cfg = state?.data?.config ?? null;
+  const gaId = cfg?.googleAnalyticsId;
+  const logoSrc = cfg?.logo?.url;
+
   return (
     <html lang="es" className={`${heading.variable} ${body.variable}`}>
       <body className="bg-[#fafafa] text-[#111] font-body antialiased">
+        <ConsentBootstrap />
+
         <Header />
 
         <CompactHeader />
 
         <HeaderWatcher />
 
-        <main>
-          {children}
-        </main>
+        <main>{children}</main>
 
         <Footer />
+        {gaId ? (
+          <>
+            <GATag gaId={gaId} />
+            <GAListener gaId={gaId} />
+            <ConsentDialog
+              gaId={gaId}
+              logoSrc={logoSrc}
+              denyTtlHours={COOKIES_CONSENT_DENY_TTL_HOURS}
+              grantTtlDays={COOKIES_CONSENT_GRANT_TTL_DAYS}
+              privacyHref="/politica-de-privacidad"
+            />
+          </>
+        ) : null}
       </body>
     </html>
   );

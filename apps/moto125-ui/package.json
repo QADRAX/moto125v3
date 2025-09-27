@@ -1,6 +1,6 @@
 {
   "name": "@moto125/moto125-ui",
-  "version": "0.0.2",
+  "version": "3.0.0",
   "type": "commonjs",
   "engines": {
     "node": ">=20"
