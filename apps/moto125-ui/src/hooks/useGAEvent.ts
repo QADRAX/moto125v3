@@ -12,7 +12,6 @@ export function useGAEvent() {
     params?: Record<string, any>
   ) {
     if (!window.gtag) {
-        console.log("KLK?");
         return;
     }
     window.gtag("event", action, {

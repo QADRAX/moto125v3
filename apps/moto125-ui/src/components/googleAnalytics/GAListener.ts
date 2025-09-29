@@ -35,11 +35,10 @@ export default function GAListener({ gaId }: { gaId: string }) {
       await waitForGtag();
       if (!window.gtag) return;
 
-      window.gtag("config", gaId, {
+      window.gtag("event", "page_view", {
         page_path: url,
         page_location: location.href,
         page_title: document.title,
-        transport_type: "beacon",
       });
     })();
   }, [pathname, search, gaId]);
