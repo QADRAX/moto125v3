@@ -1,5 +1,6 @@
 "use client";
 
+import { useGAEvent } from "@/hooks/useGAEvent";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 
@@ -17,8 +18,16 @@ export default function ZoomableImage({
   ...rest
 }: ZoomableImageProps) {
   const [open, setOpen] = React.useState(false);
+  const { trackEvent } = useGAEvent();
 
-  const openLightbox = React.useCallback(() => setOpen(true), []);
+  const openLightbox = React.useCallback(() => {
+    setOpen(true);
+    trackEvent("image_zoom", {
+      image_src: src,
+      image_alt: alt || "",
+    });
+  }, [src, alt, trackEvent]);
+  
   const closeLightbox = React.useCallback(() => setOpen(false), []);
 
   const onKeyDownGlobal = React.useCallback(

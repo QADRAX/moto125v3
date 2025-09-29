@@ -1,28 +1,45 @@
 import type { Components } from "react-markdown";
-import Link from "next/link";
-import { isExternalUrl, mediaUrl } from "@/utils/utils";
+import { mediaUrl } from "@/utils/utils";
 import ZoomableImage from "../common/ZoomableImage";
+import TrackedHeading from "./TrackedHeading";
+import TrackableLink from "./TrackableLink";
 
 export const mdComponents: Components = {
   h1: ({ children, ...props }) => (
-    <h1 className="mt-8 scroll-mt-24 text-3xl font-semibold" {...props}>
+    <TrackedHeading
+      as="h1"
+      className="mt-8 scroll-mt-24 text-3xl font-semibold"
+      {...props}
+    >
       {children}
-    </h1>
+    </TrackedHeading>
   ),
   h2: ({ children, ...props }) => (
-    <h2 className="mt-8 scroll-mt-24 text-2xl font-semibold" {...props}>
+    <TrackedHeading
+      as="h2"
+      className="mt-8 scroll-mt-24 text-2xl font-semibold"
+      {...props}
+    >
       {children}
-    </h2>
+    </TrackedHeading>
   ),
   h3: ({ children, ...props }) => (
-    <h3 className="mt-6 scroll-mt-24 text-xl font-semibold" {...props}>
+    <TrackedHeading
+      as="h3"
+      className="mt-6 scroll-mt-24 text-xl font-semibold"
+      {...props}
+    >
       {children}
-    </h3>
+    </TrackedHeading>
   ),
   h4: ({ children, ...props }) => (
-    <h4 className="mt-4 scroll-mt-24 text-lg font-semibold" {...props}>
+    <TrackedHeading
+      as="h4"
+      className="mt-4 scroll-mt-24 text-lg font-semibold"
+      {...props}
+    >
       {children}
-    </h4>
+    </TrackedHeading>
   ),
   p: ({ children, ...props }) => (
     <p className="my-4 leading-relaxed" {...props}>
@@ -67,22 +84,11 @@ export const mdComponents: Components = {
     </td>
   ),
   a: ({ children, href, ...props }) => {
-    const external = isExternalUrl(href);
     if (!href) return <span {...props}>{children}</span>;
-    return external ? (
-      <a
-        href={href}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="underline"
-        {...props}
-      >
+    return (
+      <TrackableLink href={href} className="underline" {...(props as any)}>
         {children}
-      </a>
-    ) : (
-      <Link href={href} className="underline" {...(props as any)}>
-        {children}
-      </Link>
+      </TrackableLink>
     );
   },
   img: ({ src, alt, ...props }) => {
