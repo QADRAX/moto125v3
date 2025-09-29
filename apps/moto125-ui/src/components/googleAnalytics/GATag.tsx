@@ -11,14 +11,18 @@ export default function GATag({ gaId }: Props) {
     <>
       <Script
         src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
-        strategy="afterInteractive"
+        strategy="beforeInteractive"
       />
-      <Script id="gtag-init" strategy="afterInteractive">
+      <Script id="gtag-init" strategy="beforeInteractive">
         {`
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
-          gtag('config', '${gaId}', { send_page_view: false });
+          gtag('config', '${gaId}', {
+            send_page_view: false,
+            transport_type: 'beacon',
+            ads_data_redaction: true
+        });
         `}
       </Script>
     </>
