@@ -1,4 +1,3 @@
-// apps/moto125-ui/src/server/seo.ts
 import "server-only";
 import type { Metadata } from "next";
 import type { Config, Article } from "@moto125/api-client";
@@ -88,8 +87,6 @@ export function buildSiteMetadataFromConfig(cfg?: Config | null): Metadata {
       images: ogImg ? [ogImg] : undefined,
     },
 
-    // Optional: tune robots if you want
-    // robots: { index: true, follow: true },
   };
 
   return metadata;

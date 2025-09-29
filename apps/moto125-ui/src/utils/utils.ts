@@ -1,9 +1,15 @@
-import { Article } from "@moto125/api-client";
+import { Article, StrapiFile } from "@moto125/api-client";
 
 export function mediaUrl(url?: string | null): string | null {
   if (!url) return null;
   if (/^https?:\/\//i.test(url)) return url;
   return null;
+}
+
+export function getThumbnailUrl(file: StrapiFile): string | null {
+  const thumbnail = file.formats?.small?.url ?? null;
+  if(thumbnail) return mediaUrl(thumbnail)
+  return thumbnail;
 }
 
 export function absoluteUrl(base: string | null | undefined, path: string) {

@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import type { MirrorRootState } from "@moto125/data-mirror-core";
 import type { Moto, MotoType, MotoClass } from "@moto125/api-client";
 import { getMirrorState } from "@/server/dataMirror";
-import { slugify } from "@/utils/utils";
+import { getThumbnailUrl, slugify } from "@/utils/utils";
 import MotoHeader from "@/components/motos/MotoHeader";
 import MotoSpecs from "@/components/motos/MotoSpecs";
 import Breadcrumbs from "@/components/common/Breadcrumbs";
@@ -11,22 +11,6 @@ import { Container } from "@/components/common/Container";
 import { MotoProductJsonLdFromMoto } from "@/components/seo/MotoProductJsonLd";
 
 export const revalidate = 60;
-
-function findClassBySlug(
-  state: MirrorRootState,
-  classSlug: string
-): MotoClass | null {
-  const classes = state?.data?.taxonomies?.motoClasses ?? [];
-  return classes.find((c) => slugify(c.name) === classSlug) ?? null;
-}
-
-function findTypeBySlug(
-  state: MirrorRootState,
-  typeSlug: string
-): MotoType | null {
-  const types = state?.data?.taxonomies?.motoTypes ?? [];
-  return types.find((t) => slugify(t.name ?? "") === typeSlug) ?? null;
-}
 
 function findMotoByParam(state: MirrorRootState, param: string): Moto | null {
   const motos = state?.data?.motos ?? [];
@@ -39,13 +23,21 @@ export async function generateMetadata({
   params: { class: string; type: string; moto: string };
 }) {
   const state = await getMirrorState();
-  const mc = findClassBySlug(state, params.class);
-  const mt = findTypeBySlug(state, params.type);
   const moto = findMotoByParam(state, params.moto);
-  if (!mc || !mt || !moto) return { title: "Moto no encontrada" };
+  if (!moto) return { title: "Moto no encontrada" };
+  const cover = moto.images?.[0]?.url ? getThumbnailUrl(moto.images[0]) : undefined;
+
   return {
     title: moto.fullName ?? moto.modelName,
     description: moto.description ?? undefined,
+    openGraph: {
+      type: "article",
+      images: cover ? [{ url: cover }] : undefined,
+    },
+    twitter: {
+      card: "summary_large_image",
+      images: cover ? [cover] : undefined,
+    },
   };
 }
 
