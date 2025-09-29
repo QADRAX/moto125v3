@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import type { MirrorRootState } from "@moto125/data-mirror-core";
 import { pickArticleBySlug } from "@/server/selectors";
 import { getMirrorState } from "@/server/dataMirror";
-import { mediaUrl } from "@/utils/utils";
+import { getThumbnailUrl, mediaUrl } from "@/utils/utils";
 import ArticleView from "@/components/article/ArticleView";
 import { computeArticleDescription } from "@/utils/extractArticleDescription";
 import { ArticleJsonLdFromArticle } from "@/components/seo/ArticleJsonLd";
@@ -21,7 +21,7 @@ export async function generateMetadata({
   if (!article) return { title: "Artículo no encontrado" };
   const description = computeArticleDescription(article, { maxLength: 700 });
   const title = article.title || article.slug;
-  const cover = mediaUrl(article.coverImage.url);
+  const cover = getThumbnailUrl(article.coverImage);
 
   return {
     title,
