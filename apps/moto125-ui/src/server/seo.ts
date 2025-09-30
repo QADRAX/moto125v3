@@ -31,8 +31,7 @@ export function buildSiteMetadataFromConfig(cfg?: Config | null): Metadata {
   const siteName = cfg?.siteName ?? "moto125-ui";
 
   // Title & description defaults
-  const defaultTitle =
-    cfg?.metaTitleDefault ?? cfg?.openGraphTitle ?? siteName;
+  const defaultTitle = cfg?.metaTitleDefault ?? cfg?.openGraphTitle ?? siteName;
 
   const defaultDescription =
     cfg?.openGraphDescription ??
@@ -65,7 +64,12 @@ export function buildSiteMetadataFromConfig(cfg?: Config | null): Metadata {
           apple: [{ url: faviconUrl }],
         }
       : undefined,
-
+    alternates: {
+      types: {
+        "application/rss+xml": "/feed.xml",
+        "application/feed+json": "/feed.json",
+      },
+    },
     openGraph: {
       type: "website",
       siteName,
@@ -81,7 +85,6 @@ export function buildSiteMetadataFromConfig(cfg?: Config | null): Metadata {
       description: defaultDescription,
       images: ogImg ? [ogImg] : undefined,
     },
-
   };
 
   return metadata;
