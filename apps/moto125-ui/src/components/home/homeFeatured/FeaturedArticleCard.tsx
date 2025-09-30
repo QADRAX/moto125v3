@@ -109,7 +109,7 @@ export default function FeaturedArticleCard({
               {formatDate(article.publicationDate ?? article.publishedAt)}
 
               {article.youtubeLink && (
-                <YouTubeLinkGA href={article.youtubeLink}/>
+                <YouTubeLinkGA href={article.youtubeLink} as="button"/>
               )}
 
               {article.articleType?.name && (
