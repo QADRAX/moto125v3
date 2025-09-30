@@ -2,6 +2,7 @@ import type { Article } from "@moto125/api-client";
 import { getImage } from "@/utils/utils";
 import SeoDate from "../common/SeoDate";
 import ArticleTypeBadge from "../common/ArticleTypeBadge";
+import { YouTubeIcon } from "../common/YoutubeIcon";
 
 export interface ArticleHeaderProps {
   article: Article;
@@ -11,11 +12,37 @@ function getBestDateISO(a: Article): string | undefined {
   return a.publicationDate || a.publishedAt || a.updatedAt || a.createdAt;
 }
 
+/** Normalize any provided link/ID into a YouTube watch URL */
+function toYouTubeWatchUrl(src?: string | null): string | undefined {
+  if (!src) return undefined;
+  try {
+    // Plain ID (no slash, no query)
+    if (!src.includes("/") && !src.includes("?")) {
+      return `https://www.youtube.com/watch?v=${encodeURIComponent(src.trim())}`;
+    }
+    const url = new URL(src);
+    if (url.hostname.includes("youtu.be")) {
+      const id = url.pathname.replace("/", "");
+      const q = url.search ? url.search : "";
+      return `https://www.youtube.com/watch?v=${encodeURIComponent(id)}${q}`;
+    }
+    // Already a youtube.com URL
+    if (url.hostname.includes("youtube.com")) {
+      return url.toString();
+    }
+  } catch {
+    // Fallback: treat as ID
+    return `https://www.youtube.com/watch?v=${encodeURIComponent(src.trim())}`;
+  }
+  return undefined;
+}
+
 export default function ArticleHeader({ article }: ArticleHeaderProps) {
   const iso = getBestDateISO(article);
   const { url: bgUrl, alt } = getImage(article);
   const title = article.title ?? article.slug;
   const articleType = article.articleType?.name ?? undefined;
+  const youtubeWatchUrl = toYouTubeWatchUrl(article.youtubeLink); // ⬅️ normalize link
 
   // Metadatos “autoría”
   const metaItems: Array<[label: string, value?: string | null]> = [
@@ -38,7 +65,7 @@ export default function ArticleHeader({ article }: ArticleHeaderProps) {
       "linear-gradient(180deg, rgba(0,0,0,0.00) 0%, rgba(0,0,0,0.35) 45%, rgba(0,0,0,0.75) 100%)",
   } as const;
 
-  // Construimos la línea de metadatos: Fecha | Tipo | Autor del texto: X | Fotos: Y | Acción: Z
+  // Construimos la línea de metadatos: Fecha | ... | Tipo | [YouTube icon]
   const pieces: React.ReactNode[] = [];
   if (iso) {
     pieces.push(
@@ -63,6 +90,24 @@ export default function ArticleHeader({ article }: ArticleHeaderProps) {
 
   if (articleType) {
     pieces.push(<ArticleTypeBadge key="type" name={articleType} />);
+  }
+
+  // ⬇️ Añadimos el icono de YouTube si hay vídeo
+  if (youtubeWatchUrl) {
+    pieces.push(
+      <a
+        key="yt"
+        href={youtubeWatchUrl}
+        target="_blank"
+        rel="noopener noreferrer external"
+        className="inline-flex items-center gap-1 text-white/90 hover:opacity-90"
+        title="Ver en YouTube"
+        aria-label="Ver vídeo en YouTube (se abre en una pestaña nueva)"
+      >
+        <YouTubeIcon className="w-5 h-5" />
+        <span className="sr-only">YouTube</span>
+      </a>
+    );
   }
 
   // Intercalar separadores “|”

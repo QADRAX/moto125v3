@@ -13,7 +13,7 @@ export default function FortDebBlock({
   debilidades,
 }: FortDebBlockProps) {
   return (
-    <div className="grid gap-6 md:grid-cols-2">
+    <section className="grid gap-6 md:grid-cols-2">
       <div>
         <h3 className="mb-2 text-lg font-medium">Pros</h3>
         <ul className="list-disc pl-5">
@@ -30,6 +30,6 @@ export default function FortDebBlock({
           ))}
         </ul>
       </div>
-    </div>
+    </section>
   );
 }

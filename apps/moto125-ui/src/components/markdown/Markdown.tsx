@@ -16,7 +16,7 @@ export default function Markdown({ source, className }: MarkdownProps) {
     .filter(Boolean)
     .join(" ");
   return (
-    <div className={rootClass}>
+    <section className={rootClass}>
       <ReactMarkdown
         remarkPlugins={[remarkGfm, remarkSmartypants]}
         rehypePlugins={[
@@ -27,6 +27,6 @@ export default function Markdown({ source, className }: MarkdownProps) {
       >
         {source}
       </ReactMarkdown>
-    </div>
+    </section>
   );
 }

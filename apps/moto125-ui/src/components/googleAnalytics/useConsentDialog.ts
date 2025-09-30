@@ -79,7 +79,7 @@ export function useConsentDialog({
       ad_user_data: "denied",
       ad_personalization: "denied",
     });
-    setCookie(cookieName, "deny", denyTtlHours * 60 * 60); // 👈 solo horas
+    setCookie(cookieName, "deny", denyTtlHours * 60 * 60);
     setOpen(false);
   }
 
