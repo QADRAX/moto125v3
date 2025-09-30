@@ -20,7 +20,7 @@ function findMotoByParam(state: MirrorRootState, param: string): Moto | null {
 export async function generateMetadata({
   params,
 }: {
-  params: { class: string; type: string; moto: string };
+  params: { moto: string };
 }) {
   const state = await getMirrorState();
   const moto = findMotoByParam(state, params.moto);
@@ -38,6 +38,7 @@ export async function generateMetadata({
       card: "summary_large_image",
       images: cover ? [cover] : undefined,
     },
+    alternates: { canonical: "/moto/" + params.moto }
   };
 }
 

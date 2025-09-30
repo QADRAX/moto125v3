@@ -39,6 +39,7 @@ export async function generateMetadata({
   return {
     title: `Tipos de ${mc.name}`,
     description: `Explora tipos de ${mc.name}.`,
+    alternates: { canonical: "/motos/" + params.class }
   };
 }
 

@@ -13,6 +13,7 @@ export const revalidate = 60;
 export const metadata: Metadata = {
   title: "Artículos",
   description: "Listado de artículos de moto125.cc",
+  alternates: { canonical: "/articulos" }
 };
 
 export default async function ArticulosIndexPage() {

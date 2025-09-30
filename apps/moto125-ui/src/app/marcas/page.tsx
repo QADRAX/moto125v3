@@ -37,5 +37,6 @@ export async function generateMetadata() {
   return {
     title: "Marcas de motos",
     description: "Explora todas las marcas de motos de moto125.",
+    alternates: { canonical: "/marcas" }
   };
 }

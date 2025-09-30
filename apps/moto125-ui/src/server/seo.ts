@@ -39,7 +39,6 @@ export function buildSiteMetadataFromConfig(cfg?: Config | null): Metadata {
     cfg?.metaDescriptionDefault ??
     "Comparativas, pruebas y datos de motos 125.";
 
-  // OG image / Twitter image
   const ogImg =
     mediaUrl(cfg?.openGraphImage?.url) ||
     mediaUrl(cfg?.metaImageDefault?.url) ||
@@ -67,10 +66,6 @@ export function buildSiteMetadataFromConfig(cfg?: Config | null): Metadata {
         }
       : undefined,
 
-    alternates: cfg?.canonicalUrl
-      ? { canonical: cfg.canonicalUrl }
-      : undefined,
-
     openGraph: {
       type: "website",
       siteName,
@@ -90,44 +85,4 @@ export function buildSiteMetadataFromConfig(cfg?: Config | null): Metadata {
   };
 
   return metadata;
-}
-
-/**
- * Builds page-specific Metadata for an Article using global Config as fallback.
- * Use this in article route's generateMetadata().
- */
-export function buildArticleMetadata(article: Article, cfg?: Config | null): Metadata {
-  const siteDefaults = buildSiteMetadataFromConfig(cfg);
-
-  const title = article.title ?? article.slug;
-  const description =
-    article.articleType?.name ??
-    siteDefaults.description;
-
-  const cover = mediaUrl(article.coverImage?.url) || undefined;
-
-  return {
-    ...siteDefaults,
-    title,
-    description,
-    openGraph: {
-      ...siteDefaults.openGraph,
-      title,
-      description,
-      images: cover
-        ? [{ url: cover }]
-        : siteDefaults.openGraph?.images,
-    },
-    twitter: {
-      ...siteDefaults.twitter,
-      title,
-      description,
-      images: cover
-        ? [cover]
-        : (siteDefaults.twitter as any)?.images,
-    },
-    alternates: {
-      canonical: `${(siteDefaults.metadataBase ?? new URL("https://www.moto125.cc")).toString().replace(/\/$/, "")}/${article.slug}`,
-    },
-  };
 }

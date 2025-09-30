@@ -2,6 +2,12 @@ import HomeFeatured from "@/components/home/homeFeatured/HomeFeatured";
 import CategoryLatest from "@/components/home/categoryLatest/CategoryLatest";
 import { Container } from "@/components/common/Container";
 
+export async function generateMetadata() {
+  return {
+    alternates: { canonical: "/" }
+  };
+}
+
 export default async function Home() {
   return (
     <>
