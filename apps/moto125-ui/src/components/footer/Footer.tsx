@@ -3,7 +3,7 @@ import Link from "next/link";
 import { getMirrorState } from "@/server/dataMirror";
 import type { Config } from "@moto125/api-client";
 import { mediaUrl, isExternalUrl } from "@/utils/utils";
-import { YouTubeIcon } from "./YoutubeIcon";
+import { YouTubeIcon } from "../common/YoutubeIcon";
 import ResetConsentButton from "../googleAnalytics/ResetConsentButton";
 
 type FooterProps = {

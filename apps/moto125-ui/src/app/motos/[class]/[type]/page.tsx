@@ -45,6 +45,7 @@ export async function generateMetadata({
   return {
     title: `${mt.fullName ?? mt.name} — ${mc.name}`,
     description: `Listado de motos ${mt.name} (${mc.name}).`,
+    alternates: { canonical: "/motos/" + params.class + "/" + params.type }
   };
 }
 

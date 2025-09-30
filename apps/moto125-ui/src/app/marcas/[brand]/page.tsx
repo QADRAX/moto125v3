@@ -40,6 +40,7 @@ export async function generateMetadata({
     title: company.name,
     description: company.description ?? undefined,
     openGraph: { title: company.name },
+    alternates: { canonical: "/marcas/" + params.brand }
   };
 }
 

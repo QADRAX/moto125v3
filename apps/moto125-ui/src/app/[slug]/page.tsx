@@ -38,6 +38,7 @@ export async function generateMetadata({
       description,
       images: cover ? [cover] : undefined,
     },
+    alternates: { canonical: "/" + params.slug }
   };
 }
 

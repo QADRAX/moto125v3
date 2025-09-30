@@ -2,6 +2,7 @@ import type { Article } from "@moto125/api-client";
 import { getImage } from "@/utils/utils";
 import SeoDate from "../common/SeoDate";
 import ArticleTypeBadge from "../common/ArticleTypeBadge";
+import YouTubeLinkGA from "../common/YouTubeLinkGA";
 
 export interface ArticleHeaderProps {
   article: Article;
@@ -17,7 +18,6 @@ export default function ArticleHeader({ article }: ArticleHeaderProps) {
   const title = article.title ?? article.slug;
   const articleType = article.articleType?.name ?? undefined;
 
-  // Metadatos “autoría”
   const metaItems: Array<[label: string, value?: string | null]> = [
     ["Autor del texto", article.authorText],
     ["Fotos", article.authorPhotos],
@@ -38,7 +38,6 @@ export default function ArticleHeader({ article }: ArticleHeaderProps) {
       "linear-gradient(180deg, rgba(0,0,0,0.00) 0%, rgba(0,0,0,0.35) 45%, rgba(0,0,0,0.75) 100%)",
   } as const;
 
-  // Construimos la línea de metadatos: Fecha | Tipo | Autor del texto: X | Fotos: Y | Acción: Z
   const pieces: React.ReactNode[] = [];
   if (iso) {
     pieces.push(
@@ -61,11 +60,14 @@ export default function ArticleHeader({ article }: ArticleHeaderProps) {
       );
     });
 
+  if (article.youtubeLink) {
+    pieces.push(<YouTubeLinkGA key="yt" href={article.youtubeLink} />);
+  }
+
   if (articleType) {
     pieces.push(<ArticleTypeBadge key="type" name={articleType} />);
   }
 
-  // Intercalar separadores “|”
   const metaLine = pieces.flatMap((node, i) =>
     i === 0
       ? [node]
@@ -91,14 +93,12 @@ export default function ArticleHeader({ article }: ArticleHeaderProps) {
           backgroundRepeat: "no-repeat",
         }}
       >
-        {/* Degradado overlay */}
         <div
           aria-hidden
           className="absolute inset-0 pointer-events-none opacity-90"
           style={{ background: P.gradient }}
         />
 
-        {/* Contenido */}
         <div className={`absolute inset-x-0 bottom-0 ${P.overlayPadding}`}>
           <h1 className={`m-0 ${P.titleClass}`}>{title}</h1>
 
@@ -108,7 +108,6 @@ export default function ArticleHeader({ article }: ArticleHeaderProps) {
         </div>
       </div>
 
-      {/* Texto alternativo accesible */}
       <span className="sr-only">{alt ?? title}</span>
     </header>
   );

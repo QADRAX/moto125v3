@@ -12,7 +12,7 @@ export default function ArticleView({ article }: ArticleViewProps) {
     <>
       <ArticleHeader article={article} />
       <article className="container mx-auto max-w-3xl px-4 py-8">
-        <ArticleContent blocks={article.content} />
+        <ArticleContent blocks={article.content} youtubeLink={article.youtubeLink} youtubeTitle={article.title ?? article.slug} />
         <ArticleFooter article={article} />
       </article>
     </>

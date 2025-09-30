@@ -2,6 +2,7 @@ import "server-only";
 import Link from "next/link";
 import type { Article } from "@moto125/api-client";
 import { formatDate, getImage, resolveArticleHref } from "@/utils/utils";
+import YouTubeLinkGA from "@/components/common/YouTubeLinkGA";
 
 type Variant = "hero" | "small";
 
@@ -104,8 +105,13 @@ export default function FeaturedArticleCard({
           )}
 
           {(article.publicationDate ?? article.publishedAt) && (
-            <p className={`mt-1 ${P.dateClass}`}>
+            <p className={`mt-1 flex items-center ${P.dateClass}`}>
               {formatDate(article.publicationDate ?? article.publishedAt)}
+
+              {article.youtubeLink && (
+                <YouTubeLinkGA href={article.youtubeLink}/>
+              )}
+
               {article.articleType?.name && (
                 <span className={P.badgeClass}>{article.articleType.name}</span>
               )}

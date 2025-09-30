@@ -10,7 +10,7 @@ export default function ConsentDialog({
   grantTtlDays = 180,
   logoSrc,
   brandName = "moto125.cc",
-  privacyHref = "/sobre-nosotros#privacidad", // adjust to your real policy URL
+  privacyHref,
 }: {
   gaId: string;
   cookieName?: string;

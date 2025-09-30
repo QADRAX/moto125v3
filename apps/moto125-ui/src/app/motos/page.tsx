@@ -39,5 +39,6 @@ export async function generateMetadata() {
   return {
     title: "Motos por clase",
     description: "Explora scooters y motos por clase.",
+    alternates: { canonical: "/motos" }
   };
 }
