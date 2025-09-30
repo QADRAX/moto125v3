@@ -1,7 +1,7 @@
 import "server-only";
 import type { ReactNode } from "react";
 
-export default function CategorySectionHeader({
+export default function SectionHeader({
   title,
   action,
 }: {

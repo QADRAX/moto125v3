@@ -4,7 +4,7 @@ import Link from "next/link";
 import { getMirrorState } from "@/server/dataMirror";
 import { pickLatestArticles } from "@/server/selectors";
 import { slugify } from "@/utils/utils";
-import CategorySectionHeader from "./CategorySectionHeader";
+import SectionHeader from "../../common/SectionHeader";
 import ArticleGrid from "../../common/ArticleGrid";
 
 export default async function CategoryLatest(props: {
@@ -28,7 +28,7 @@ export default async function CategoryLatest(props: {
       className={`mx-auto max-w-screen-xl px-4 sm:px-6 py-6 sm:py-8 ${containerClass ?? ""}`}
       aria-label={`Últimos de ${articleType}`}
     >
-      <CategorySectionHeader
+      <SectionHeader
         title={headerText}
         action={
           <Link
