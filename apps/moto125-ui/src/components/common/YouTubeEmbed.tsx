@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import YouTubeIframeClient from "./YouTubeIframeClient";
-import { normalizeYouTube } from "@/utils/youtube";
+import { normalizeYouTube } from "@/utils/normalizeYoutubeLink";
 
 export default function YouTubeEmbed({
   src,

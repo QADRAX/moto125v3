@@ -2,7 +2,7 @@
 
 import { useGAEvent } from "@/hooks/useGAEvent";
 import { YouTubeIcon } from "./YoutubeIcon";
-import { normalizeYouTube } from "@/utils/youtube";
+import { normalizeYouTube } from "@/utils/normalizeYoutubeLink";
 
 export default function YouTubeLinkGA({
   href,
