@@ -4,6 +4,7 @@ import ArticleFooter from "./ArticleFooter";
 import ArticleContent from "./ArticleContentBlock";
 import { Container } from "../common/Container";
 import RelatedArticlesCarousel from "./RelatedArticlesCarousel";
+import MarkArticleAsViewed from "./MarkArticleAsViewed";
 
 export interface ArticleViewProps {
   article: Article;
@@ -20,6 +21,7 @@ export default function ArticleView({ article }: ArticleViewProps) {
       <Container className="max-w-screen-xl">
         <RelatedArticlesCarousel article={article}/>
       </Container>
+      <MarkArticleAsViewed slug={article.slug}/>
     </>
   );
 }

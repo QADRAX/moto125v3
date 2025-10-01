@@ -131,4 +131,25 @@
       transition: none;
     }
   }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .cursor-grab {
+    cursor: grab;
+  }
+
+  .cursor-grabbing {
+    cursor: grabbing;
+  }
+
+  .dragging {
+    cursor: grabbing;
+  }
 }

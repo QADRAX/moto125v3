@@ -8,13 +8,14 @@ import Link from "next/link";
 import SectionHeader from "../common/SectionHeader";
 import { selectRelatedArticles } from "./RelatedArticlesCarousel.selector";
 import AutoCarousel from "../common/AutoCarousel";
+import { cookies } from "next/headers";
+import { parseSlugCsv, viewedCookieNameToday } from "@/utils/viewedArticles";
 
 export interface RelatedArticlesCarouselProps {
   article: Article;
-  minItems?: number; // default ahora 14 (tu valor)
-  maxItems?: number; // default 28
+  minItems?: number;
+  maxItems?: number;
   title?: string;
-  /** ms entre rotaciones automáticas; default 5000 */
   intervalMs?: number;
 }
 
@@ -31,7 +32,13 @@ export default async function RelatedArticlesCarousel({
   const safeMin = Math.max(1, Math.min(minItems, 48));
   const safeMax = Math.max(safeMin, Math.min(maxItems, 64));
 
-  const items = selectRelatedArticles(allArticles, article, safeMin, safeMax);
+  const cookieName = viewedCookieNameToday();
+  const raw = cookies().get(cookieName)?.value;
+  const viewed = parseSlugCsv(raw);
+
+  const pool = allArticles.filter((a) => !viewed.has(a.slug));
+
+  const items = selectRelatedArticles(pool, article, safeMin, safeMax);
   if (!items.length) return null;
 
   return (
@@ -53,12 +60,11 @@ export default async function RelatedArticlesCarousel({
       <AutoCarousel
         ariaLabel="Artículos relacionados"
         intervalMs={intervalMs}
-        pauseOnHover={true}
-        pauseOnTouchDrag={true}
-        snap={true}
+        pauseOnTouchDrag
+        snap
       >
         {items.map((a) => (
-          <ArticleCard key={a.id} article={a} emphasis={true} />
+          <ArticleCard key={a.id} article={a} emphasis />
         ))}
       </AutoCarousel>
     </section>
