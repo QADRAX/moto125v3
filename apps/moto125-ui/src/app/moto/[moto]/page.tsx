@@ -1,7 +1,7 @@
 import "server-only";
 import { notFound } from "next/navigation";
 import type { MirrorRootState } from "@moto125/data-mirror-core";
-import type { Moto, MotoType, MotoClass } from "@moto125/api-client";
+import type { Moto } from "@moto125/api-client";
 import { getMirrorState } from "@/server/dataMirror";
 import { getThumbnailUrl, slugify } from "@/utils/utils";
 import MotoHeader from "@/components/motos/MotoHeader";
@@ -9,6 +9,7 @@ import MotoSpecs from "@/components/motos/MotoSpecs";
 import Breadcrumbs from "@/components/common/Breadcrumbs";
 import { Container } from "@/components/common/Container";
 import { MotoProductJsonLdFromMoto } from "@/components/seo/MotoProductJsonLd";
+import MotoImageGallery from "@/components/motos/MotoImageGallery";
 
 export const revalidate = 60;
 
@@ -49,11 +50,11 @@ export default async function MotoDetailPage({
 }) {
   const state: MirrorRootState = await getMirrorState();
   const moto = findMotoByParam(state, params.moto);
+
+  if (!moto) notFound();
   
   const mc = moto.motoType?.motoClass;
   const mt = moto.motoType;
-
-  if (!moto) notFound();
 
   return (
     <Container>
@@ -71,6 +72,7 @@ export default async function MotoDetailPage({
       />
       <MotoHeader moto={moto} />
       <MotoSpecs ficha={moto.fichaTecnica ?? {}} />
+      <MotoImageGallery moto={moto} />
     </Container>
   );
 }

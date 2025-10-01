@@ -10,12 +10,12 @@ import { selectRelatedArticles } from "./RelatedArticlesCarousel.selector";
 import AutoCarousel from "../common/AutoCarousel";
 import { cookies } from "next/headers";
 import { parseSlugCsv, viewedCookieNameToday } from "@/utils/viewedArticles";
+import { Container } from "../common/Container";
 
 export interface RelatedArticlesCarouselProps {
   article: Article;
   minItems?: number;
   maxItems?: number;
-  title?: string;
   intervalMs?: number;
 }
 
@@ -23,7 +23,6 @@ export default async function RelatedArticlesCarousel({
   article,
   minItems = 14,
   maxItems = 28,
-  title = "Te puede interesar",
   intervalMs = 5000,
 }: RelatedArticlesCarouselProps) {
   const state = await getMirrorState();
@@ -42,10 +41,10 @@ export default async function RelatedArticlesCarousel({
   if (!items.length) return null;
 
   return (
-    <section className="mt-10">
-      {title ? (
+    <>
+      <Container className="mt-10">
         <SectionHeader
-          title={title}
+          title="te puede interesar"
           action={
             <Link
               href={`/articulos`}
@@ -55,18 +54,19 @@ export default async function RelatedArticlesCarousel({
             </Link>
           }
         />
-      ) : null}
-
-      <AutoCarousel
-        ariaLabel="Artículos relacionados"
-        intervalMs={intervalMs}
-        pauseOnTouchDrag
-        snap
-      >
-        {items.map((a) => (
-          <ArticleCard key={a.id} article={a} emphasis />
-        ))}
-      </AutoCarousel>
-    </section>
+      </Container>
+      <Container className="max-w-screen-xl">
+        <AutoCarousel
+          ariaLabel="Artículos relacionados"
+          intervalMs={intervalMs}
+          pauseOnTouchDrag
+          snap
+        >
+          {items.map((a) => (
+            <ArticleCard key={a.id} article={a} emphasis />
+          ))}
+        </AutoCarousel>
+      </Container>
+    </>
   );
 }

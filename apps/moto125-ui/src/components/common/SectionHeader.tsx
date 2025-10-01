@@ -1,4 +1,3 @@
-import "server-only";
 import type { ReactNode } from "react";
 
 export default function SectionHeader({
