@@ -8,7 +8,7 @@ export const mdComponents: Components = {
   h1: ({ children, ...props }) => (
     <TrackedHeading
       as="h1"
-      className="mt-8 scroll-mt-24 text-3xl font-semibold"
+      className="mt-6 scroll-mt-24 text-3xl font-bold"
       {...props}
     >
       {children}
@@ -17,7 +17,7 @@ export const mdComponents: Components = {
   h2: ({ children, ...props }) => (
     <TrackedHeading
       as="h2"
-      className="mt-8 scroll-mt-24 text-2xl font-semibold"
+      className="mt-6 scroll-mt-24 text-2xl font-bold"
       {...props}
     >
       {children}
@@ -26,7 +26,7 @@ export const mdComponents: Components = {
   h3: ({ children, ...props }) => (
     <TrackedHeading
       as="h3"
-      className="mt-6 scroll-mt-24 text-xl font-semibold"
+      className="mt-6 scroll-mt-24 text-xl font-bold"
       {...props}
     >
       {children}
@@ -86,7 +86,7 @@ export const mdComponents: Components = {
   a: ({ children, href, ...props }) => {
     if (!href) return <span {...props}>{children}</span>;
     return (
-      <TrackableLink href={href} className="underline" {...(props as any)}>
+      <TrackableLink href={href} {...(props as any)}>
         {children}
       </TrackableLink>
     );
@@ -98,7 +98,7 @@ export const mdComponents: Components = {
       <ZoomableImage
         src={url}
         alt={alt ?? ""}
-        className="my-4"
+        className="my-2"
         {...(props as any)}
       />
     );
