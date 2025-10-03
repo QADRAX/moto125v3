@@ -1,61 +1,60 @@
-# 🚀 Getting started with Strapi
+# @moto125/strapi
 
-Strapi comes with a full featured [Command Line Interface](https://docs.strapi.io/dev-docs/cli) (CLI) which lets you scaffold and manage your project in seconds.
+Aplicación **Strapi v5** que define el **modelo de contenido** de *moto125.cc*.  
 
-### `develop`
-
-Start your Strapi application with autoReload enabled. [Learn more](https://docs.strapi.io/dev-docs/cli#strapi-develop)
-
-```
-npm run develop
-# or
-yarn develop
-```
-
-### `start`
-
-Start your Strapi application with autoReload disabled. [Learn more](https://docs.strapi.io/dev-docs/cli#strapi-start)
-
-```
-npm run start
-# or
-yarn start
-```
-
-### `build`
-
-Build your admin panel. [Learn more](https://docs.strapi.io/dev-docs/cli#strapi-build)
-
-```
-npm run build
-# or
-yarn build
-```
-
-## ⚙️ Deployment
-
-Strapi gives you many possible deployment options for your project including [Strapi Cloud](https://cloud.strapi.io). Browse the [deployment section of the documentation](https://docs.strapi.io/dev-docs/deployment) to find the best solution for your use case.
-
-```
-yarn strapi deploy
-```
-
-## 📚 Learn more
-
-- [Resource center](https://strapi.io/resource-center) - Strapi resource center.
-- [Strapi documentation](https://docs.strapi.io) - Official Strapi documentation.
-- [Strapi tutorials](https://strapi.io/tutorials) - List of tutorials made by the core team and the community.
-- [Strapi blog](https://strapi.io/blog) - Official Strapi blog containing articles made by the Strapi team and the community.
-- [Changelog](https://strapi.io/changelog) - Find out about the Strapi product updates, new features and general improvements.
-
-Feel free to check out the [Strapi GitHub repository](https://github.com/strapi/strapi). Your feedback and contributions are welcome!
-
-## ✨ Community
-
-- [Discord](https://discord.strapi.io) - Come chat with the Strapi community including the core team.
-- [Forum](https://forum.strapi.io/) - Place to discuss, ask questions and find answers, show your Strapi project and get feedback or just talk with other Community members.
-- [Awesome Strapi](https://github.com/strapi/awesome-strapi) - A curated list of awesome things related to Strapi.
+Incluye colecciones para artículos, motos y marcas, además de `singleTypes` para páginas estáticas y configuración global.
 
 ---
 
-<sub>🤫 Psst! [Strapi is hiring](https://strapi.io/careers).</sub>
+## Diseño de contenido
+
+A continuación se resume el modelo principal.
+
+Se distinguen **colecciones dinámicas** (collection types) y **páginas estáticas** (single types).
+
+### Collection Types (dinámicos)
+
+| UID | Nombre (ES) | Campos clave | Relaciones | Notas |
+| --- | --- | --- | --- | --- |
+| `api::article.article` | **Artículos** | `slug (uid, req)`, `title`, `publicationDate`, `visible`, `coverImage (media, req)`, `content (dynamiczone)`, `tags (component repeatable)`, `authorText`, `authorPhotos`, `authorAction`, `youtubeLink` | `articleType (manyToOne)`, `relatedMotos (manyToMany)`, `relatedCompanies (manyToMany)` | Rico en contenidos: texto, grids, prestaciones, fortalezas/debilidades. |
+| `api::company.company` | **Marcas** | `name`, `image (media)`, `phone`, `url`, `active`, `description (richtext)` | `motos (oneToMany)`, `articles (manyToMany)` | Soporta logo/imagen y descripción larga. |
+| `api::moto.moto` | **Motos** | `moto125Id (uid, req)`, `modelName (req)`, `fullName`, `description`, `images (media[])`, `priece (decimal)`, `year (int)`, `fichaTecnica (json)`, `active`, `normativa (enum)`, `engineType (enum)` | `company (manyToOne)`, `motoType (manyToOne)`, `articles (manyToMany)` | Campos de ficha técnica y galería. *(Nota: `priece` parece typo de `price`.)* |
+| `api::article-type.article-type` | **Tipos de artículo** | `name` | `articles (oneToMany)` | Catálogo para clasificar artículos. |
+| `api::moto-type.moto-type` | **Tipos de moto** | `name`, `image (media)`, `fullName`, `description (richtext)` | `motos (oneToMany)`, `motoClass (manyToOne)` | Taxonomía intermedia. |
+| `api::moto-class.moto-class` | **Clases de moto** | `name (req)`, `image (media)` | `motoTypes (oneToMany)` | Taxonomía superior. |
+
+### Single Types (estáticos)
+
+| UID | Nombre (ES) | Campos clave | Notas |
+| --- | --- | --- | --- |
+| `api::config.config` | **Configuración del sitio** | `siteName`, `logo`, `favicon`, `metaTitleDefault`, `metaDescriptionDefault`, `metaImageDefault`, `twitterHandle`, `openGraphTitle`, `openGraphDescription`, `openGraphImage`, `canonicalUrl`, `googleAnalyticsId`, `heroBannerImage`, `heroBannerTitle`, `heroBannerSubtitle` | Metadatos globales, SEO y recursos gráficos. |
+| `api::home-page.home-page` | **Página principal** | `featuredArticles (component)`, `top10speed (component)` | Agregadores de contenido (destacados y top por velocidad). |
+| `api::pagina-ofertas.pagina-ofertas` | **Página de ofertas** | `title`, `content (richtext)`, `ofertas (dynamiczone)` | Bloques de ofertas como componentes dinámicos. |
+| `api::about-us-page.about-us-page` | **Página quiénes somos** | `content (richtext)` | Página corporativa. |
+
+---
+
+## Componentes
+
+### Zona dinámica de **Artículo**
+
+| Componente | UID | Campos |
+| --- | --- | --- |
+| **TextContent** | `article-content.text-content` | `Text (richtext)` |
+| **ImageGridContent** | `article-content.image-grid-content` | *(sin campos definidos de momento)* |
+| **Prestaciones** | `article-content.prestaciones` | `prestaciones (json)` |
+| **FortalezasDebilidades** | `article-content.fortalezas-debilidades` | `Fortalezas (component list.foralezas-list, repeatable)`, `Debilidades (component list.debilidades-list, repeatable)` |
+
+### Componentes de **listas** y agregación
+
+| Componente | UID | Campos | Uso |
+| --- | --- | --- | --- |
+| **ArticulosDestacados** | `list.articulos-destacados` | `featuredArticle1..3 (oneToOne article)` | Home: destacados manuales. |
+| **Top10MotosSpeed** | `list.top10-motos-speed` | `top1..top10 (oneToOne moto)`, `top1speed..top10speed (string)` | Home: ranking con velocidades. |
+| **Oferta** | `list.ofertas` | `title (string)`, `content (richtext)` | Página de ofertas (dynamiczone). |
+| **TagList** | `list.tag-list` | `Value (string, req)` | Etiquetas libres para artículos. |
+| **ForalezasList** | `list.foralezas-list` | `value (string)` | Item de fortaleza. *(typo “Foralezas” en UID de archivo)* |
+| **DebilidadesList** | `list.debilidades-list` | `value (string)` | Item de debilidad. |
+
+
+---
