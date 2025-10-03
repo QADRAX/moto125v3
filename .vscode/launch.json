@@ -82,6 +82,46 @@
     {
       "type": "node",
       "request": "launch",
+      "name": "Run backfillArticlePrestaciones",
+      "runtimeArgs": [
+        "-r",
+        "ts-node/register"
+      ],
+      "args": [
+        "${workspaceFolder}/packages/migration/src/backfillArticlePrestaciones.ts"
+      ],
+      "cwd": "${workspaceFolder}/packages/migration",
+      "sourceMaps": true,
+      "outFiles": [
+        "${workspaceFolder}/packages/migration/**/*.js"
+      ],
+      "env": {
+        "TS_NODE_PROJECT": "${workspaceFolder}/packages/migration/tsconfig.json"
+      }
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Run rankArticlesByMaxSpeed",
+      "runtimeArgs": [
+        "-r",
+        "ts-node/register"
+      ],
+      "args": [
+        "${workspaceFolder}/packages/migration/src/rankArticlesByMaxSpeed.ts"
+      ],
+      "cwd": "${workspaceFolder}/packages/migration",
+      "sourceMaps": true,
+      "outFiles": [
+        "${workspaceFolder}/packages/migration/**/*.js"
+      ],
+      "env": {
+        "TS_NODE_PROJECT": "${workspaceFolder}/packages/migration/tsconfig.json"
+      }
+    },
+    {
+      "type": "node",
+      "request": "launch",
       "name": "Run scan-article-moto-refs",
       "runtimeArgs": [
         "-r",
