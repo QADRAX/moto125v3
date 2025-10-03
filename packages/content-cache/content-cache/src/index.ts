@@ -1,1 +1,1 @@
-export * from "./createDataMirror";
+export * from "./createContentCache";

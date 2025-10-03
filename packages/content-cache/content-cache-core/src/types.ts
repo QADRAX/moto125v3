@@ -11,25 +11,25 @@ import type {
   AboutUsPage,
 } from "@moto125/api-client";
 
-export type MirrorWorkerIn =
+export type ContentCacheWorkerIn =
   | { type: "hydrate"; sdkInit: SdkInit }
   | { type: "saveSnapshot"; path: string; stateBin: ArrayBufferLike }
   | { type: "loadSnapshot"; path: string }
   | { type: "setDebug"; enabled: boolean }
   | { type: "dispose" };
 
-export type MirrorWorkerOut =
+export type ContentCacheWorkerOut =
   | { type: "hydrate:done"; payload: { stateBin: ArrayBuffer; size: number } }
   | { type: "saveSnapshot:done" }
   | {
       type: "loadSnapshot:done";
       payload: { stateBin: ArrayBuffer; size: number };
     }
-  | { type: "saveSnapshot:error"; error: MirrorError }
-  | { type: "loadSnapshot:error"; error: MirrorError }
+  | { type: "saveSnapshot:error"; error: ContentCacheError }
+  | { type: "loadSnapshot:error"; error: ContentCacheError }
   | { type: "error"; error: string };
 
-export interface MirrorError {
+export interface ContentCacheError {
   time: string;
   source:
     | "unknown"
@@ -56,7 +56,7 @@ export type HydrateOpts = {
   snapshotPath?: string;
 };
 
-export interface MirrorData {
+export interface ContentCacheData {
   articles: Article[];
   motos: Moto[];
   companies: Company[];
@@ -73,7 +73,7 @@ export interface MirrorData {
   config?: Config;
 }
 
-export interface MirrorTimings {
+export interface ContentCacheTimings {
   hydrate: {
     startedAt: string;
     endedAt: string;
@@ -82,19 +82,19 @@ export interface MirrorTimings {
   };
 }
 
-export interface MirrorState {
+export interface ContentCacheState {
   version?: string;
   generatedAt: string;
-  data: MirrorData;
-  timings?: MirrorTimings;
+  data: ContentCacheData;
+  timings?: ContentCacheTimings;
 }
 
-export type MirrorRootState = MirrorState | null;
-export type ErrorListener = (err: MirrorError) => void;
+export type ContentCacheRootState = ContentCacheState | null;
+export type ErrorListener = (err: ContentCacheError) => void;
 
 export type SdkInit = { baseUrl: string; token?: string };
 
-export interface DataMirrorInitOptions {
+export interface ContentCacheInitOptions {
   sdkInit?: SdkInit;
   snapshotPath?: string;
   refreshIntervalMs?: number;
@@ -105,14 +105,14 @@ export interface DataMirrorInitOptions {
   workerDebugLogging?: boolean;
 }
 
-export type UpdateListener = (next: MirrorRootState) => void;
+export type UpdateListener = (next: ContentCacheRootState) => void;
 
-export interface DataMirror {
-  init(opts: DataMirrorInitOptions): Promise<void>;
-  state(): MirrorRootState;
+export interface ContentCache {
+  init(opts: ContentCacheInitOptions): Promise<void>;
+  state(): ContentCacheRootState;
   onUpdate(listener: UpdateListener): () => void;
   onError(listener: ErrorListener): () => void;
-  getErrors(): ReadonlyArray<MirrorError>;
+  getErrors(): ReadonlyArray<ContentCacheError>;
   clearErrors(): void;
   refresh(): Promise<void>;
   start(): void;
@@ -121,7 +121,7 @@ export interface DataMirror {
   loadSnapshot(): Promise<void>;
   setWorkerDebugLogging(enabled: boolean): void;
   configure(
-    opts: Partial<Omit<DataMirrorInitOptions, "forceHydrateOnInit">>
+    opts: Partial<Omit<ContentCacheInitOptions, "forceHydrateOnInit">>
   ): void;
   dispose(): void;
 }

@@ -10,7 +10,7 @@
 import "dotenv/config";
 import { resolve } from "node:path";
 import { createMoto125Api } from "@moto125/api-client";
-import { createDataMirror } from "@moto125/content-cache";
+import { createContentCache } from "@moto125/content-cache";
 import { STRAPI_URL } from "./constants";
 
 /** Short ISO format: YYYY-MM-DD HH:mm:ss */
@@ -24,7 +24,7 @@ function isoShort(iso?: string | null) {
   ).padStart(2, "0")}:${String(d.getSeconds()).padStart(2, "0")}`;
 }
 
-type Mirror = ReturnType<typeof createDataMirror>;
+type Mirror = ReturnType<typeof createContentCache>;
 let mirror: Mirror;
 
 function mirrorState() {
@@ -77,9 +77,24 @@ function buildUnifiedTable(
 
   // counts
   rows.push(
-    { metric: "articles", value: now.articles, delta: d(now.articles, prev?.articles), timingMs: timings?.bySource["articles"] ?? "" },
-    { metric: "motos", value: now.motos, delta: d(now.motos, prev?.motos), timingMs: timings?.bySource["motos"] ?? "" },
-    { metric: "companies", value: now.companies, delta: d(now.companies, prev?.companies), timingMs: timings?.bySource["companies"] ?? "" },
+    {
+      metric: "articles",
+      value: now.articles,
+      delta: d(now.articles, prev?.articles),
+      timingMs: timings?.bySource["articles"] ?? "",
+    },
+    {
+      metric: "motos",
+      value: now.motos,
+      delta: d(now.motos, prev?.motos),
+      timingMs: timings?.bySource["motos"] ?? "",
+    },
+    {
+      metric: "companies",
+      value: now.companies,
+      delta: d(now.companies, prev?.companies),
+      timingMs: timings?.bySource["companies"] ?? "",
+    },
     {
       metric: "articleTypes",
       value: now.articleTypes,
@@ -98,15 +113,40 @@ function buildUnifiedTable(
       delta: d(now.motoClasses, prev?.motoClasses),
       timingMs: timings?.bySource["taxonomies.motoClasses"] ?? "",
     },
-    { metric: "hasHome", value: String(now.hasHome), delta: "", timingMs: timings?.bySource["pages.home"] ?? "" },
-    { metric: "hasOfertas", value: String(now.hasOfertas), delta: "", timingMs: timings?.bySource["pages.ofertas"] ?? "" },
-    { metric: "hasAboutUs", value: String(now.hasAboutUs), delta: "", timingMs: timings?.bySource["pages.aboutUs"] ?? "" },
-    { metric: "hasConfig", value: String(now.hasConfig), delta: "", timingMs: timings?.bySource["config"] ?? "" }
+    {
+      metric: "hasHome",
+      value: String(now.hasHome),
+      delta: "",
+      timingMs: timings?.bySource["pages.home"] ?? "",
+    },
+    {
+      metric: "hasOfertas",
+      value: String(now.hasOfertas),
+      delta: "",
+      timingMs: timings?.bySource["pages.ofertas"] ?? "",
+    },
+    {
+      metric: "hasAboutUs",
+      value: String(now.hasAboutUs),
+      delta: "",
+      timingMs: timings?.bySource["pages.aboutUs"] ?? "",
+    },
+    {
+      metric: "hasConfig",
+      value: String(now.hasConfig),
+      delta: "",
+      timingMs: timings?.bySource["config"] ?? "",
+    }
   );
 
   // totals at bottom
   rows.push({ metric: "—", value: "—", delta: "—", timingMs: "—" });
-  rows.push({ metric: "totalHydrate", value: "", delta: "", timingMs: timings ? Math.round(timings.totalMs) : "" });
+  rows.push({
+    metric: "totalHydrate",
+    value: "",
+    delta: "",
+    timingMs: timings ? Math.round(timings.totalMs) : "",
+  });
   rows.push({
     metric: "snapshotSave",
     value: "",
@@ -142,7 +182,7 @@ async function main() {
   console.log("   • baseUrl :", STRAPI_API_URL);
 
   // Create mirror and attach listeners BEFORE init to catch errors emitted during init/refresh.
-  mirror = createDataMirror();
+  mirror = createContentCache();
 
   let prevCounts: ReturnType<typeof countsOf> | undefined;
   let seenInitialPush = false;
@@ -167,7 +207,10 @@ async function main() {
 
     hr(`POLL #${tick} @ ${isoShort(nowCounts.generatedAt)}`);
     if (t) {
-      console.log("   window:", `${isoShort(t.startedAt)} → ${isoShort(t.endedAt)}`);
+      console.log(
+        "   window:",
+        `${isoShort(t.startedAt)} → ${isoShort(t.endedAt)}`
+      );
     }
 
     const table = buildUnifiedTable(nowCounts, prevCounts, t);
@@ -217,7 +260,9 @@ async function main() {
   const s0 = mirror.state();
   if (!s0) {
     hr("BOOT");
-    console.log("ℹ️  No initial state available (no snapshot or hydrate failed). Waiting for next successful poll…");
+    console.log(
+      "ℹ️  No initial state available (no snapshot or hydrate failed). Waiting for next successful poll…"
+    );
   } else {
     prevCounts = countsOf(s0);
   }

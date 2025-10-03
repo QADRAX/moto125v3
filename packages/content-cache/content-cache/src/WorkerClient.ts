@@ -1,15 +1,15 @@
 import {
-  MirrorError,
-  MirrorState,
-  MirrorWorkerIn,
-  MirrorWorkerOut,
+  ContentCacheError,
+  ContentCacheState,
+  ContentCacheWorkerIn,
+  ContentCacheWorkerOut,
   SdkInit,
 } from "@moto125/content-cache-core";
 import { Worker as NodeWorker } from "node:worker_threads";
 import * as v8 from "v8";
 import { resolveWorkerEntry } from "./resolveWorker";
 
-export class MirrorWorkerClient {
+export class WorkerClient {
   private worker!: NodeWorker;
 
   /**
@@ -24,7 +24,7 @@ export class MirrorWorkerClient {
    * Gracefully dispose worker resources.
    */
   dispose(): void {
-    this.worker?.postMessage({ type: "dispose" } satisfies MirrorWorkerIn);
+    this.worker?.postMessage({ type: "dispose" } satisfies ContentCacheWorkerIn);
     this.worker?.terminate().catch(() => {});
   }
 
@@ -36,18 +36,18 @@ export class MirrorWorkerClient {
   //    caller can branch on m.type (needed for *:error handling).
   // ─────────────────────────────────────────────────────────────────────────────
 
-  private rpc<TType extends MirrorWorkerOut["type"]>(
-    msg: MirrorWorkerIn,
+  private rpc<TType extends ContentCacheWorkerOut["type"]>(
+    msg: ContentCacheWorkerIn,
     expect: TType
-  ): Promise<Extract<MirrorWorkerOut, { type: TType }>>;
-  private rpc(msg: MirrorWorkerIn): Promise<MirrorWorkerOut>;
+  ): Promise<Extract<ContentCacheWorkerOut, { type: TType }>>;
+  private rpc(msg: ContentCacheWorkerIn): Promise<ContentCacheWorkerOut>;
 
   private rpc(
-    msg: MirrorWorkerIn,
-    expect?: MirrorWorkerOut["type"]
+    msg: ContentCacheWorkerIn,
+    expect?: ContentCacheWorkerOut["type"]
   ): Promise<any> {
     return new Promise((resolve, reject) => {
-      const onMessage = (m: MirrorWorkerOut) => {
+      const onMessage = (m: ContentCacheWorkerOut) => {
         if (m.type === "error") {
           cleanup();
           reject(new Error(m.error));
@@ -84,11 +84,11 @@ export class MirrorWorkerClient {
    * Hydrate the mirror state via the worker.
    * - Throws AggregateError with `__mirrorErrors` if API returned errors.
    */
-  async hydrate(sdkInit: SdkInit): Promise<MirrorState> {
+  async hydrate(sdkInit: SdkInit): Promise<ContentCacheState> {
     const res = await this.rpc({ type: "hydrate", sdkInit }, "hydrate:done");
     const buf = Buffer.from(new Uint8Array(res.payload.stateBin));
-    const state = v8.deserialize(buf) as MirrorState & {
-      errors?: MirrorError[];
+    const state = v8.deserialize(buf) as ContentCacheState & {
+      errors?: ContentCacheError[];
     };
 
     const errs = Array.isArray(state.errors)
@@ -106,7 +106,7 @@ export class MirrorWorkerClient {
    * Save a snapshot through the worker.
    * - On structured failure, throws AggregateError with `__mirrorErrors`.
    */
-  async saveSnapshot(path: string, state: MirrorState): Promise<void> {
+  async saveSnapshot(path: string, state: ContentCacheState): Promise<void> {
     const buf: Buffer = v8.serialize(state);
     const ab: ArrayBuffer = buf.buffer.slice(
       buf.byteOffset,
@@ -130,12 +130,12 @@ export class MirrorWorkerClient {
    * Load a snapshot through the worker.
    * - On structured failure, throws AggregateError with `__mirrorErrors`.
    */
-  async loadSnapshot(path: string): Promise<MirrorState> {
+  async loadSnapshot(path: string): Promise<ContentCacheState> {
     const res = await this.rpc({ type: "loadSnapshot", path });
 
     if (res.type === "loadSnapshot:done") {
       const buf = Buffer.from(new Uint8Array(res.payload.stateBin));
-      const state = v8.deserialize(buf) as MirrorState;
+      const state = v8.deserialize(buf) as ContentCacheState;
       if (!state.generatedAt) state.generatedAt = new Date().toISOString();
       return state;
     }
@@ -150,6 +150,6 @@ export class MirrorWorkerClient {
   }
 
   setDebugLogging(enabled: boolean): void {
-    this.worker?.postMessage({ type: "setDebug", enabled } as MirrorWorkerIn);
+    this.worker?.postMessage({ type: "setDebug", enabled } as ContentCacheWorkerIn);
   }
 }

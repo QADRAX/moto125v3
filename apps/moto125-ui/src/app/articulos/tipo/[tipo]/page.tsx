@@ -1,7 +1,7 @@
 import "server-only";
 import type { Metadata, ResolvingMetadata } from "next";
 import { getMirrorState } from "@/server/dataMirror";
-import type { MirrorRootState } from "@moto125/content-cache-core";
+import type { ContentCacheRootState } from "@moto125/content-cache-core";
 import ArticleGrid from "@/components/common/ArticleGrid";
 import Pagination from "@/components/common/Pagination";
 import { paginate } from "@/server/pagination";
@@ -25,7 +25,7 @@ export async function generateMetadata(
 }
 
 export default async function ArticulosTipoIndexPage({ params }: Props) {
-  const state: MirrorRootState = await getMirrorState();
+  const state: ContentCacheRootState = await getMirrorState();
   const wanted = params.tipo.toLowerCase();
 
   const all = (state.data.articles ?? []).filter((a) => {

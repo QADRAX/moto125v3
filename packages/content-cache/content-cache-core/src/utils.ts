@@ -1,4 +1,4 @@
-import { MirrorError } from "./types";
+import { ContentCacheError } from "./types";
 import * as v8 from "v8";
 
 export function getHttpStatus(e: unknown): number | undefined {
@@ -8,11 +8,11 @@ export function getHttpStatus(e: unknown): number | undefined {
 }
 
 export function toMirrorError(
-  source: MirrorError["source"],
+  source: ContentCacheError["source"],
   err: unknown
-): MirrorError {
+): ContentCacheError {
   const status = getHttpStatus(err);
-  let code: MirrorError["code"] = "UNKNOWN";
+  let code: ContentCacheError["code"] = "UNKNOWN";
   if (typeof status === "number") {
     if (status === 404) code = "HTTP_404";
     else if (status >= 500) code = "HTTP_5XX";

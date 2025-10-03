@@ -1,7 +1,7 @@
 import "server-only";
 import type { Metadata } from "next";
 import { getMirrorState } from "@/server/dataMirror";
-import type { MirrorRootState } from "@moto125/content-cache-core";
+import type { ContentCacheRootState } from "@moto125/content-cache-core";
 import ArticleGrid from "@/components/common/ArticleGrid";
 import Pagination from "@/components/common/Pagination";
 import { paginate } from "@/server/pagination";
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 };
 
 export default async function ArticulosIndexPage() {
-  const state: MirrorRootState = await getMirrorState();
+  const state: ContentCacheRootState = await getMirrorState();
   const all = state.data.articles ?? [];
   const { slice, info } = paginate(all, 1, PAGE_SIZE);
 

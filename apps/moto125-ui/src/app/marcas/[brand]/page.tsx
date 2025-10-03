@@ -1,7 +1,7 @@
 import "server-only";
 
 import { notFound, redirect } from "next/navigation";
-import type { MirrorRootState } from "@moto125/content-cache-core";
+import type { ContentCacheRootState } from "@moto125/content-cache-core";
 import type { Company, Moto } from "@moto125/api-client";
 import { getMirrorState } from "@/server/dataMirror";
 import Breadcrumbs from "@/components/common/Breadcrumbs";
@@ -14,14 +14,14 @@ import { BrandJsonLdFromCompany } from "@/components/seo/BrandJsonLd";
 export const revalidate = 60;
 
 function findCompanyBySlug(
-  state: MirrorRootState,
+  state: ContentCacheRootState,
   brandSlug: string
 ): Company | null {
   const companies = state?.data?.companies ?? [];
   return companies.find((c) => slugify(c.name) === brandSlug) ?? null;
 }
 
-function getMotosByCompany(state: MirrorRootState, company: Company): Moto[] {
+function getMotosByCompany(state: ContentCacheRootState, company: Company): Moto[] {
   const motos = state?.data?.motos ?? [];
   return motos.filter(
     (m) => m.company && m.company.documentId === company.documentId
@@ -49,7 +49,7 @@ export default async function BrandDetailPage({
 }: {
   params: { brand: string };
 }) {
-  const state: MirrorRootState = await getMirrorState();
+  const state: ContentCacheRootState = await getMirrorState();
   const company = findCompanyBySlug(state, params.brand);
   if (!company) notFound();
 

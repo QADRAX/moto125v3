@@ -1,7 +1,7 @@
 import "server-only";
 
 import { notFound } from "next/navigation";
-import type { MirrorRootState } from "@moto125/content-cache-core";
+import type { ContentCacheRootState } from "@moto125/content-cache-core";
 import { pickArticleBySlug } from "@/server/selectors";
 import { getMirrorState } from "@/server/dataMirror";
 import { getThumbnailUrl, mediaUrl } from "@/utils/utils";
@@ -47,7 +47,7 @@ export default async function ArticlePage({
 }: {
   params: { slug: string };
 }) {
-  const state: MirrorRootState = await getMirrorState();
+  const state: ContentCacheRootState = await getMirrorState();
   const article = pickArticleBySlug(state, params.slug);
   if (!article) notFound();
 

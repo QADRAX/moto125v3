@@ -2,9 +2,9 @@
   "name": "@moto125/content-cache-worker",
   "version": "1.0.0",
   "type": "commonjs",
-  "main": "./dist/mirror.worker.js",
+  "main": "./dist/cache.worker.js",
   "exports": {
-    "./worker": "./dist/mirror.worker.js"
+    "./worker": "./dist/cache.worker.js"
   },
   "files": ["dist"],
   "scripts": {

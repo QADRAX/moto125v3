@@ -1,27 +1,27 @@
 import {
   type SdkInit,
-  type DataMirror,
-  type DataMirrorInitOptions,
+  type ContentCache,
+  type ContentCacheInitOptions,
   type UpdateListener,
-  type MirrorRootState,
+  type ContentCacheRootState,
   type ErrorListener,
-  type MirrorError,
+  type ContentCacheError,
 } from "@moto125/content-cache-core";
 
 import { getMirrorState, setState, subscribe } from "./store";
 import { SnapshotManager } from "./SnapshotManager";
-import { MirrorWorkerClient } from "./MirrorWorkerClient";
-import { MirrorErrorBus } from "./MirrorErrorBus";
+import { WorkerClient } from "./WorkerClient";
+import { ErrorBus } from "./ErrorBus";
 import { createScheduler } from "./scheduler/SchedulerFactory";
 
-export class DataMirrorImpl implements DataMirror {
+export class ContentCacheImpl implements ContentCache {
   private sdkInit?: SdkInit;
   private snapshotPath?: string;
   private autosave = false;
   private refreshing = false;
 
-  private readonly worker = new MirrorWorkerClient();
-  private readonly errors = new MirrorErrorBus();
+  private readonly worker = new WorkerClient();
+  private readonly errors = new ErrorBus();
 
   private readonly scheduler = createScheduler(
     { refreshIntervalMs: 0, refreshCron: undefined, cronTimezone: undefined },
@@ -37,7 +37,7 @@ export class DataMirrorImpl implements DataMirror {
     });
   }
 
-  async init(opts: DataMirrorInitOptions): Promise<void> {
+  async init(opts: ContentCacheInitOptions): Promise<void> {
     await this.worker.init();
 
     if (opts.workerDebugLogging !== undefined) {
@@ -73,7 +73,7 @@ export class DataMirrorImpl implements DataMirror {
     this.scheduler.start();
   }
 
-  state(): MirrorRootState {
+  state(): ContentCacheRootState {
     return getMirrorState();
   }
 
@@ -87,7 +87,7 @@ export class DataMirrorImpl implements DataMirror {
     return this.errors.onError(listener);
   }
 
-  getErrors(): ReadonlyArray<MirrorError> {
+  getErrors(): ReadonlyArray<ContentCacheError> {
     return this.errors.getErrors();
   }
 
@@ -139,7 +139,7 @@ export class DataMirrorImpl implements DataMirror {
   }
 
   configure(
-    opts: Partial<Omit<DataMirrorInitOptions, "forceHydrateOnInit">>
+    opts: Partial<Omit<ContentCacheInitOptions, "forceHydrateOnInit">>
   ): void {
     if (opts.sdkInit !== undefined) this.sdkInit = opts.sdkInit;
     if (opts.snapshotPath !== undefined) this.snapshotPath = opts.snapshotPath;
