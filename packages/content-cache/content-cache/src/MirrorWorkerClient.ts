@@ -4,7 +4,7 @@ import {
   MirrorWorkerIn,
   MirrorWorkerOut,
   SdkInit,
-} from "@moto125/data-mirror-core";
+} from "@moto125/content-cache-core";
 import { Worker as NodeWorker } from "node:worker_threads";
 import * as v8 from "v8";
 import { resolveWorkerEntry } from "./resolveWorker";

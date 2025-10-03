@@ -13,8 +13,8 @@
     "typecheck:scripts": "tsc -p tsconfig.scripts.json --noEmit"
   },
   "dependencies": {
-    "@moto125/data-mirror-worker": "*",
-    "@moto125/data-mirror": "*",
+    "@moto125/content-cache-worker": "*",
+    "@moto125/content-cache": "*",
     "next": "^14",
     "react": "^18",
     "react-dom": "^18",

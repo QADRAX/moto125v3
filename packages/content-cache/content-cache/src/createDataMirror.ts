@@ -1,7 +1,7 @@
 import type {
   DataMirror,
   DataMirrorInitOptions,
-} from "@moto125/data-mirror-core";
+} from "@moto125/content-cache-core";
 import { DataMirrorImpl } from "./DataMirrorImpl";
 
 export function createDataMirror(): DataMirror {

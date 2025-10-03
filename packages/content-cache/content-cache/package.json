@@ -1,6 +1,6 @@
 {
-  "name": "@moto125/data-mirror",
-  "version": "0.0.2",
+  "name": "@moto125/content-cache",
+  "version": "1.0.0",
   "type": "module",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
@@ -30,8 +30,8 @@
     "lint": "echo \"(lint shared)\""
   },
   "dependencies": {
-    "@moto125/data-mirror-core": "*",
-    "@moto125/data-mirror-worker": "*",
+    "@moto125/content-cache-core": "*",
+    "@moto125/content-cache-worker": "*",
     "cron-parser": "^5.4.0"
   }
 }

@@ -6,7 +6,7 @@ import {
   type MirrorRootState,
   type ErrorListener,
   type MirrorError,
-} from "@moto125/data-mirror-core";
+} from "@moto125/content-cache-core";
 
 import { getMirrorState, setState, subscribe } from "./store";
 import { SnapshotManager } from "./SnapshotManager";

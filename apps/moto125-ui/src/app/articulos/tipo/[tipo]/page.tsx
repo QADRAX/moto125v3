@@ -1,7 +1,7 @@
 import "server-only";
 import type { Metadata, ResolvingMetadata } from "next";
 import { getMirrorState } from "@/server/dataMirror";
-import type { MirrorRootState } from "@moto125/data-mirror-core";
+import type { MirrorRootState } from "@moto125/content-cache-core";
 import ArticleGrid from "@/components/common/ArticleGrid";
 import Pagination from "@/components/common/Pagination";
 import { paginate } from "@/server/pagination";

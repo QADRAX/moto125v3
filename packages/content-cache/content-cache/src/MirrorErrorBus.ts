@@ -1,4 +1,4 @@
-import type { ErrorListener, MirrorError } from "@moto125/data-mirror-core";
+import type { ErrorListener, MirrorError } from "@moto125/content-cache-core";
 
 export class MirrorErrorBus {
   private readonly listeners = new Set<ErrorListener>();

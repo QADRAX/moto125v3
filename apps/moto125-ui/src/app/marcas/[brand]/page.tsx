@@ -1,7 +1,7 @@
 import "server-only";
 
 import { notFound, redirect } from "next/navigation";
-import type { MirrorRootState } from "@moto125/data-mirror-core";
+import type { MirrorRootState } from "@moto125/content-cache-core";
 import type { Company, Moto } from "@moto125/api-client";
 import { getMirrorState } from "@/server/dataMirror";
 import Breadcrumbs from "@/components/common/Breadcrumbs";

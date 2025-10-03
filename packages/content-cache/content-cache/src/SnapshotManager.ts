@@ -1,4 +1,4 @@
-import type { MirrorState } from "@moto125/data-mirror-core";
+import type { MirrorState } from "@moto125/content-cache-core";
 import { setState } from "./store";
 import { MirrorWorkerClient } from "./MirrorWorkerClient";
 import { MirrorErrorBus } from "./MirrorErrorBus";

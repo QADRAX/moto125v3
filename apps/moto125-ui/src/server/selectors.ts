@@ -1,7 +1,7 @@
 import "server-only";
 
 import type { Article } from "@moto125/api-client";
-import type { MirrorRootState } from "@moto125/data-mirror-core";
+import type { MirrorRootState } from "@moto125/content-cache-core";
 import { matchesType } from "@/utils/utils";
 
 export function pickLatestArticles(

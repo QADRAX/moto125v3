@@ -10,7 +10,7 @@
 import "dotenv/config";
 import { resolve } from "node:path";
 import { createMoto125Api } from "@moto125/api-client";
-import { createDataMirror } from "@moto125/data-mirror";
+import { createDataMirror } from "@moto125/content-cache";
 import { STRAPI_URL } from "./constants";
 
 /** Short ISO format: YYYY-MM-DD HH:mm:ss */

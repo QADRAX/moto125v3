@@ -1,4 +1,4 @@
-import type { DataMirrorInitOptions } from "@moto125/data-mirror-core";
+import type { DataMirrorInitOptions } from "@moto125/content-cache-core";
 import type { Scheduler } from "./Scheduler";
 import { CronScheduler } from "./CronScheduler";
 import { IntervalScheduler } from "./IntervalScheduler";

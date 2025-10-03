@@ -1,7 +1,7 @@
 import "server-only";
 
 import { notFound } from "next/navigation";
-import type { MirrorRootState } from "@moto125/data-mirror-core";
+import type { MirrorRootState } from "@moto125/content-cache-core";
 import { pickArticleBySlug } from "@/server/selectors";
 import { getMirrorState } from "@/server/dataMirror";
 import { getThumbnailUrl, mediaUrl } from "@/utils/utils";

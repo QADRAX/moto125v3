@@ -1,4 +1,4 @@
-import { MirrorRootState, MirrorState } from "@moto125/data-mirror-core";
+import { MirrorRootState, MirrorState } from "@moto125/content-cache-core";
 
 let state: MirrorRootState = null;
 

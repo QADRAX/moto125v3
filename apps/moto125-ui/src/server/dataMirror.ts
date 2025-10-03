@@ -3,8 +3,8 @@ import "server-only";
 import type {
   DataMirror,
   DataMirrorInitOptions,
-} from "@moto125/data-mirror-core";
-import { createDataMirror } from "@moto125/data-mirror";
+} from "@moto125/content-cache-core";
+import { createDataMirror } from "@moto125/content-cache";
 
 const IS_BUILD = process.env.NEXT_PHASE === "phase-production-build";
 

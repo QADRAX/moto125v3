@@ -7,7 +7,7 @@ import {
   MirrorState,
   MirrorWorkerIn,
   MirrorWorkerOut,
-} from "@moto125/data-mirror-core";
+} from "@moto125/content-cache-core";
 import { createMoto125Api } from "@moto125/api-client";
 
 let DEBUG = false;
