@@ -1,10 +1,10 @@
 {
-  "name": "@moto125/data-mirror-worker",
-  "version": "0.0.1",
+  "name": "@moto125/content-cache-worker",
+  "version": "1.0.0",
   "type": "commonjs",
-  "main": "./dist/mirror.worker.js",
+  "main": "./dist/cache.worker.js",
   "exports": {
-    "./worker": "./dist/mirror.worker.js"
+    "./worker": "./dist/cache.worker.js"
   },
   "files": ["dist"],
   "scripts": {
@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@moto125/api-client": "*",
-    "@moto125/data-mirror-core": "*"
+    "@moto125/content-cache-core": "*"
   },
   "devDependencies": {
     "typescript": "^5.6.0",

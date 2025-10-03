@@ -1,25 +1,25 @@
 import type { Moto125Sdk } from "@moto125/api-client";
 import type {
-  MirrorData,
-  MirrorError,
-  MirrorTimings,
+  ContentCacheData,
+  ContentCacheError,
+  ContentCacheTimings,
 } from "./types";
 import { fetchAllCollection, safeSingle } from "./strapi";
 import { performance } from "node:perf_hooks";
 import { timed, toMirrorError } from "./utils";
 
 export async function hydrateAllResilient(sdk: Moto125Sdk): Promise<{
-  data: MirrorData;
-  errors: MirrorError[];
-  timings: MirrorTimings;
+  data: ContentCacheData;
+  errors: ContentCacheError[];
+  timings: ContentCacheTimings;
 }> {
-  const errors: MirrorError[] = [];
+  const errors: ContentCacheError[] = [];
   const bySource: Record<string, number> = {};
 
   const startedAt = new Date().toISOString();
   const tAll0 = performance.now();
 
-  const data: MirrorData = {
+  const data: ContentCacheData = {
     articles: [],
     motos: [],
     companies: [],

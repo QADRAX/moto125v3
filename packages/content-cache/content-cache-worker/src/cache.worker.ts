@@ -4,10 +4,10 @@ import {
   hydrateAllResilient,
   loadSnapshot,
   saveSnapshot,
-  MirrorState,
-  MirrorWorkerIn,
-  MirrorWorkerOut,
-} from "@moto125/data-mirror-core";
+  ContentCacheState,
+  ContentCacheWorkerIn,
+  ContentCacheWorkerOut,
+} from "@moto125/content-cache-core";
 import { createMoto125Api } from "@moto125/api-client";
 
 let DEBUG = false;
@@ -37,12 +37,12 @@ function sep(label: string): Row {
   return { key: `── ${label} ──`, value: "", timing: "" };
 }
 
-function getSrcMs(state: MirrorState, srcKey: string): number | string {
+function getSrcMs(state: ContentCacheState, srcKey: string): number | string {
   return state.timings?.hydrate?.bySource?.[srcKey] ?? "-";
 }
 
 function logStateSummary(
-  state: MirrorState,
+  state: ContentCacheState,
   rawSizeBytes?: number
 ) {
   if (!DEBUG) return;
@@ -158,12 +158,12 @@ function logSnapshotIO(
   ]);
 }
 
-async function handle(msg: MirrorWorkerIn): Promise<MirrorWorkerOut | void> {
+async function handle(msg: ContentCacheWorkerIn): Promise<ContentCacheWorkerOut | void> {
   switch (msg.type) {
     case "setDebug": {
       DEBUG = !!msg.enabled;
-      if (DEBUG) console.log("[DM-Worker] Debug logging ENABLED");
-      else console.log("[DM-Worker] Debug logging DISABLED");
+      if (DEBUG) console.log("[cache-Worker] Debug logging ENABLED");
+      else console.log("[cache-Worker] Debug logging DISABLED");
       return;
     }
 
@@ -173,7 +173,7 @@ async function handle(msg: MirrorWorkerIn): Promise<MirrorWorkerOut | void> {
         token: msg.sdkInit.token,
       });
       const { data, errors, timings } = await hydrateAllResilient(sdk);
-      const state: MirrorState & { errors?: any[] } = {
+      const state: ContentCacheState & { errors?: any[] } = {
         version: "api-client@0.0.2",
         generatedAt: new Date().toISOString(),
         data,
@@ -194,7 +194,7 @@ async function handle(msg: MirrorWorkerIn): Promise<MirrorWorkerOut | void> {
       try {
         const view = new Uint8Array(msg.stateBin);
         const buf = Buffer.from(view);
-        const stateObj = v8.deserialize(buf) as MirrorState;
+        const stateObj = v8.deserialize(buf) as ContentCacheState;
         await saveSnapshot(msg.path, stateObj);
         if (DEBUG) {
           const approxBytes = Buffer.byteLength(
@@ -244,7 +244,7 @@ async function handle(msg: MirrorWorkerIn): Promise<MirrorWorkerOut | void> {
   }
 }
 
-parentPort?.on("message", async (msg: MirrorWorkerIn) => {
+parentPort?.on("message", async (msg: ContentCacheWorkerIn) => {
   try {
     const out = await handle(msg);
     if (!out) return;
@@ -254,7 +254,7 @@ parentPort?.on("message", async (msg: MirrorWorkerIn) => {
         : [];
     parentPort!.postMessage(out, transfers);
   } catch (e: any) {
-    const err: MirrorWorkerOut = {
+    const err: ContentCacheWorkerOut = {
       type: "error",
       error: e?.stack || String(e),
     };

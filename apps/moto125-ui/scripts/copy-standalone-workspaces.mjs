@@ -11,9 +11,9 @@ const standalone    = path.join(appRoot, ".next", "standalone");          // out
 const pkgsScopeDir  = path.join(standalone, "node_modules", "@moto125");  // <-- destino clave
 
 const sources = [
-  { name: "data-mirror",        src: path.join(repoRoot, "packages", "data-mirror") },
-  { name: "data-mirror-core",   src: path.join(repoRoot, "packages", "data-mirror-core") },
-  { name: "data-mirror-worker", src: path.join(repoRoot, "packages", "data-mirror-worker") },
+  { name: "content-cache",        src: path.join(repoRoot, "packages", "content-cache") },
+  { name: "content-cache-core",   src: path.join(repoRoot, "packages", "content-cache-core") },
+  { name: "content-cache-worker", src: path.join(repoRoot, "packages", "content-cache-worker") },
 ];
 
 async function exists(p){ try{ await fs.access(p); return true; } catch{ return false; } }

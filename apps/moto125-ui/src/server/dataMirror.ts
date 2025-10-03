@@ -1,16 +1,16 @@
 import "server-only";
 
 import type {
-  DataMirror,
-  DataMirrorInitOptions,
-} from "@moto125/data-mirror-core";
-import { createDataMirror } from "@moto125/data-mirror";
+  ContentCache,
+  ContentCacheInitOptions,
+} from "@moto125/content-cache-core";
+import { createContentCache } from "@moto125/content-cache";
 
 const IS_BUILD = process.env.NEXT_PHASE === "phase-production-build";
 
 declare global {
   var __MOTO125_MIRROR__:
-    | { instance: DataMirror | null; started: boolean; initialized: boolean }
+    | { instance: ContentCache | null; started: boolean; initialized: boolean }
     | undefined;
 }
 const globalRef =
@@ -21,7 +21,7 @@ const globalRef =
     initialized: false,
   });
 
-function buildInitOptions(): DataMirrorInitOptions {
+function buildInitOptions(): ContentCacheInitOptions {
   return {
     sdkInit: {
       baseUrl: process.env.STRAPI_API_URL!,
@@ -40,9 +40,9 @@ function buildInitOptions(): DataMirrorInitOptions {
   };
 }
 
-async function ensureMirror(): Promise<DataMirror> {
+async function ensureMirror(): Promise<ContentCache> {
   if (!globalRef.instance) {
-    globalRef.instance = createDataMirror();
+    globalRef.instance = createContentCache();
 
     globalRef.instance.onError((err: any) => {
       console.error("[DataMirror] error:", err);
@@ -67,7 +67,7 @@ async function ensureMirror(): Promise<DataMirror> {
   return globalRef.instance!;
 }
 
-export async function getDataMirror(): Promise<DataMirror> {
+export async function getDataMirror(): Promise<ContentCache> {
   return ensureMirror();
 }
 

@@ -2,7 +2,7 @@ import "server-only";
 import { notFound } from "next/navigation";
 import type { Metadata, ResolvingMetadata } from "next";
 import { getMirrorState } from "@/server/dataMirror";
-import type { MirrorRootState } from "@moto125/data-mirror-core";
+import type { ContentCacheRootState } from "@moto125/content-cache-core";
 import ArticleGrid from "@/components/common/ArticleGrid";
 import Pagination from "@/components/common/Pagination";
 import { paginate } from "@/server/pagination";
@@ -35,7 +35,7 @@ export default async function ArticulosTipoPagedPage({ params }: Props) {
   const pageNum = Number(params.page);
   if (!Number.isFinite(pageNum) || pageNum < 1) notFound();
 
-  const state: MirrorRootState = await getMirrorState();
+  const state: ContentCacheRootState = await getMirrorState();
   const wanted = params.tipo.toLowerCase();
   const filtered = (state.data.articles ?? []).filter((a) => {
     const t = a.articleType?.name ?? "";

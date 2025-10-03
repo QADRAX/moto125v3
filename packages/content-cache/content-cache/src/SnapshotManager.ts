@@ -1,12 +1,12 @@
-import type { MirrorState } from "@moto125/data-mirror-core";
+import type { ContentCacheState } from "@moto125/content-cache-core";
 import { setState } from "./store";
-import { MirrorWorkerClient } from "./MirrorWorkerClient";
-import { MirrorErrorBus } from "./MirrorErrorBus";
+import { WorkerClient } from "./WorkerClient";
+import { ErrorBus } from "./ErrorBus";
 
 export class SnapshotManager {
   constructor(
-    private readonly worker: MirrorWorkerClient,
-    private readonly errors: MirrorErrorBus
+    private readonly worker: WorkerClient,
+    private readonly errors: ErrorBus
   ) {}
 
   async tryLoadIntoStore(path: string): Promise<boolean> {
@@ -29,7 +29,7 @@ export class SnapshotManager {
     }
   }
 
-  async save(path: string, state: MirrorState): Promise<void> {
+  async save(path: string, state: ContentCacheState): Promise<void> {
     try {
       await this.worker.saveSnapshot(path, state);
     } catch (e: any) {

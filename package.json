@@ -4,6 +4,7 @@
   "description": "",
   "workspaces": [
     "packages/*",
+    "packages/content-cache/*",
     "apps/*"
   ],
   "private": true,

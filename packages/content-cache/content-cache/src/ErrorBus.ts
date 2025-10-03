@@ -1,20 +1,20 @@
-import type { ErrorListener, MirrorError } from "@moto125/data-mirror-core";
+import type { ErrorListener, ContentCacheError } from "@moto125/content-cache-core";
 
-export class MirrorErrorBus {
+export class ErrorBus {
   private readonly listeners = new Set<ErrorListener>();
-  private readonly lastErrors: MirrorError[] = [];
+  private readonly lastErrors: ContentCacheError[] = [];
 
   onError(listener: ErrorListener): () => void {
     this.listeners.add(listener);
     return () => this.listeners.delete(listener);
   }
 
-  emit(err: MirrorError): void {
+  emit(err: ContentCacheError): void {
     this.lastErrors.push(err);
     for (const l of this.listeners) l(err);
   }
 
-  getErrors(): ReadonlyArray<MirrorError> {
+  getErrors(): ReadonlyArray<ContentCacheError> {
     return this.lastErrors;
   }
 
@@ -22,8 +22,8 @@ export class MirrorErrorBus {
     this.lastErrors.length = 0;
   }
 
-  fromUnknown(e: any, source: MirrorError["source"]): void {
-    const apiErrors: MirrorError[] | undefined = e?.__mirrorErrors;
+  fromUnknown(e: any, source: ContentCacheError["source"]): void {
+    const apiErrors: ContentCacheError[] | undefined = e?.__mirrorErrors;
     if (Array.isArray(apiErrors) && apiErrors.length > 0) {
       for (const err of apiErrors) this.emit(err);
       return;

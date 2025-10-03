@@ -1,11 +1,11 @@
-import type { DataMirrorInitOptions } from "@moto125/data-mirror-core";
+import type { ContentCacheInitOptions } from "@moto125/content-cache-core";
 import type { Scheduler } from "./Scheduler";
 import { CronScheduler } from "./CronScheduler";
 import { IntervalScheduler } from "./IntervalScheduler";
 
 export function createScheduler(
   opts: Pick<
-    DataMirrorInitOptions,
+    ContentCacheInitOptions,
     "refreshIntervalMs" | "refreshCron" | "cronTimezone"
   >,
   task: () => Promise<void> | void
@@ -13,7 +13,7 @@ export function createScheduler(
   reconfigure(
     next: Partial<
       Pick<
-        DataMirrorInitOptions,
+        ContentCacheInitOptions,
         "refreshIntervalMs" | "refreshCron" | "cronTimezone"
       >
     >
@@ -49,7 +49,7 @@ export function createScheduler(
     reconfigure: (
       next: Partial<
         Pick<
-          DataMirrorInitOptions,
+          ContentCacheInitOptions,
           "refreshIntervalMs" | "refreshCron" | "cronTimezone"
         >
       >

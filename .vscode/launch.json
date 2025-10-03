@@ -157,7 +157,7 @@
       "sourceMaps": true,
       "outFiles": [
         "${workspaceFolder}/packages/migration/**/*.js",
-        "${workspaceFolder}/packages/data-mirror/dist/**/*.js"
+        "${workspaceFolder}/packages/content-cache/dist/**/*.js"
       ],
       "autoAttachChildProcesses": true,
       "env": {

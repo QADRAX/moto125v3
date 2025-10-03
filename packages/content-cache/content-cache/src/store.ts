@@ -1,11 +1,11 @@
-import { MirrorRootState, MirrorState } from "@moto125/data-mirror-core";
+import { ContentCacheRootState, ContentCacheState } from "@moto125/content-cache-core";
 
-let state: MirrorRootState = null;
+let state: ContentCacheRootState = null;
 
-type Listener = (next: Readonly<MirrorRootState>) => void;
+type Listener = (next: Readonly<ContentCacheRootState>) => void;
 const listeners = new Set<Listener>();
 
-export function getMirrorState(): Readonly<MirrorRootState> {
+export function getMirrorState(): Readonly<ContentCacheRootState> {
   return state;
 }
 
@@ -18,7 +18,7 @@ function notify() {
   for (const l of listeners) l(state);
 }
 
-export function setState(next: MirrorState): void {
+export function setState(next: ContentCacheState): void {
   state = next;
   notify();
 }

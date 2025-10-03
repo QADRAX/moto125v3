@@ -1,6 +1,6 @@
 import "server-only";
 import { notFound } from "next/navigation";
-import type { MirrorRootState } from "@moto125/data-mirror-core";
+import type { ContentCacheRootState } from "@moto125/content-cache-core";
 import type { Moto } from "@moto125/api-client";
 import { getMirrorState } from "@/server/dataMirror";
 import { getThumbnailUrl, slugify } from "@/utils/utils";
@@ -13,7 +13,7 @@ import MotoImageGallery from "@/components/motos/MotoImageGallery";
 
 export const revalidate = 60;
 
-function findMotoByParam(state: MirrorRootState, param: string): Moto | null {
+function findMotoByParam(state: ContentCacheRootState, param: string): Moto | null {
   const motos = state?.data?.motos ?? [];
   return motos.find((m) => m.moto125Id === param) ?? null;
 }
@@ -48,7 +48,7 @@ export default async function MotoDetailPage({
 }: {
   params: { moto: string };
 }) {
-  const state: MirrorRootState = await getMirrorState();
+  const state: ContentCacheRootState = await getMirrorState();
   const moto = findMotoByParam(state, params.moto);
 
   if (!moto) notFound();

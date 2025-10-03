@@ -1,11 +1,11 @@
 import "server-only";
 
 import type { Article } from "@moto125/api-client";
-import type { MirrorRootState } from "@moto125/data-mirror-core";
+import type { ContentCacheRootState } from "@moto125/content-cache-core";
 import { matchesType } from "@/utils/utils";
 
 export function pickLatestArticles(
-  state: MirrorRootState,
+  state: ContentCacheRootState,
   limitOrType?: number | string,
   maybeType?: string
 ): Article[] {
@@ -39,7 +39,7 @@ export function pickLatestArticles(
 }
 
 export function pickArticleBySlug(
-  state: MirrorRootState,
+  state: ContentCacheRootState,
   slug: string
 ): Article | null {
   if (!state?.data?.articles?.length) return null;

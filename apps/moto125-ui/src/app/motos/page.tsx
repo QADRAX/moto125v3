@@ -1,6 +1,6 @@
 import "server-only";
 import { redirect, notFound } from "next/navigation";
-import type { MirrorRootState } from "@moto125/data-mirror-core";
+import type { ContentCacheRootState } from "@moto125/content-cache-core";
 import type { MotoClass } from "@moto125/api-client";
 import { getMirrorState } from "@/server/dataMirror";
 import { slugify } from "@/utils/utils";
@@ -10,12 +10,12 @@ import { Container } from "@/components/common/Container";
 
 export const revalidate = 60;
 
-function getClasses(state: MirrorRootState): MotoClass[] {
+function getClasses(state: ContentCacheRootState): MotoClass[] {
   return state?.data?.taxonomies?.motoClasses ?? [];
 }
 
 export default async function MotosClassesPage() {
-  const state: MirrorRootState = await getMirrorState();
+  const state: ContentCacheRootState = await getMirrorState();
   const classes = getClasses(state).filter(Boolean);
   if (!classes.length) notFound();
 

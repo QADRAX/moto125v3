@@ -1,6 +1,6 @@
 import "server-only";
 import { notFound } from "next/navigation";
-import type { MirrorRootState } from "@moto125/data-mirror-core";
+import type { ContentCacheRootState } from "@moto125/content-cache-core";
 import type { Company } from "@moto125/api-client";
 import { getMirrorState } from "@/server/dataMirror";
 import Breadcrumbs from "@/components/common/Breadcrumbs";
@@ -9,7 +9,7 @@ import { Container } from "@/components/common/Container";
 
 export const revalidate = 60;
 
-function getCompanies(state: MirrorRootState): Company[] {
+function getCompanies(state: ContentCacheRootState): Company[] {
   const list = state?.data?.companies ?? [];
   return list
     .filter((c) => c && c.active !== false)
@@ -20,7 +20,7 @@ function getCompanies(state: MirrorRootState): Company[] {
 }
 
 export default async function BrandsIndexPage() {
-  const state: MirrorRootState = await getMirrorState();
+  const state: ContentCacheRootState = await getMirrorState();
   const companies = getCompanies(state);
   if (!companies.length) notFound();
 
