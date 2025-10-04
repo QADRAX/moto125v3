@@ -18,14 +18,11 @@ function findMotoByParam(state: ContentCacheRootState, param: string): Moto | nu
   return motos.find((m) => m.moto125Id === param) ?? null;
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { moto: string };
-}) {
+export async function generateMetadata({ params }: { params: { moto: string } }) {
   const state = await getMirrorState();
   const moto = findMotoByParam(state, params.moto);
   if (!moto) return { title: "Moto no encontrada" };
+
   const cover = moto.images?.[0]?.url ? getThumbnailUrl(moto.images[0]) : undefined;
 
   return {
@@ -39,37 +36,41 @@ export async function generateMetadata({
       card: "summary_large_image",
       images: cover ? [cover] : undefined,
     },
-    alternates: { canonical: "/moto/" + params.moto }
+    alternates: { canonical: "/moto/" + params.moto },
   };
 }
 
-export default async function MotoDetailPage({
-  params,
-}: {
-  params: { moto: string };
-}) {
+export default async function MotoDetailPage({ params }: { params: { moto: string } }) {
   const state: ContentCacheRootState = await getMirrorState();
   const moto = findMotoByParam(state, params.moto);
 
   if (!moto) notFound();
-  
-  const mc = moto.motoType?.motoClass;
-  const mt = moto.motoType;
+
+  const mc = moto.motoType?.motoClass ?? null;
+  const mt = moto.motoType ?? null;
+
+  const crumbs: Array<{ label: string; href?: string }> = [{ label: "Motos", href: "/motos" }];
+
+  if (mc?.name) {
+    const classSlug = slugify(mc.name);
+    crumbs.push({ label: mc.name, href: `/motos/${classSlug}` });
+  }
+
+  if (mt?.name || mt?.fullName) {
+    const typeLabel = mt?.fullName ?? mt?.name!;
+    const typeSlug = slugify(mt?.name ?? mt?.fullName ?? "");
+    const baseSegments = ["", "motos"];
+    if (mc?.name) baseSegments.push(slugify(mc.name));
+    const typeHref = baseSegments.concat(typeSlug).join("/");
+    crumbs.push({ label: typeLabel, href: typeHref });
+  }
+
+  crumbs.push({ label: moto.fullName ?? moto.modelName }); 
 
   return (
     <Container>
       <MotoProductJsonLdFromMoto moto={moto} />
-      <Breadcrumbs
-        items={[
-          { label: "Motos", href: "/motos" },
-          { label: mc.name, href: `/motos/${slugify(mc.name)}` },
-          {
-            label: mt.fullName ?? mt.name,
-            href: `/motos/${slugify(mc.name)}/${slugify(mt.name)}`,
-          },
-          { label: moto.fullName ?? moto.modelName },
-        ]}
-      />
+      <Breadcrumbs items={crumbs} />
       <MotoHeader moto={moto} />
       <MotoSpecs ficha={moto.fichaTecnica ?? {}} />
       <MotoImageGallery moto={moto} />
