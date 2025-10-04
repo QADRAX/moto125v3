@@ -119,6 +119,26 @@
         "TS_NODE_PROJECT": "${workspaceFolder}/packages/migration/tsconfig.json"
       }
     },
+        {
+      "type": "node",
+      "request": "launch",
+      "name": "Run backfillReplaceOldLinks",
+      "runtimeArgs": [
+        "-r",
+        "ts-node/register"
+      ],
+      "args": [
+        "${workspaceFolder}/packages/migration/src/backfillReplaceOldLinks.ts"
+      ],
+      "cwd": "${workspaceFolder}/packages/migration",
+      "sourceMaps": true,
+      "outFiles": [
+        "${workspaceFolder}/packages/migration/**/*.js"
+      ],
+      "env": {
+        "TS_NODE_PROJECT": "${workspaceFolder}/packages/migration/tsconfig.json"
+      }
+    },
     {
       "type": "node",
       "request": "launch",
