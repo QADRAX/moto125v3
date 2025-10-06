@@ -4,12 +4,14 @@ import { z } from "zod";
 const EnvSchema = z.object({
   PORT: z.coerce.number().default(8080),
 
-  LOG_LEVEL: z.enum(["trace", "debug", "info", "warn", "error"]).default("info"),
+  LOG_LEVEL: z
+    .enum(["trace", "debug", "info", "warn", "error"])
+    .default("info"),
   LOG_BUFFER_SIZE: z.coerce.number().int().positive().default(1000),
 
-  STRAPI_ADMIN_BASE_URL: z.string().url(),            // OK en Zod v4
+  STRAPI_ADMIN_BASE_URL: z.string().url(), // OK en Zod v4
   STRAPI_ADMIN_TOKEN: z.string().optional(),
-  STRAPI_ADMIN_EMAIL: z.string().email().optional(),  // OK en Zod v4
+  STRAPI_ADMIN_EMAIL: z.string().email().optional(), // OK en Zod v4
   STRAPI_ADMIN_PASSWORD: z.string().optional(),
 
   AZURE_ACCOUNT: z.string(),
@@ -20,6 +22,9 @@ const EnvSchema = z.object({
   SYNC_MEDIA_CRON: z.string().default("0 5 * * *"),
   SYNC_MEDIA_START_ON_BOOT: z.coerce.boolean().default(true),
   SYNC_MEDIA_CONCURRENCY: z.coerce.number().int().positive().default(4),
+
+  BASIC_AUTH_USER: z.string(),
+  BASIC_AUTH_PASSWORD: z.string(),
 });
 
 /** App configuration inferred from environment variables. */
@@ -39,7 +44,10 @@ export function loadConfig(): AppConfig {
   const cfg = parsed.data;
 
   // Ensure we have either token OR email+password for Strapi
-  if (!cfg.STRAPI_ADMIN_TOKEN && !(cfg.STRAPI_ADMIN_EMAIL && cfg.STRAPI_ADMIN_PASSWORD)) {
+  if (
+    !cfg.STRAPI_ADMIN_TOKEN &&
+    !(cfg.STRAPI_ADMIN_EMAIL && cfg.STRAPI_ADMIN_PASSWORD)
+  ) {
     throw new Error(
       "Strapi admin auth: provide STRAPI_ADMIN_TOKEN or STRAPI_ADMIN_EMAIL + STRAPI_ADMIN_PASSWORD"
     );

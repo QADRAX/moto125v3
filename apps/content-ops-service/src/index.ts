@@ -1,11 +1,11 @@
-import 'dotenv/config';
-import { loadConfig } from './config';
-import { createLogger } from './logger';
-import { Scheduler } from './scheduler/Scheduler';
-import { createServer } from './server/server';
-import { createSyncMediaJob } from './jobs/syncMedia';
-import { createAzureContainer } from './services/azureBlob';
-import { createStrapiClients } from './services/strapi';
+import "dotenv/config";
+import { loadConfig } from "./config";
+import { createLogger } from "./logger";
+import { Scheduler } from "./scheduler/Scheduler";
+import { createServer } from "./server/server";
+import { createSyncMediaJob } from "./jobs/syncMedia";
+import { createAzureContainer } from "./services/azureBlob";
+import { createStrapiClients } from "./services/strapi";
 
 async function main() {
   const cfg = loadConfig();
@@ -38,12 +38,19 @@ async function main() {
     })
   );
 
-  createServer({ port: cfg.PORT, scheduler, log: logger, bus });
+  createServer({
+    port: cfg.PORT,
+    scheduler,
+    log: logger,
+    bus,
+    auth: { user: cfg.BASIC_AUTH_USER, password: cfg.BASIC_AUTH_PASSWORD },
+  });
+
   await scheduler.runJobsOnBoot();
 }
 
 main().catch((err) => {
   // eslint-disable-next-line no-console
-  console.error('Fatal error on startup:', err);
+  console.error("Fatal error on startup:", err);
   process.exit(1);
 });
