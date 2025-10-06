@@ -18,6 +18,7 @@
     "changed": "lerna changed",
     "dev:strapi": "lerna run develop --scope=@moto125/strapi --stream",
     "dev:ui": "lerna run dev --scope=@moto125/moto125-ui --stream",
+    "dev:content-ops-service": "lerna run dev --scope=@moto125/content-ops-service --stream",
     "start:ui": "npm run start -w @moto125/moto125-ui"
   },
   "repository": {

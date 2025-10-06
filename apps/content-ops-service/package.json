@@ -1,8 +1,8 @@
 {
     "name": "@moto125/content-ops-service",
-    "version": "0.1.0",
+    "version": "1.0.0",
     "private": true,
-    "type": "module",
+    "type": "commonjs",
     "main": "dist/index.js",
     "scripts": {
         "dev": "tsx watch src/index.ts",
@@ -13,16 +13,18 @@
         "@azure/storage-blob": "^12.28.0",
         "@moto125/admin-api-client": "*",
         "@moto125/content-ops-shared": "*",
+        "@moto125/content-ops-ui": "*",
         "cors": "^2.8.5",
         "express": "^5.1.0",
-        "node-cron": "^4.2.1",
-        "zod": "^4.1.12",
         "mime-types": "^3.0.1",
-        "p-limit": "^7.1.1"
+        "node-cron": "^4.2.1",
+        "p-limit": "^7.1.1",
+        "zod": "^4.1.12"
     },
     "devDependencies": {
         "@types/cors": "^2.8.19",
         "@types/express": "^5.0.3",
+        "@types/node": "^22.7.6",
         "@types/node-cron": "^3.0.11",
         "tsx": "^4.19.1",
         "typescript": "^5.6.3"

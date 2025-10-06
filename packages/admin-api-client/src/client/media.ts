@@ -1,8 +1,14 @@
-import FormData from 'form-data';
-import fs from 'node:fs';
-import path from 'node:path';
-import { StrapiAdminHttp } from '../http';
-import { AdminFile, AdminFolder, Id, Page, UploadOptions } from '../types/admin';
+import FormData from "form-data";
+import fs from "node:fs";
+import path from "node:path";
+import { StrapiAdminHttp } from "../http";
+import {
+  AdminFile,
+  AdminFolder,
+  Id,
+  Page,
+  UploadOptions,
+} from "../types/admin";
 
 function normList<T = any>(raw: any): T[] {
   const d = raw?.data ?? raw;
@@ -12,39 +18,48 @@ function normList<T = any>(raw: any): T[] {
   return [];
 }
 
+function unwrap<T = any>(raw: any): T {
+  return raw && raw.data ? (raw.data as T) : (raw as T);
+}
+
 export class MediaLibrary {
   constructor(private http: StrapiAdminHttp) {}
 
   private folderCacheByKey = new Map<string, AdminFolder>();
 
   async listChildFolders(parentId: Id | null): Promise<AdminFolder[]> {
-    const params: any = { sort: 'name:asc' };
-    if (parentId === null) params['filters[parent][id][$null]'] = true;
-    else params['filters[parent][id][$eq]'] = parentId;
+    const params: any = { sort: "name:asc" };
+    if (parentId === null) params["filters[parent][id][$null]"] = true;
+    else params["filters[parent][id][$eq]"] = parentId;
 
-    const raw = await this.http.get('/upload/folders', { params });
+    const raw = await this.http.get("/upload/folders", { params });
     const arr = normList<any>(raw);
     const out = arr.map((f) => ({
       id: f.id,
       name: f.name,
       parentId: f.parent?.id ?? null,
     })) as AdminFolder[];
-    out.sort((a, b) => a.name.localeCompare(b.name, 'es'));
+    out.sort((a, b) => a.name.localeCompare(b.name, "es"));
     return out;
   }
 
-  async getChildFolderByName(parentId: Id | null, name: string): Promise<AdminFolder | null> {
-    const cacheKey = `${parentId ?? 'root'}::${name}`;
+  async getChildFolderByName(
+    parentId: Id | null,
+    name: string
+  ): Promise<AdminFolder | null> {
+    const cacheKey = `${parentId ?? "root"}::${name}`;
     const cached = this.folderCacheByKey.get(cacheKey);
     if (cached) return cached;
 
-    const params: any = { 'filters[name][$eq]': name };
-    if (parentId === null) params['filters[parent][id][$null]'] = true;
-    else params['filters[parent][id][$eq]'] = parentId;
+    const params: any = { "filters[name][$eq]": name };
+    if (parentId === null) params["filters[parent][id][$null]"] = true;
+    else params["filters[parent][id][$eq]"] = parentId;
 
-    const raw = await this.http.get('/upload/folders', { params });
+    const raw = await this.http.get("/upload/folders", { params });
     const f = normList<any>(raw)[0];
-    const out = f ? { id: f.id, name: f.name, parentId: f.parent?.id ?? null } : null;
+    const out = f
+      ? { id: f.id, name: f.name, parentId: f.parent?.id ?? null }
+      : null;
     if (out) this.folderCacheByKey.set(cacheKey, out);
     return out;
   }
@@ -52,15 +67,25 @@ export class MediaLibrary {
   /** Crea carpeta (en root si parentId es null) */
   async createFolder(name: string, parentId: Id | null): Promise<AdminFolder> {
     const body: any = { name, parent: parentId };
-    const created = await this.http.post('/upload/folders', body);
-    const out = { id: created.id, name: created.name, parentId: created.parent?.id ?? null };
-    const cacheKey = `${parentId ?? 'root'}::${name}`;
+    const createdRaw = await this.http.post("/upload/folders", body);
+    const created = unwrap<any>(createdRaw);
+
+    const out: AdminFolder = {
+      id: created.id,
+      name: created.name,
+      parentId: created.parent?.id ?? null,
+    };
+
+    const cacheKey = `${parentId ?? "root"}::${name}`;
     this.folderCacheByKey.set(cacheKey, out);
     return out;
   }
 
   async ensureFolderPath(pathStr: string): Promise<AdminFolder> {
-    const segments = pathStr.split(/[\\/]/).filter(Boolean);
+    const clean = String(pathStr ?? "").trim();
+    if (!clean) throw new Error("ensureFolderPath: path vacío");
+    const segments = clean.split(/[\\/]+/).filter(Boolean);
+
     let parentId: Id | null = null;
     let last: AdminFolder | null = null;
 
@@ -68,17 +93,23 @@ export class MediaLibrary {
       const existing = await this.getChildFolderByName(parentId, seg);
       last = existing ?? (await this.createFolder(seg, parentId));
       parentId = last.id;
+      if (typeof parentId !== "number") {
+        throw new Error(
+          `createFolder devolvió id inválido en segmento "${seg}" (id=${String(parentId)})`
+        );
+      }
     }
-    if (!last) throw new Error(`No se pudo resolver/crear la ruta "${pathStr}"`);
+    if (!last)
+      throw new Error(`No se pudo resolver/crear la ruta "${pathStr}"`);
     return last;
   }
 
   async listFilesInFolder(folderId: Id): Promise<AdminFile[]> {
     const params: any = {
-      'filters[folder][id][$eq]': folderId,
-      sort: 'name:asc',
+      "filters[folder][id][$eq]": folderId,
+      sort: "name:asc",
     };
-    const raw = await this.http.get('/upload/files', { params });
+    const raw = await this.http.get("/upload/files", { params });
     const results = normList<any>(raw).map((f) => ({
       id: f.id,
       name: f.name,
@@ -99,7 +130,9 @@ export class MediaLibrary {
   }
 
   async moveFile(fileId: Id, newFolderId: Id | null): Promise<AdminFile> {
-    const updated = await this.http.put(`/upload/files/${fileId}`, { folder: newFolderId });
+    const updated = await this.http.put(`/upload/files/${fileId}`, {
+      folder: newFolderId,
+    });
     return {
       id: updated.id,
       name: updated.name,
@@ -119,20 +152,28 @@ export class MediaLibrary {
     await this.http.del(`/upload/files/${fileId}`);
   }
 
-  async uploadLocalFile(filePath: string, opts: UploadOptions = {}): Promise<AdminFile[]> {
+  async uploadLocalFile(
+    filePath: string,
+    opts: UploadOptions = {}
+  ): Promise<AdminFile[]> {
     const stat = fs.statSync(filePath);
     if (!stat.isFile()) throw new Error(`No es un fichero: ${filePath}`);
 
     const stream = fs.createReadStream(filePath);
     const form = new FormData();
-    form.append('files', stream, { filename: opts.filename ?? path.basename(filePath) });
+    form.append("files", stream, {
+      filename: opts.filename ?? path.basename(filePath),
+    });
 
-    if (opts.fileInfo) form.append('fileInfo', JSON.stringify(opts.fileInfo));
-    if (typeof opts.folderId !== 'undefined') form.append('folder', String(opts.folderId ?? ''));
+    if (opts.fileInfo) form.append("fileInfo", JSON.stringify(opts.fileInfo));
+
+    if (typeof opts.folderId !== "undefined") {
+      form.append("folder", String(opts.folderId ?? ""));
+    }
 
     const headers = form.getHeaders();
-    const data = await this.http.post('/upload', form, { headers });
-    const arr = Array.isArray(data) ? data : data?.data ?? [];
+    const data = await this.http.post("/upload", form, { headers });
+    const arr = Array.isArray(data) ? data : (data?.data ?? []);
     return arr.map((f: any) => ({
       id: f.id,
       name: f.name,
