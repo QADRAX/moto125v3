@@ -4,7 +4,6 @@ import type { Scheduler } from '../scheduler/Scheduler';
 import type { Logger } from '../logger';
 import type { LogBus } from '../logging/LogBus';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 
 /**
  * Creates and starts the HTTP server (Express).
