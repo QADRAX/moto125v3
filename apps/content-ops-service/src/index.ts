@@ -3,15 +3,17 @@ import { loadConfig } from "./config";
 import { createLogger } from "./logger";
 import { Scheduler } from "./scheduler/Scheduler";
 import { createServer } from "./server/server";
-import { createSyncMediaJob } from "./jobs/syncMedia";
 import { createAzureContainer } from "./services/azureBlob";
 import { createStrapiClients } from "./services/strapi";
+import { createSyncMediaJob } from "./jobs/syncMedia";
 
 async function main() {
   const cfg = loadConfig();
+
   const { logger, bus } = createLogger(cfg.LOG_LEVEL, cfg.LOG_BUFFER_SIZE);
   const scheduler = new Scheduler(logger);
 
+  // Services
   const container = createAzureContainer({
     account: cfg.AZURE_ACCOUNT,
     key: cfg.AZURE_KEY,
@@ -25,6 +27,7 @@ async function main() {
     password: cfg.STRAPI_ADMIN_PASSWORD,
   });
 
+  // Register job: Sync Azure Blob → Strapi
   scheduler.register(
     createSyncMediaJob({
       cron: cfg.SYNC_MEDIA_CRON,
@@ -38,6 +41,7 @@ async function main() {
     })
   );
 
+  // Start HTTP server
   createServer({
     port: cfg.PORT,
     scheduler,
@@ -46,9 +50,18 @@ async function main() {
     auth: {
       user: cfg.BASIC_AUTH_USER,
       password: cfg.BASIC_AUTH_PASSWORD,
-      maxFails: cfg.BASIC_AUTH_MAX_FAILS,
-      lockoutSeconds: cfg.BASIC_AUTH_LOCKOUT_SECONDS,
-      windowSeconds: cfg.BASIC_AUTH_WINDOW_SECONDS,
+      maxFails: cfg.SEC_AUTH_MAX_FAILS,
+      lockoutSeconds: cfg.SEC_AUTH_LOCKOUT_SECONDS,
+      windowSeconds: cfg.SEC_WINDOW_SECONDS,
+      maxTrackedKeys: cfg.SEC_MAX_TRACKED_KEYS,
+      pruneIntervalSeconds: cfg.SEC_PRUNE_INTERVAL_SECONDS,
+    },
+    rate: {
+      capacity: cfg.SEC_RATE_CAPACITY,
+      windowSeconds: cfg.SEC_WINDOW_SECONDS,
+      maxTrackedKeys: cfg.SEC_MAX_TRACKED_KEYS,
+      pruneIntervalSeconds: cfg.SEC_PRUNE_INTERVAL_SECONDS,
+      trustProxy: cfg.SEC_TRUST_PROXY,
     },
   });
 

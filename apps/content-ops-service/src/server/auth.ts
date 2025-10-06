@@ -1,7 +1,24 @@
 import crypto from "node:crypto";
 import type { RequestHandler } from "express";
 
-/** Constant-time string comparison to mitigate timing attacks. */
+export interface BasicAuthOptions {
+  /** Usuario esperado. */
+  user: string;
+  /** Password esperado. */
+  password: string;
+  /** Fallos permitidos dentro de la ventana antes del bloqueo. */
+  maxFails: number;
+  /** Duración del bloqueo (segundos). */
+  lockoutSeconds: number;
+  /** Duración de la ventana de contabilización de fallos (segundos). */
+  windowSeconds: number;
+  /** Máximo de claves (IP) a rastrear en memoria. */
+  maxTrackedKeys: number;
+  /** Intervalo (segundos) entre tareas de poda (purga) del mapa en memoria. */
+  pruneIntervalSeconds: number;
+}
+
+/** Comparación en tiempo constante para evitar filtrado por timing. */
 function safeEqual(a: string, b: string): boolean {
   const ab = Buffer.from(a);
   const bb = Buffer.from(b);
@@ -9,96 +26,106 @@ function safeEqual(a: string, b: string): boolean {
   return crypto.timingSafeEqual(ab, bb);
 }
 
-type Tracker = {
-  fails: number;
-  firstFailAt: number;
-  lockUntil?: number;
-};
-
-const attempts = new Map<string, Tracker>();
-
 /**
- * Basic Auth middleware with lockout after N failed attempts.
- * Returns 401 for normal unauthorized; returns 429 when locked (with Retry-After).
- * Keys the tracker by "ip|username" to avoid cross-impact between users on same IP.
+ * Middleware de Basic Auth con lockout y límites de memoria.
+ * No tiene defaults; pásalo todo desde config.ts.
+ * Nota: este middleware NO excluye rutas (p. ej., /health). Monta antes de él
+ * las rutas públicas si quieres que queden sin proteger.
  */
-export function basicAuth(opts: {
-  user: string;
-  password: string;
-  maxFails: number;
-  lockoutSeconds: number;
-  windowSeconds: number;
-}): RequestHandler {
-  const expected =
+export function basicAuth(opts: BasicAuthOptions): RequestHandler {
+  const expectedHeader =
     "Basic " + Buffer.from(`${opts.user}:${opts.password}`).toString("base64");
+  const windowMs = opts.windowSeconds * 1000;
+  const lockMs = opts.lockoutSeconds * 1000;
+  const ttlMs = windowMs + lockMs; // vida máxima de un registro sin actividad
+  const maxTracked = opts.maxTrackedKeys;
+  const pruneEveryMs = opts.pruneIntervalSeconds * 1000;
+
+  type Rec = {
+    fails: number;
+    firstFailAt: number;
+    lastSeenAt: number;
+    lockedUntil?: number;
+  };
+
+  const store = new Map<string, Rec>(); // key = IP
+  let lastPrune = 0;
+
+  function prune(now: number) {
+    // TTL: si pasó la ventana+lock desde el último evento relevante, eliminar
+    for (const [key, rec] of store) {
+      const ref =
+        rec.lockedUntil !== undefined ? rec.lockedUntil : rec.firstFailAt;
+      if (ref + ttlMs <= now) store.delete(key);
+    }
+    // Cap de memoria (LRU-like por lastSeenAt)
+    if (store.size > maxTracked) {
+      const entries = [...store.entries()];
+      entries.sort((a, b) => a[1].lastSeenAt - b[1].lastSeenAt);
+      const toDrop = store.size - maxTracked;
+      for (let i = 0; i < toDrop; i++) store.delete(entries[i][0]);
+    }
+  }
 
   return (req, res, next) => {
-    // Keep /health public
-    if (req.path === "/health") return next();
-
-    // Parse presented username (if present) to key attempts accurately
-    const hdr =
-      typeof req.headers["authorization"] === "string"
-        ? req.headers["authorization"]
-        : "";
-    let presentedUser = "";
-    if (hdr.startsWith("Basic ")) {
-      try {
-        const raw = Buffer.from(hdr.slice(6), "base64").toString("utf8");
-        presentedUser = raw.split(":")[0] ?? "";
-      } catch {
-        /* ignore */
-      }
-    }
-    const key = `${req.ip || req.socket.remoteAddress || "unknown"}|${presentedUser || "?"}`;
-
     const now = Date.now();
-    const rec = attempts.get(key);
+    if (now - lastPrune >= pruneEveryMs) {
+      prune(now);
+      lastPrune = now;
+    }
 
-    // If locked, return 429 with Retry-After
-    if (rec?.lockUntil && now < rec.lockUntil) {
-      const secsLeft = Math.max(1, Math.ceil((rec.lockUntil - now) / 1000));
-      res.setHeader("Retry-After", String(secsLeft));
+    const ip = req.ip || req.socket.remoteAddress || "unknown";
+    let rec = store.get(ip);
+
+    const hdr =
+      typeof req.headers.authorization === "string"
+        ? req.headers.authorization
+        : "";
+    const ok = safeEqual(hdr, expectedHeader);
+
+    // ¿bloqueado?
+    if (rec && rec.lockedUntil !== undefined && rec.lockedUntil > now) {
+      const wait = Math.ceil((rec.lockedUntil - now) / 1000);
+      res.setHeader("Retry-After", String(wait));
+      return res
+        .status(429)
+        .json({ ok: false, error: "Locked", message: `Try again in ${wait}s` });
+    }
+
+    if (ok) {
+      if (rec) store.delete(ip); // reset al éxito
+      return next();
+    }
+
+    // No autorizado → contabilizar fallo
+    if (!rec || now - rec.firstFailAt > windowMs) {
+      rec = {
+        fails: 1,
+        firstFailAt: now,
+        lastSeenAt: now,
+        lockedUntil: undefined,
+      };
+    } else {
+      rec.fails += 1;
+      rec.lastSeenAt = now;
+    }
+
+    if (rec.fails >= opts.maxFails) {
+      rec.lockedUntil = now + lockMs;
+      rec.fails = 0; // reset tras bloquear
+      store.set(ip, rec);
+      res.setHeader("Retry-After", String(opts.lockoutSeconds));
       return res
         .status(429)
         .json({
           ok: false,
-          error: `Too many attempts. Retry after ${secsLeft}s`,
+          error: "Locked",
+          message: `Locked for ${opts.lockoutSeconds}s`,
         });
     }
 
-    // No/invalid header -> count as fail
-    if (!hdr || !safeEqual(hdr, expected)) {
-      const windowMs = opts.windowSeconds * 1000;
-      const lockMs = opts.lockoutSeconds * 1000;
-      const nowRec: Tracker = rec ?? { fails: 0, firstFailAt: now };
-
-      // Reset window if expired
-      if (now - nowRec.firstFailAt > windowMs) {
-        nowRec.fails = 0;
-        nowRec.firstFailAt = now;
-        nowRec.lockUntil = undefined;
-      }
-
-      nowRec.fails += 1;
-
-      // Lock if threshold reached
-      if (nowRec.fails >= opts.maxFails) {
-        nowRec.lockUntil = now + lockMs;
-        attempts.set(key, nowRec);
-        res.setHeader("Retry-After", String(Math.ceil(lockMs / 1000)));
-        return res
-          .status(429)
-          .json({ ok: false, error: "Too many attempts. Try again later." });
-      }
-
-      attempts.set(key, nowRec);
-      res.setHeader("WWW-Authenticate", 'Basic realm="ContentOps"');
-      return res.status(401).json({ ok: false, error: "Unauthorized" });
-    }
-
-    // Success -> clear tracker for this key
-    attempts.delete(key);
-    return next();
+    store.set(ip, rec);
+    res.setHeader("WWW-Authenticate", 'Basic realm="Restricted Area"');
+    return res.status(401).json({ ok: false, error: "Unauthorized" });
   };
 }
