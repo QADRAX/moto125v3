@@ -43,7 +43,13 @@ async function main() {
     scheduler,
     log: logger,
     bus,
-    auth: { user: cfg.BASIC_AUTH_USER, password: cfg.BASIC_AUTH_PASSWORD },
+    auth: {
+      user: cfg.BASIC_AUTH_USER,
+      password: cfg.BASIC_AUTH_PASSWORD,
+      maxFails: cfg.BASIC_AUTH_MAX_FAILS,
+      lockoutSeconds: cfg.BASIC_AUTH_LOCKOUT_SECONDS,
+      windowSeconds: cfg.BASIC_AUTH_WINDOW_SECONDS,
+    },
   });
 
   await scheduler.runJobsOnBoot();

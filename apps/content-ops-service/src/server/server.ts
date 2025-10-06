@@ -11,7 +11,13 @@ export function createServer(opts: {
   scheduler: Scheduler;
   log: Logger;
   bus: LogBus;
-  auth: { user: string; password: string };
+  auth: {
+    user: string;
+    password: string;
+    maxFails: number;
+    lockoutSeconds: number;
+    windowSeconds: number;
+  }
 }) {
   const app = express();
 
@@ -22,7 +28,15 @@ export function createServer(opts: {
   app.get("/health", (_req, res) => res.json({ ok: true, ts: new Date().toISOString() }));
 
   // Basic auth for everything else (UI, logs, APIs)
-  app.use(basicAuth(opts.auth));
+  app.use(
+    basicAuth({
+      user: opts.auth.user,
+      password: opts.auth.password,
+      maxFails: opts.auth.maxFails,
+      lockoutSeconds: opts.auth.lockoutSeconds,
+      windowSeconds: opts.auth.windowSeconds,
+    })
+  );
 
   // Jobs API
   app.get("/jobs", (_req, res) => {

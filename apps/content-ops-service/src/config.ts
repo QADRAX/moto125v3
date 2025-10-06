@@ -25,6 +25,9 @@ const EnvSchema = z.object({
 
   BASIC_AUTH_USER: z.string(),
   BASIC_AUTH_PASSWORD: z.string(),
+  BASIC_AUTH_MAX_FAILS: z.coerce.number().int().positive().default(5),
+  BASIC_AUTH_LOCKOUT_SECONDS: z.coerce.number().int().positive().default(300),
+  BASIC_AUTH_WINDOW_SECONDS: z.coerce.number().int().positive().default(900),
 });
 
 /** App configuration inferred from environment variables. */
