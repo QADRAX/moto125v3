@@ -104,29 +104,61 @@ export class MediaLibrary {
     return last;
   }
 
-  async listFilesInFolder(folderId: Id): Promise<AdminFile[]> {
-    const params: any = {
-      "filters[folder][id][$eq]": folderId,
-      sort: "name:asc",
-    };
-    const raw = await this.http.get("/upload/files", { params });
-    const results = normList<any>(raw).map((f) => ({
-      id: f.id,
-      name: f.name,
-      alternativeText: f.alternativeText ?? null,
-      caption: f.caption ?? null,
-      folderId: f.folder?.id ?? null,
-      url: f.url,
-      ext: f.ext,
-      mime: f.mime,
-      size: f.size,
-      width: f.width ?? null,
-      height: f.height ?? null,
-      createdAt: f.createdAt,
-      updatedAt: f.updatedAt,
-    })) as AdminFile[];
+  async listFilesInFolder(
+    folderId: Id | null,
+    opts?: { pageSize?: number; folderPath?: string } // folderPath como "/1/3" si lo conoces
+  ): Promise<AdminFile[]> {
+    const out: AdminFile[] = [];
+    const pageSize = opts?.pageSize ?? 100;
+    let page = 1;
+    const seen = new Set<number>(); // evita bucles si el server ignora la paginación
+    while (true) {
+      const params: Record<string, any> = {
+        sort: "name:asc",
+        page,
+        pageSize,
+      };
 
-    return results;
+      if (folderId === null) {
+        // root
+        params["filters[folder][id][$null]"] = true;
+      } else {
+        // carpeta concreta al estilo del admin UI
+        params["folder"] = folderId;
+        if (opts?.folderPath) {
+          params["filters[$and][0][folderPath][$eq]"] = opts.folderPath; // ej: "/1/3" (opcional)
+        }
+      }
+
+      const raw = await this.http.get("/upload/files", { params });
+      const items = normList<any>(raw);
+
+      const fresh = items.filter((f: any) => !seen.has(f.id));
+      for (const f of fresh) {
+        out.push({
+          id: f.id,
+          name: f.name,
+          alternativeText: f.alternativeText ?? null,
+          caption: f.caption ?? null,
+          folderId: f.folder?.id ?? null,
+          url: f.url,
+          ext: f.ext,
+          mime: f.mime,
+          size: f.size,
+          width: f.width ?? null,
+          height: f.height ?? null,
+          createdAt: f.createdAt,
+          updatedAt: f.updatedAt,
+        } as AdminFile);
+        seen.add(f.id);
+      }
+
+      // corte: página corta o sin nuevos elementos
+      if (items.length < pageSize || fresh.length === 0) break;
+      page += 1;
+    }
+
+    return out;
   }
 
   async moveFile(fileId: Id, newFolderId: Id | null): Promise<AdminFile> {

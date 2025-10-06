@@ -6,7 +6,9 @@ import {
   downloadTmpFromBlob,
   ensureFolder,
   getFolderFilesCacheEntry,
-  isSameFile,
+  // si en helpers usas claves normalizadas, sigue igual
+  // deriveKeysFromBlobName / nameKey si los tienes; si no, usa la lógica actual
+  sanitizeNameLikeStrapi,
   uploadToStrapi,
   type FolderFilesCache,
 } from "./helpers";
@@ -18,7 +20,7 @@ export type ProcessCounters = {
   errors: number;
 };
 
-/** Procesa un blob (descargar, comprobar cache, crear carpeta, subir o saltar). */
+/** Procesa un blob (serial: sin concurrencia, sin guard). */
 export function createBlobProcessor(deps: {
   container: ContainerClient;
   http: StrapiAdminHttp;
@@ -34,23 +36,29 @@ export function createBlobProcessor(deps: {
 
       const tmp = await downloadTmpFromBlob(container, blobName);
       const folderId: Id | null = await ensureFolder(media, tmp.folderPath);
+
       const filesMap = await getFolderFilesCacheEntry(cache, folderId, http, media);
 
-      const existing = filesMap.get(tmp.fileName);
-      if (existing) {
+      // ——— Estrategia de skip por nombre ———
+      // Si en helpers usas claves normalizadas (con/sin extensión), cámbialo por esa clave.
+      const key = sanitizeNameLikeStrapi(tmp.fileName);
+      if (filesMap.has(key)) {
         counters.skipped += 1;
         counters.processed += 1;
-        log.info("⏭️ Skip existing", { file: tmp.fileName, folderId, size: tmp.size, mime: tmp.mime });
+        log.info("⏭️ Skip existing", { file: key, folderId });
         await cleanupTmp(tmp.tmpPath);
         return;
       }
 
-      await uploadToStrapi(media, tmp, folderId);
-      filesMap.set(tmp.fileName, { size: tmp.size, mime: tmp.mime });
+      // Subir
+      const { storedName } = await uploadToStrapi(media, tmp, folderId);
+
+      // Actualizar cache (usa la misma clave que emplees al cargarlo)
+      filesMap.set(sanitizeNameLikeStrapi(storedName), { size: tmp.size, mime: tmp.mime });
 
       counters.uploaded += 1;
       counters.processed += 1;
-      log.info("📤 Uploaded", { file: tmp.fileName, folderId });
+      log.info("📤 Uploaded", { file: storedName, folderId });
 
       await cleanupTmp(tmp.tmpPath);
     } catch (err: any) {

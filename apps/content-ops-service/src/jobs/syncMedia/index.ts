@@ -1,8 +1,7 @@
-import pLimit from "p-limit";
 import type { ContainerClient } from "@azure/storage-blob";
 import type { Job } from "../types";
 import type { Logger } from "../../logger";
-import { MediaLibrary, StrapiAdminHttp, type Id } from "@moto125/admin-api-client";
+import { MediaLibrary, StrapiAdminHttp } from "@moto125/admin-api-client";
 import { type JobRunResult } from "@moto125/content-ops-shared";
 import { type FolderFilesCache } from "./helpers";
 import { createBlobProcessor, type ProcessCounters } from "./processor";
@@ -11,7 +10,7 @@ export function createSyncMediaJob(opts: {
   cron: string;
   enabled: boolean;
   startOnBoot: boolean;
-  concurrency: number;
+  concurrency: number; // ignorado en serial
   container: ContainerClient;
   http: StrapiAdminHttp;
   media: MediaLibrary;
@@ -28,10 +27,10 @@ export function createSyncMediaJob(opts: {
     state,
 
     async run(): Promise<JobRunResult> {
-      const limit = pLimit(Math.max(1, opts.concurrency));
       const cache: FolderFilesCache = new Map();
-
       const counters: ProcessCounters = { processed: 0, uploaded: 0, skipped: 0, errors: 0 };
+
+      // procesador serial (sin guard ni paralelismo)
       const processOne = createBlobProcessor({
         container: opts.container,
         http: opts.http,
@@ -40,11 +39,10 @@ export function createSyncMediaJob(opts: {
         cache,
       });
 
-      const running: Promise<void>[] = [];
+      // IMPORTANTE: procesamos 1 a 1 en orden
       for await (const blob of opts.container.listBlobsFlat()) {
-        running.push(limit(() => processOne(blob.name, counters)));
+        await processOne(blob.name, counters);
       }
-      await Promise.all(running);
 
       state.runs += 1;
       state.processed += counters.processed;
