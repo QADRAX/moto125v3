@@ -1,6 +1,7 @@
 import { schedule, type ScheduledTask } from "node-cron";
-import type { Job, JobRunResult } from "../jobs/types";
+import type { Job } from "../jobs/types";
 import type { Logger } from "../logger";
+import { JobRunResult } from "@moto125/content-ops-shared";
 
 /**
  * Orchestrates cron scheduling, manual triggers, and job state updates.

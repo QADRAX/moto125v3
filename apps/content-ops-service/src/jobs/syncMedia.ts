@@ -1,10 +1,11 @@
 import pLimit from "p-limit";
 import type { ContainerClient } from "@azure/storage-blob";
-import type { Job, JobRunResult } from "./types";
+import type { Job } from "./types";
 import type { Logger } from "../logger";
 import { MediaLibrary, StrapiAdminHttp, type Id } from "@moto125/admin-api-client";
 import { downloadBlobToTmp, safeUnlink } from "../services/azureBlob";
 import { listFilesInFolderOrRoot } from "../services/strapi";
+import { JobRunResult } from "@moto125/content-ops-shared";
 
 /** In-memory cache of Strapi files per folder for one run. */
 type FolderFilesCache = Map<Id | null, Map<string, { size: number; mime?: string }>>;

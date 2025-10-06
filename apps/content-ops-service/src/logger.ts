@@ -1,4 +1,5 @@
-import { LogBus, LogEntry, LogLevel } from "./logging/LogBus";
+import { LogEntry, LogLevel } from "@moto125/content-ops-shared";
+import { LogBus } from "./logging/LogBus";
 
 const LEVELS_ORDER: LogLevel[] = ["trace", "debug", "info", "warn", "error"];
 

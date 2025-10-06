@@ -1,13 +1,5 @@
+import { LogEntry } from '@moto125/content-ops-shared';
 import { EventEmitter } from 'node:events';
-
-export type LogLevel = 'trace' | 'debug' | 'info' | 'warn' | 'error';
-
-export interface LogEntry {
-  ts: string;      // ISO timestamp
-  level: LogLevel;
-  msg: string;
-  ctx?: Record<string, unknown>;
-}
 
 /**
  * In-memory log bus with ring buffer and event emitter for SSE subscribers.

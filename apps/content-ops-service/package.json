@@ -6,12 +6,13 @@
     "main": "dist/index.js",
     "scripts": {
         "dev": "tsx watch src/index.ts",
-        "build": "tsc -p tsconfig.json && cpy \"src/server/static/**\" dist/server/static",
+        "build": "tsc -p tsconfig.json",
         "start": "node dist/index.js"
     },
     "dependencies": {
         "@azure/storage-blob": "^12.28.0",
         "@moto125/admin-api-client": "*",
+        "@moto125/content-ops-shared": "*",
         "cors": "^2.8.5",
         "express": "^5.1.0",
         "node-cron": "^4.2.1",

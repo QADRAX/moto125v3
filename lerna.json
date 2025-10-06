@@ -4,6 +4,7 @@
   "packages": [
     "packages/*",
     "packages/content-cache/*",
+    "packages/content-ops/*",
     "apps/*"
   ],
   "npmClient": "npm",
