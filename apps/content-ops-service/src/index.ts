@@ -1,19 +1,23 @@
 import "dotenv/config";
+
 import { loadConfig } from "./config";
 import { createLogger } from "./logger";
 import { Scheduler } from "./scheduler/Scheduler";
-import { createServer } from "./server/server";
+import { createServer } from "./server";
 import { createAzureContainer } from "./services/azureBlob";
 import { createStrapiClients } from "./services/strapi";
-import { createSyncMediaJob } from "./jobs/syncMedia";
+
+import { createJobStore } from "./services/jobStore";
+import { restoreJobs } from "./bootstrap/restoreJobs";
 
 async function main() {
   const cfg = loadConfig();
 
+  // Logger + Scheduler
   const { logger, bus } = createLogger(cfg.LOG_LEVEL, cfg.LOG_BUFFER_SIZE);
   const scheduler = new Scheduler(logger);
 
-  // Services
+  // Servicios externos
   const container = createAzureContainer({
     account: cfg.AZURE_ACCOUNT,
     key: cfg.AZURE_KEY,
@@ -27,21 +31,22 @@ async function main() {
     password: cfg.STRAPI_ADMIN_PASSWORD,
   });
 
-  // Register job: Sync Azure Blob → Strapi
-  scheduler.register(
-    createSyncMediaJob({
-      cron: cfg.SYNC_MEDIA_CRON,
-      enabled: cfg.SYNC_MEDIA_ENABLED,
-      startOnBoot: cfg.SYNC_MEDIA_START_ON_BOOT,
-      concurrency: cfg.SYNC_MEDIA_CONCURRENCY,
-      container,
-      http,
-      media,
-      log: logger,
-    })
-  );
+  // JobStore (Azure Table Storage) — misma cuenta que Blob
+  const jobStore = createJobStore({
+    azureAccount: cfg.AZURE_ACCOUNT,
+    azureKey: cfg.AZURE_KEY,
+  });
+  await jobStore.init();
 
-  // Start HTTP server
+  // Rehidratar jobs desde tablas (monta cron/manual según `cron` guardado)
+  await restoreJobs({
+    scheduler,
+    log: logger,
+    jobStore,
+    services: { container, http, media },
+  });
+
+  // Arrancar HTTP server
   createServer({
     port: cfg.PORT,
     scheduler,
@@ -63,9 +68,8 @@ async function main() {
       pruneIntervalSeconds: cfg.SEC_PRUNE_INTERVAL_SECONDS,
       trustProxy: cfg.SEC_TRUST_PROXY,
     },
+    services: { container, http, media, jobStore },
   });
-
-  await scheduler.runJobsOnBoot();
 }
 
 main().catch((err) => {

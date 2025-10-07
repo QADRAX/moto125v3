@@ -1,3 +1,5 @@
+export type JobType = "sync-media";
+
 /** Live, mutable job state reported by the server. */
 export interface JobState {
   lastRunAt?: string;
@@ -11,15 +13,15 @@ export interface JobState {
   nextRunAt?: string;
 }
 
-/** Job info exposed to the UI. */
-export interface JobItem {
+export interface JobBase {
   id: string;
+  type: JobType;
   name: string;
-  cron: string;
-  enabled: boolean;
-  startOnBoot: boolean;
+  cron?: string;
   state: JobState;
 }
+
+export interface JobItem extends JobBase {}
 
 /** Result of a job run (single execution). */
 export interface JobRunResult {

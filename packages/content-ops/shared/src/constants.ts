@@ -10,6 +10,8 @@ export const ROUTES = {
   HEALTH: "/health",
   JOBS: "/jobs",
   JOB_RUN: (id: string) => `/jobs/${encodeURIComponent(id)}/run`,
+  JOBS_SYNC_MEDIA: "/jobs/sync-media",
+  JOB_DELETE: (id: string) => `/jobs/${encodeURIComponent(id)}`,
   SCHEDULER_RESTART: "/scheduler/restart",
-  LOGS_STREAM: "/logs/stream"
+  LOGS_STREAM: "/logs/stream",
 } as const;

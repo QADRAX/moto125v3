@@ -11,10 +11,12 @@
     },
     "dependencies": {
         "@azure/storage-blob": "^12.28.0",
+        "@azure/data-tables": "^13.3.1",
         "@moto125/admin-api-client": "*",
         "@moto125/content-ops-shared": "*",
         "@moto125/content-ops-ui": "*",
         "cors": "^2.8.5",
+        "cron": "^4.3.3",
         "express": "^5.1.0",
         "mime-types": "^3.0.1",
         "node-cron": "^4.2.1",
@@ -23,6 +25,7 @@
     },
     "devDependencies": {
         "@types/cors": "^2.8.19",
+        "@types/cron": "^2.4.3",
         "@types/express": "^5.0.3",
         "@types/node": "^22.7.6",
         "@types/node-cron": "^3.0.11",

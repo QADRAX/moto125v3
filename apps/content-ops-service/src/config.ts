@@ -17,15 +17,6 @@ const EnvSchema = z.object({
   AZURE_KEY: z.string(),
   AZURE_CONTAINER: z.string(),
 
-  SYNC_MEDIA_ENABLED: z.coerce.boolean().default(DEFAULTS.SYNC_MEDIA_ENABLED),
-  SYNC_MEDIA_CRON: z.string().default(DEFAULTS.SYNC_MEDIA_CRON),
-  SYNC_MEDIA_START_ON_BOOT: z.coerce.boolean().default(DEFAULTS.SYNC_MEDIA_START_ON_BOOT),
-  SYNC_MEDIA_CONCURRENCY: z
-    .coerce.number()
-    .int()
-    .positive()
-    .default(DEFAULTS.SYNC_MEDIA_CONCURRENCY),
-
   BASIC_AUTH_USER: z.string(),
   BASIC_AUTH_PASSWORD: z.string(),
 
