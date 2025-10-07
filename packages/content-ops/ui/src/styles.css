@@ -1,154 +1,21 @@
-:root {
-    --bg: #0f1115;
-    --card: #161a22;
-    --muted: #8a94a6;
-    --fg: #e8ecf3;
-    --accent: #3b82f6;
-    --ok: #10b981;
-    --warn: #f59e0b;
-    --err: #ef4444;
-}
+/* Tailwind v4: todo en uno */
+@import "tailwindcss";
 
-* {
-    box-sizing: border-box
-}
+/* Tu tema/utilidades (con @theme/@plugin) */
+@import "./theme.css";
 
-body {
-    margin: 0;
-    padding: 24px;
-    background: var(--bg);
-    color: var(--fg);
-    font: 14px/1.5 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial
-}
-
-h1 {
-    margin: 0 0 16px;
-    font-size: 20px
-}
-
-.toolbar {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    margin-bottom: 16px
-}
-
-button {
-    background: var(--accent);
-    color: #fff;
-    border: 0;
-    padding: 8px 12px;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer
-}
-
-button.secondary {
-    background: #2b3242;
-    color: var(--fg)
-}
-
-button:disabled {
-    opacity: .6;
-    cursor: not-allowed
-}
-
-.grid {
-    display: grid;
-    grid-template-columns: 1fr 420px;
-    gap: 16px
-}
-
-.card {
-    background: var(--card);
-    border: 1px solid #212835;
-    border-radius: 12px;
-    padding: 16px
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse
-}
-
-thead th {
-    text-align: left;
-    color: var(--muted);
-    font-weight: 600;
-    font-size: 12px
-}
-
-tbody td {
-    padding: 8px 0;
-    border-top: 1px solid #212835
-}
-
-.pill {
-    display: inline-block;
-    padding: 2px 8px;
-    border-radius: 999px;
-    font-size: 12px
-}
-
-.pill.ok {
-    background: #093;
-    color: #c5f7d6
-}
-
-.pill.warn {
-    background: #5a4100;
-    color: #ffd78a
-}
-
-.pill.err {
-    background: #4a1111;
-    color: #ffc7c7
-}
-
-.mono {
-    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace
-}
-
-.logs {
-    height: calc(100vh - 180px);
-    overflow: auto;
-    font-size: 12px;
-    background: #0b0d12;
-    border: 1px solid #212835;
-    border-radius: 12px;
-    padding: 12px
-}
-
-.log-line {
-    white-space: pre-wrap;
-    margin: 0
-}
-
-.lvl-INFO {
-    color: #bfe2ff
-}
-
-.lvl-WARN {
-    color: var(--warn)
-}
-
-.lvl-ERROR {
-    color: var(--err)
-}
-
-.lvl-DEBUG {
-    color: #9aa5b1
-}
-
-.lvl-TRACE {
-    color: #6b7280
-}
-
-.muted {
-    color: var(--muted)
-}
-
-.row-actions {
-    display: flex;
-    gap: 8px
+/* Componentes utilitarios propios */
+@layer components {
+  .btn {
+    @apply inline-flex items-center gap-2 rounded-lg px-3 py-2 font-semibold text-white bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)];
+  }
+  .btn-secondary {
+    @apply inline-flex items-center gap-2 rounded-lg px-3 py-2 font-semibold bg-[var(--color-surface)] text-[var(--color-text)] border border-[var(--color-border)] hover:bg-[#f3f3f3] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)];
+  }
+  .card { @apply bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl shadow-sm; }
+  .pill { @apply inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold; }
+  .pill-ok   { @apply bg-green-100 text-green-700; }
+  .pill-warn { @apply bg-yellow-100 text-yellow-800; }
+  .pill-err  { @apply bg-red-100 text-red-700; }
+  .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
 }

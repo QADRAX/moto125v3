@@ -36,9 +36,7 @@ export interface PostCreateSyncMediaJobRequest {
   /** Unique job id; if omitted, server may generate one. */
   id?: string;
   /** Cron expression for scheduling. */
-  cron: string;
-  /** Whether the job should be scheduled (enabled). */
-  enabled: boolean;
+  cron?: string;
   /** Internal concurrency setting for the processor. */
   concurrency: number;
 }

@@ -1,23 +1,28 @@
 {
-    "name": "@moto125/content-ops-ui",
-    "version": "1.0.0",
-    "private": true,
-    "type": "module",
-    "scripts": {
-        "dev": "vite",
-        "build": "vite build",
-        "preview": "vite preview"
-    },
-    "dependencies": {
-        "@moto125/content-ops-shared": "*",
-        "react": "^18.3.1",
-        "react-dom": "^18.3.1"
-    },
-    "devDependencies": {
-        "@types/react": "^18.3.5",
-        "@types/react-dom": "^18.3.0",
-        "typescript": "^5.6.3",
-        "vite": "^5.4.10",
-        "@vitejs/plugin-react": "^5.0.4"
-    }
+  "name": "@moto125/content-ops-ui",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@moto125/content-ops-shared": "*",
+    "@reduxjs/toolkit": "^2.9.0",
+    "react-redux": "^9.2.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/typography": "^0.5.15",
+    "@tailwindcss/postcss": "^4.1.14",
+    "@types/react": "^18.3.5",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^5.0.4",
+    "autoprefixer": "^10.4.21",
+    "tailwindcss": "^4.1.14",
+    "typescript": "^5.6.3",
+    "vite": "^5.4.10"
+  }
 }

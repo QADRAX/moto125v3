@@ -1,38 +1,39 @@
-import React from "react";
-import type { LogsEvent } from "@moto125/content-ops-shared";
+import { useAppSelector } from "../store";
 
 export default function LogsPanel() {
-  const ref = React.useRef<HTMLDivElement | null>(null);
+  const { lines, connected, lastError } = useAppSelector((s) => s.logs);
 
-  React.useEffect(() => {
-    const es = new EventSource("/logs/stream");
-    const onMsg = (ev: MessageEvent) => {
-      try {
-        const e = JSON.parse(ev.data) as LogsEvent;
-        if (!ref.current) return;
-        const lvl = String(e.level || "info").toUpperCase();
-        const div = document.createElement("div");
-        div.className = `log-line lvl-${lvl}`;
-        div.textContent = `${e.ts ?? new Date().toISOString()} [${lvl}] ${e.msg || ""} ${e.ctx ? JSON.stringify(e.ctx) : ""}`;
-        ref.current.appendChild(div);
-        ref.current.scrollTop = ref.current.scrollHeight;
-      } catch {}
-    };
-    const onErr = () => {
-      if (!ref.current) return;
-      const div = document.createElement("div");
-      div.className = "log-line lvl-WARN";
-      div.textContent = `${new Date().toISOString()} [WARN] Log stream disconnected`;
-      ref.current.appendChild(div);
-    };
-    es.addEventListener("message", onMsg);
-    es.addEventListener("error", onErr);
-    return () => {
-      es.removeEventListener("message", onMsg);
-      es.removeEventListener("error", onErr);
-      es.close();
-    };
-  }, []);
+  return (
+    <div className="flex flex-col min-h-[280px]">
+      <div className="flex items-center justify-between mb-2">
+        <h2 className="text-xl font-semibold text-heading mt-0">Logs</h2>
+        <div className="text-xs">
+          {connected ? (
+            <span className="pill pill-ok">connected</span>
+          ) : (
+            <span className="pill pill-warn">disconnected</span>
+          )}
+        </div>
+      </div>
 
-  return <div id="logs" className="logs mono" ref={ref} aria-live="polite" />;
+      {lastError ? (
+        <div className="text-xs text-red-600 mb-2">Error: {lastError}</div>
+      ) : null}
+
+      <div className="mono h-[40vh] sm:h-[45vh] overflow-auto bg-white/60 border border-border rounded-xl p-3 no-scrollbar">
+        {lines.length === 0 ? (
+          <div className="text-gray-500 text-sm">No logs yet</div>
+        ) : (
+          lines.map((line, idx) => {
+            const [msg, color = "text-blue-700"] = line.split("|||");
+            return (
+              <div key={idx} className={`text-xs whitespace-pre-wrap ${color}`}>
+                {msg}
+              </div>
+            );
+          })
+        )}
+      </div>
+    </div>
+  );
 }
