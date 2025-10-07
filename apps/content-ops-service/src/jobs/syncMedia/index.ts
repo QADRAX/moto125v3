@@ -10,7 +10,7 @@ export function createSyncMediaJob(opts: {
   cron: string;
   enabled: boolean;
   startOnBoot: boolean;
-  concurrency: number; // ignorado en serial
+  concurrency: number;
   container: ContainerClient;
   http: StrapiAdminHttp;
   media: MediaLibrary;
@@ -30,7 +30,6 @@ export function createSyncMediaJob(opts: {
       const cache: FolderFilesCache = new Map();
       const counters: ProcessCounters = { processed: 0, uploaded: 0, skipped: 0, errors: 0 };
 
-      // procesador serial (sin guard ni paralelismo)
       const processOne = createBlobProcessor({
         container: opts.container,
         http: opts.http,
@@ -39,7 +38,6 @@ export function createSyncMediaJob(opts: {
         cache,
       });
 
-      // IMPORTANTE: procesamos 1 a 1 en orden
       for await (const blob of opts.container.listBlobsFlat()) {
         await processOne(blob.name, counters);
       }

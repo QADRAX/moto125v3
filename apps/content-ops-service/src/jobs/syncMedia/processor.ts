@@ -6,8 +6,6 @@ import {
   downloadTmpFromBlob,
   ensureFolder,
   getFolderFilesCacheEntry,
-  // si en helpers usas claves normalizadas, sigue igual
-  // deriveKeysFromBlobName / nameKey si los tienes; si no, usa la lógica actual
   sanitizeNameLikeStrapi,
   uploadToStrapi,
   type FolderFilesCache,
@@ -20,7 +18,6 @@ export type ProcessCounters = {
   errors: number;
 };
 
-/** Procesa un blob (serial: sin concurrencia, sin guard). */
 export function createBlobProcessor(deps: {
   container: ContainerClient;
   http: StrapiAdminHttp;
@@ -39,8 +36,6 @@ export function createBlobProcessor(deps: {
 
       const filesMap = await getFolderFilesCacheEntry(cache, folderId, http, media);
 
-      // ——— Estrategia de skip por nombre ———
-      // Si en helpers usas claves normalizadas (con/sin extensión), cámbialo por esa clave.
       const key = sanitizeNameLikeStrapi(tmp.fileName);
       if (filesMap.has(key)) {
         counters.skipped += 1;
@@ -50,10 +45,8 @@ export function createBlobProcessor(deps: {
         return;
       }
 
-      // Subir
       const { storedName } = await uploadToStrapi(media, tmp, folderId);
 
-      // Actualizar cache (usa la misma clave que emplees al cargarlo)
       filesMap.set(sanitizeNameLikeStrapi(storedName), { size: tmp.size, mime: tmp.mime });
 
       counters.uploaded += 1;
