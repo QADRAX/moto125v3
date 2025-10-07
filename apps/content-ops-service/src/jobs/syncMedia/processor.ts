@@ -51,7 +51,7 @@ export function createBlobProcessor(deps: {
       if (filesMap.has(key)) {
         counters.skipped += 1;
         counters.processed += 1;
-        log.info("⏭️ Skip existing", {
+        log.debug("⏭️ Skip existing", {
           file: key,
           folderId,
           processed: counters.processed,
