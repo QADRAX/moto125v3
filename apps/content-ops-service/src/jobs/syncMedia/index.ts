@@ -18,6 +18,12 @@ export function createSyncMediaJob(opts: {
 }): Job {
   const state = { runs: 0, processed: 0, uploaded: 0, skipped: 0, errors: 0 };
 
+  async function countBlobs(container: ContainerClient): Promise<number> {
+    let total = 0;
+    for await (const _ of container.listBlobsFlat()) total += 1;
+    return total;
+  }
+
   const job: Job = {
     id: "sync-media",
     name: "Sync Azure Blob → Strapi",
@@ -28,7 +34,16 @@ export function createSyncMediaJob(opts: {
 
     async run(): Promise<JobRunResult> {
       const cache: FolderFilesCache = new Map();
-      const counters: ProcessCounters = { processed: 0, uploaded: 0, skipped: 0, errors: 0 };
+
+      const total = await countBlobs(opts.container);
+
+      const counters: ProcessCounters = {
+        processed: 0,
+        uploaded: 0,
+        skipped: 0,
+        errors: 0,
+        total,
+      };
 
       const processOne = createBlobProcessor({
         container: opts.container,
@@ -38,9 +53,23 @@ export function createSyncMediaJob(opts: {
         cache,
       });
 
+      const inflight = new Set<Promise<void>>();
+      const max = Math.max(1, opts.concurrency || 1);
+
       for await (const blob of opts.container.listBlobsFlat()) {
-        await processOne(blob.name, counters);
+        const p = (async () => {
+          await processOne(blob.name, counters);
+        })();
+
+        inflight.add(p);
+        p.finally(() => inflight.delete(p));
+
+        if (inflight.size >= max) {
+          await Promise.race(inflight);
+        }
       }
+
+      await Promise.all(inflight);
 
       state.runs += 1;
       state.processed += counters.processed;
