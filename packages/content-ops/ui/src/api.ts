@@ -60,14 +60,14 @@ export const API = {
   },
 
   async runJob(id: string, signal?: AbortSignal) {
-    return requestJSON<PostRunJobResponse>(ROUTES.JOB_RUN(id), {
+    return requestJSON<PostRunJobResponse>(`/jobs/${id}/run`, {
       method: "POST",
       signal,
     });
   },
 
   async deleteJob(id: string, signal?: AbortSignal) {
-    return requestJSON<DeleteJobResponse>(ROUTES.JOB_DELETE(id), {
+    return requestJSON<DeleteJobResponse>(`jobs/${id}`, {
       method: "DELETE",
       signal,
     });

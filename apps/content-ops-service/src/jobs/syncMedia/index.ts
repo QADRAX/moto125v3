@@ -7,6 +7,7 @@ import { type FolderFilesCache } from "./helpers";
 import { createBlobProcessor, type ProcessCounters } from "./processor";
 
 export function createSyncMediaJob(opts: {
+  id: string;
   cron?: string;
   concurrency: number;
   container: ContainerClient;
@@ -17,7 +18,7 @@ export function createSyncMediaJob(opts: {
   const state = { runs: 0, processed: 0, uploaded: 0, skipped: 0, errors: 0 };
 
   const job: Job = {
-    id: "sync-media",
+    id: opts.id,
     type: "sync-media",
     name: "Sync Azure Blob → Strapi",
     cron: opts.cron,

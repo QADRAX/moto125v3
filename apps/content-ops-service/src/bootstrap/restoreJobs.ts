@@ -31,6 +31,7 @@ export async function restoreJobs(opts: {
         case "sync-media": {
           const concurrency = cfg.config?.concurrency ?? 1;
           const job = createSyncMediaJob({
+            id: cfg.id,
             cron: cfg.cron,
             concurrency,
             container: services.container,

@@ -41,6 +41,7 @@ export function mountJobsRoutes(app: Express, opts: ServerOptions) {
     const cron = typeof body.cron === "string" && body.cron.trim() ? body.cron.trim() : undefined;
 
     const job = createSyncMediaJob({
+      id,
       cron,
       concurrency: body.concurrency,
       container: opts.services.container,
@@ -67,7 +68,7 @@ export function mountJobsRoutes(app: Express, opts: ServerOptions) {
   });
 
   // Delete / unregister
-  app.delete(ROUTES.JOB_DELETE(":id"), async (req, res) => {
+  app.delete(ROUTES.JOB_DELETE, async (req, res) => {
     const id = req.params.id;
     const job = opts.scheduler.get(id); // añadimos get() en el Scheduler
     if (!job) {
@@ -89,7 +90,7 @@ export function mountJobsRoutes(app: Express, opts: ServerOptions) {
   });
 
   // Run now (manual trigger). Also log run into JobStore.
-  app.post(ROUTES.JOB_RUN(":id"), async (req, res) => {
+  app.post(ROUTES.JOB_RUN, async (req, res) => {
     const id = req.params.id;
     const job = opts.scheduler.get(id);
     if (!job) {
