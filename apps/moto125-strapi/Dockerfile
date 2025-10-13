@@ -1,55 +1,45 @@
-# ------------------------------------------------------------
-# Stage 1 (deps dev): install deps (incl. dev) to build Strapi admin
-# ------------------------------------------------------------
-FROM node:20-alpine AS deps_dev
+# -----------------------------
+# Builder: instala deps y build
+# -----------------------------
+FROM node:20-alpine AS builder
+ENV CI=1 NEXT_TELEMETRY_DISABLED=1 NODE_ENV=production
 WORKDIR /repo
 
-COPY package.json package-lock.json ./
-COPY apps/moto125-strapi/package.json apps/moto125-strapi/package.json
+RUN apk add --no-cache python3 make g++ libc6-compat
 
-RUN npm ci -w @moto125/strapi
+RUN npm i -g npm@11.3.0
 
-# ------------------------------------------------------------
-# Stage 2 (deps prod): same deps but only prod for final image
-# ------------------------------------------------------------
-FROM node:20-alpine AS deps_prod
+COPY package*.json ./
+COPY lerna.json ./
+COPY apps ./apps
+COPY packages ./packages
+
+RUN --mount=type=cache,target=/root/.npm npm ci
+
+RUN npx lerna run build --scope @moto125/strapi --include-dependencies --stream
+
+RUN npm prune --omit=dev
+
+# -----------------------------
+# Runner: imagen final
+# -----------------------------
+FROM node:20-alpine AS runner
+ENV NODE_ENV=production \
+    PORT=1337 \
+    HOST=0.0.0.0
+
+RUN apk add --no-cache tini
+
 WORKDIR /repo
 
-COPY package.json package-lock.json ./
-COPY apps/moto125-strapi/package.json apps/moto125-strapi/package.json
-
-RUN npm ci --omit=dev -w @moto125/strapi
-
-# ------------------------------------------------------------
-# Stage 3 (build): build Strapi admin
-# ------------------------------------------------------------
-FROM node:20-alpine AS build
-WORKDIR /repo
-
-COPY --from=deps_dev /repo/node_modules ./node_modules
-COPY --from=deps_dev /repo/apps/moto125-strapi/package.json apps/moto125-strapi/package.json
-
-COPY . .
-WORKDIR /repo/apps/moto125-strapi
-RUN npm run build
-
-# ------------------------------------------------------------
-# Stage 4 (runtime): final image with prod deps
-# ------------------------------------------------------------
-FROM node:20-alpine
-ENV NODE_ENV=production
-
-# Use the pre-existing `node` user (uid=1000, gid=1000)
-WORKDIR /home/node/app
-
-# Ensure uploads dir exists with correct ownership
-RUN install -d -o node -g node /home/node/app/public/uploads
-
-# Copy app build + prod deps with correct ownership
-COPY --from=build     --chown=node:node /repo/apps/moto125-strapi ./ 
-COPY --from=deps_prod --chown=node:node /repo/node_modules        ./node_modules
+COPY --from=builder /repo/node_modules           ./node_modules
+COPY --from=builder /repo/packages               ./packages
+COPY --from=builder /repo/apps/moto125-strapi    ./apps/moto125-strapi
+COPY --from=builder /repo/package.json           ./package.json
+COPY --from=builder /repo/lerna.json             ./lerna.json
 
 USER node
-
 EXPOSE 1337
-CMD ["npm", "run", "start"]
+
+ENTRYPOINT ["/sbin/tini","--"]
+CMD ["npm", "run", "start", "-w", "@moto125/strapi"]
