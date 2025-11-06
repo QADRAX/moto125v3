@@ -10,6 +10,7 @@ import BrandHeader from "@/components/brands/BrandHeader";
 import BrandMotoList from "@/components/brands/BrandMotoList";
 import { Container } from "@/components/common/Container";
 import { BrandJsonLdFromCompany } from "@/components/seo/BrandJsonLd";
+import RelatedArticles from "@/components/articles/RelatedArticles";
 
 export const revalidate = 60;
 
@@ -21,7 +22,10 @@ function findCompanyBySlug(
   return companies.find((c) => slugify(c.name) === brandSlug) ?? null;
 }
 
-function getMotosByCompany(state: ContentCacheRootState, company: Company): Moto[] {
+function getMotosByCompany(
+  state: ContentCacheRootState,
+  company: Company
+): Moto[] {
   const motos = state?.data?.motos ?? [];
   return motos.filter(
     (m) => m.company && m.company.documentId === company.documentId
@@ -40,7 +44,7 @@ export async function generateMetadata({
     title: company.name,
     description: company.description ?? undefined,
     openGraph: { title: company.name },
-    alternates: { canonical: "/marcas/" + params.brand }
+    alternates: { canonical: "/marcas/" + params.brand },
   };
 }
 
@@ -59,6 +63,7 @@ export default async function BrandDetailPage({
   }
 
   const motos = getMotosByCompany(state, company);
+  const motoTypes = state?.data?.taxonomies?.motoTypes ?? [];
 
   return (
     <Container>
@@ -67,18 +72,13 @@ export default async function BrandDetailPage({
         items={[{ label: "Marcas", href: "/marcas" }, { label: company.name }]}
       />
       <BrandHeader company={company} />
-      {motos.length ? (
-        <section className="mt-8">
-          <h2 className="mb-4 text-xl font-semibold">
-            Modelos de {company.name}
-          </h2>
-          <BrandMotoList motos={motos} />
-        </section>
-      ) : (
-        <p className="mt-6 opacity-70">
-          No hay motos publicadas de esta marca todavía.
-        </p>
-      )}
+      {company.articles && <RelatedArticles articles={company.articles} />}
+      <BrandMotoList
+        motos={motos}
+        motoTypes={motoTypes}
+        title={`Modelos 125 de ${company.name}`}
+        className="mt-8"
+      />
     </Container>
   );
 }
