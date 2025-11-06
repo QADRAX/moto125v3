@@ -10,6 +10,7 @@ import type { CompanyCreateInput, CompanyUpdateInput } from '../types/inputs.js'
 
 export const COMPANY_POPULATE: StrapiQueryParams['populate'] = {
   image: true,
+  articles: { populate: ['coverImage', 'articleType'] },
 };
 
 /** ===== GET ===== */

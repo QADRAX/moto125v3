@@ -76,6 +76,7 @@ export interface Company {
   publishedAt?: string | null;
   description?: string | null;
   image?: StrapiFile | null;
+  articles?: Article[] | null;
 }
 
 export interface MotoClass {

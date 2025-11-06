@@ -10,6 +10,7 @@ import BrandHeader from "@/components/brands/BrandHeader";
 import BrandMotoList from "@/components/brands/BrandMotoList";
 import { Container } from "@/components/common/Container";
 import { BrandJsonLdFromCompany } from "@/components/seo/BrandJsonLd";
+import RelatedArticles from "@/components/articles/RelatedArticles";
 
 export const revalidate = 60;
 
@@ -67,6 +68,7 @@ export default async function BrandDetailPage({
         items={[{ label: "Marcas", href: "/marcas" }, { label: company.name }]}
       />
       <BrandHeader company={company} />
+      {company.articles && <RelatedArticles articles={company.articles} />}
       {motos.length ? (
         <section className="mt-8">
           <h2 className="mb-4 text-xl font-semibold">

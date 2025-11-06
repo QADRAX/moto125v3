@@ -10,20 +10,30 @@ import Breadcrumbs from "@/components/common/Breadcrumbs";
 import { Container } from "@/components/common/Container";
 import { MotoProductJsonLdFromMoto } from "@/components/seo/MotoProductJsonLd";
 import MotoImageGallery from "@/components/motos/MotoImageGallery";
+import RelatedArticles from "@/components/articles/RelatedArticles";
 
 export const revalidate = 60;
 
-function findMotoByParam(state: ContentCacheRootState, param: string): Moto | null {
+function findMotoByParam(
+  state: ContentCacheRootState,
+  param: string
+): Moto | null {
   const motos = state?.data?.motos ?? [];
   return motos.find((m) => m.moto125Id === param) ?? null;
 }
 
-export async function generateMetadata({ params }: { params: { moto: string } }) {
+export async function generateMetadata({
+  params,
+}: {
+  params: { moto: string };
+}) {
   const state = await getMirrorState();
   const moto = findMotoByParam(state, params.moto);
   if (!moto) return { title: "Moto no encontrada" };
 
-  const cover = moto.images?.[0]?.url ? getThumbnailUrl(moto.images[0]) : undefined;
+  const cover = moto.images?.[0]?.url
+    ? getThumbnailUrl(moto.images[0])
+    : undefined;
 
   return {
     title: moto.fullName ?? moto.modelName,
@@ -40,7 +50,11 @@ export async function generateMetadata({ params }: { params: { moto: string } })
   };
 }
 
-export default async function MotoDetailPage({ params }: { params: { moto: string } }) {
+export default async function MotoDetailPage({
+  params,
+}: {
+  params: { moto: string };
+}) {
   const state: ContentCacheRootState = await getMirrorState();
   const moto = findMotoByParam(state, params.moto);
 
@@ -49,7 +63,9 @@ export default async function MotoDetailPage({ params }: { params: { moto: strin
   const mc = moto.motoType?.motoClass ?? null;
   const mt = moto.motoType ?? null;
 
-  const crumbs: Array<{ label: string; href?: string }> = [{ label: "Motos", href: "/motos" }];
+  const crumbs: Array<{ label: string; href?: string }> = [
+    { label: "Motos", href: "/motos" },
+  ];
 
   if (mc?.name) {
     const classSlug = slugify(mc.name);
@@ -65,7 +81,7 @@ export default async function MotoDetailPage({ params }: { params: { moto: strin
     crumbs.push({ label: typeLabel, href: typeHref });
   }
 
-  crumbs.push({ label: moto.fullName ?? moto.modelName }); 
+  crumbs.push({ label: moto.fullName ?? moto.modelName });
 
   return (
     <Container>
@@ -73,6 +89,7 @@ export default async function MotoDetailPage({ params }: { params: { moto: strin
       <Breadcrumbs items={crumbs} />
       <MotoHeader moto={moto} />
       <MotoSpecs ficha={moto.fichaTecnica ?? {}} />
+      {moto.articles && <RelatedArticles articles={moto.articles} />}
       <MotoImageGallery moto={moto} />
     </Container>
   );
