@@ -26,7 +26,7 @@ export default async function BrandCard({ company }: BrandCardProps) {
       aria-label={`${company.name} — ${count} modelos`}
     >
       <div className="relative flex h-32 w-full items-center justify-center bg-neutral-100 dark:bg-neutral-800">
-        <span className="absolute left-3 top-3 select-none rounded-full bg-black/70 px-3 py-1 text-xs font-medium text-white backdrop-blur-sm">
+        <span className="absolute left-3 top-3 select-none rounded-full bg-black/70 px-3 py-1 text-xs font-medium text-white backdrop-blur-sm z-50">
           {count === 0 ? "Sin modelos" : count === 1 ? "1 modelo" : `${count} modelos`}
         </span>
 

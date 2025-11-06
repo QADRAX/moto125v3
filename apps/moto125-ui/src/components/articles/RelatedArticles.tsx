@@ -6,22 +6,11 @@ import SectionHeader from "@/components/common/SectionHeader";
 import RelatedArticleRow from "./RelatedArticleRow";
 
 export interface RelatedArticlesProps {
-  /** Full list of articles (the component will paginate client-side). */
   articles?: Article[] | null;
-  /** Section title (defaults to "Artículos relacionados"). */
   title?: string;
-  /** Optional className for the section wrapper. */
   className?: string;
-  /**
-   * Initial number of items to show on first render.
-   * Defaults to 10.
-   */
-  limit?: number;
-  /**
-   * Number of items to add on each "load more" click.
-   * Defaults to 5.
-   */
-  batchSize?: number;
+  limit?: number;     // default 10
+  batchSize?: number; // default 5
 }
 
 export default function RelatedArticles({
@@ -37,7 +26,6 @@ export default function RelatedArticles({
 
   const [visibleCount, setVisibleCount] = React.useState(safeInitial);
 
-  // Clamp visibleCount if the articles prop changes (e.g., hydration or data refresh)
   React.useEffect(() => {
     setVisibleCount((prev) => Math.min(Math.max(prev, safeInitial), list.length));
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -46,17 +34,13 @@ export default function RelatedArticles({
   const visibleItems = list.slice(0, Math.min(visibleCount, list.length));
   const hasMore = visibleCount < list.length;
 
-  function handleLoadMore() {
-    setVisibleCount((prev) => Math.min(prev + safeBatch, list.length));
-  }
-
   if (!list.length) return null;
 
   return (
     <section className={["mt-8", className].join(" ")}>
       <SectionHeader title={title} />
 
-      <div className="mx-auto max-w-3xl w-full">
+      <div className="mx-auto p-2">
         <ul role="list" className="flex flex-col gap-2">
           {visibleItems.map((a) => (
             <li key={a.id}>
@@ -69,7 +53,9 @@ export default function RelatedArticles({
           <div className="mt-4 flex justify-center">
             <button
               type="button"
-              onClick={handleLoadMore}
+              onClick={() =>
+                setVisibleCount((prev) => Math.min(prev + safeBatch, list.length))
+              }
               className={[
                 "px-3 py-2 text-sm font-semibold",
                 "bg-[var(--color-surface)] border border-[var(--color-border)]",

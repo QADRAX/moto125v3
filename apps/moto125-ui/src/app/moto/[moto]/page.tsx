@@ -81,6 +81,11 @@ export default async function MotoDetailPage({
     crumbs.push({ label: typeLabel, href: typeHref });
   }
 
+  if (moto.company) {
+    const companyNameSlug = slugify(moto.company.name);
+    crumbs.push({ label: moto.company.name, href: `/marcas/${companyNameSlug}` });
+  }
+
   crumbs.push({ label: moto.fullName ?? moto.modelName });
 
   return (
