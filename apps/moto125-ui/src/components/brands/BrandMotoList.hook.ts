@@ -53,13 +53,17 @@ export function useBrandMotoListLogic(
   const [activeOnly, setActiveOnly] =
     React.useState<boolean>(defaultActiveOnly);
 
+  const anyActive = React.useMemo(() => list.some((m) => m.active), [list]);
+
   const typeIndex = React.useMemo(
     () => buildMotoTypeIndex(motoTypes),
     [motoTypes]
   );
 
   const sections: BrandMotoSection[] = React.useMemo(() => {
-    const filtered = activeOnly ? list.filter((m) => m.active) : list;
+    // If there are no active motos, ignore the active-only filter.
+    const useActiveFilter = activeOnly && anyActive;
+    const filtered = useActiveFilter ? list.filter((m) => m.active) : list;
     if (!filtered.length) return [];
 
     const groupsMap = new Map<
@@ -71,12 +75,10 @@ export function useBrandMotoListLogic(
       const typeId = m.motoType?.documentId ?? "__otros__";
       const label = getTypeLabel(m);
 
-      // Prefer data from taxonomy
       const t = typeIndex.get(typeId);
       const classNameFromIndex = t?.motoClass?.name;
       const typeNameFromIndex = t?.name ?? t?.fullName;
 
-      // Fallback to moto object
       const classNameFromMoto = m.motoType?.motoClass?.name;
       const typeNameFromMoto = m.motoType?.name ?? m.motoType?.fullName;
 
@@ -99,19 +101,17 @@ export function useBrandMotoListLogic(
     }
 
     return Array.from(groupsMap.values())
-      .map((s) => ({
-        ...s,
-        items: s.items.slice().sort(sortMotosActiveFirst),
-      }))
+      .map((s) => ({ ...s, items: s.items.slice().sort(sortMotosActiveFirst) }))
       .filter((s) => s.items.length > 0)
       .sort((a, b) =>
         a.label.localeCompare(b.label, "es", { sensitivity: "base" })
       );
-  }, [activeOnly, list, typeIndex]);
+  }, [activeOnly, anyActive, list, typeIndex]);
 
   return {
     activeOnly,
     setActiveOnly,
+    anyActive,
     sections,
     hasData: sections.length > 0,
   };
