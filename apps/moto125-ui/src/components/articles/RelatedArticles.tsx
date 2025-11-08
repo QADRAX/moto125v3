@@ -13,6 +13,29 @@ export interface RelatedArticlesProps {
   batchSize?: number; // default 5
 }
 
+/** Safely parse date strings; returns ms epoch or 0 if invalid. */
+function toTime(value?: string | null): number {
+  if (!value) return 0;
+  const t = Date.parse(value);
+  return Number.isNaN(t) ? 0 : t;
+}
+
+/**
+ * Get the best date to sort an article:
+ * - publicationDate (explicit editorial date)
+ * - publishedAt (CMS publication)
+ * - updatedAt (last update)
+ * - createdAt (fallback)
+ */
+function sortKey(a: Article): number {
+  return (
+    toTime(a.publicationDate) ||
+    toTime(a.publishedAt ?? null) ||
+    toTime(a.updatedAt) ||
+    toTime(a.createdAt)
+  );
+}
+
 export default function RelatedArticles({
   articles,
   title = "Artículos relacionados",
@@ -20,7 +43,14 @@ export default function RelatedArticles({
   limit = 10,
   batchSize = 5,
 }: RelatedArticlesProps) {
-  const list = (articles ?? []).filter(Boolean);
+  const rawList = (articles ?? []).filter(Boolean);
+
+  // Sort: newest first by the best available date field
+  const list = React.useMemo(
+    () => rawList.slice().sort((a, b) => sortKey(b) - sortKey(a)),
+    [rawList]
+  );
+
   const safeInitial = Math.max(0, Math.floor(limit));
   const safeBatch = Math.max(1, Math.floor(batchSize));
 
@@ -60,7 +90,6 @@ export default function RelatedArticles({
                 "px-3 py-2 text-sm font-semibold",
                 "bg-[var(--color-surface)] border border-[var(--color-border)]",
                 "hover:bg-[var(--color-surface-2,#f6f6f6)] transition-colors",
-                "focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--color-primary)]",
               ].join(" ")}
               aria-label="Cargar más artículos"
             >

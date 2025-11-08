@@ -29,25 +29,25 @@ export default function BrandMotoList({
   title = "Modelos",
   defaultActiveOnly = true,
 }: BrandMotoListProps) {
-  const { sections, activeOnly, setActiveOnly, hasData } =
+  const { sections, activeOnly, setActiveOnly, hasData, anyActive } =
     useBrandMotoListLogic(motos, motoTypes, defaultActiveOnly);
 
   if (!hasData) return null;
 
   return (
     <div className={`space-y-12 ${className}`}>
-      {/* Section header with breathing space below */}
       <SectionHeader
         title={title}
         action={
-          <ActiveFilterToggle checked={activeOnly} onChange={setActiveOnly} />
+          anyActive ? (
+            <ActiveFilterToggle checked={activeOnly} onChange={setActiveOnly} />
+          ) : undefined
         }
       />
 
       <div className="space-y-16 mt-8 p-2">
         {sections.map((section) => (
           <section key={section.href} className="scroll-mt-24">
-            {/* Header with more vertical separation */}
             <div className="mb-8">
               <SectionTypeHeader
                 icon={section.icon}
@@ -57,7 +57,6 @@ export default function BrandMotoList({
               />
             </div>
 
-            {/* Clean grid, no padding or border */}
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {section.items.map((m) => (
                 <div
