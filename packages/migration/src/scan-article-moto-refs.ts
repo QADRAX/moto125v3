@@ -80,15 +80,26 @@ function stripDirectRivalsGfmTables(md: string): string {
 }
 
 /**
- * Extract Moto IDs from legacy paths like ".../images/stories/motos/m{ID}/..."
+ * Extract Moto IDs from legacy paths like ".../images/stories/motos/m{ID}/file.jpg"
  * AFTER removing only "Rivales directos" tables to avoid false positives.
+ * Ignores thumbnails whose filename starts with "t" right after the m{ID}/ segment.
  */
 function extractMotoIdsFromMarkdown(md: string): string[] {
   const cleaned = stripDirectRivalsTablesOnly(md);
-  const rx = /images\/stories\/motos\/m([1-9]\d*)/gi; // avoid m0
+
+  // Matches: images/stories/motos/m{ID}/<filename>
+  // but IGNORES when <filename> starts with "t" (e.g., t000.jpg)
+  // Explanation:
+  //  - capture group 1 = moto ID (no leading zero)
+  //  - after m{ID}/ we assert next path segment DOES NOT start with "t"
+  //  - stops matching at next slash/space/quote/paren to avoid over-capture
+  const rx = /images\/stories\/motos\/m([1-9]\d*)\/(?!t)[^\/\s"'()<>]+/gi;
+
   const found = new Set<string>();
   let m: RegExpExecArray | null;
-  while ((m = rx.exec(cleaned)) !== null) found.add(m[1]);
+  while ((m = rx.exec(cleaned)) !== null) {
+    found.add(m[1]);
+  }
   return Array.from(found);
 }
 
@@ -144,10 +155,6 @@ async function resolveMotoInfo(
   }
 }
 
-/**
- * Scan "PRUEBAS" articles, extract legacy moto refs from text blocks,
- * validate referenced motos, and print a summary.
- */
 async function main() {
   guardEnv();
 
@@ -176,7 +183,6 @@ async function main() {
 
   while (page <= pageCount) {
     const res = await sdk.articles.list({
-      filters: { articleType: { name: { $eqi: 'PRUEBAS' } } },
       populate: basePopulate,
       pagination: { page, pageSize, withCount: true },
       sort: ['publicationDate:desc', 'createdAt:desc'],

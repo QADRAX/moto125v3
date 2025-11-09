@@ -142,13 +142,13 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Run scan-article-moto-refs",
+      "name": "Run scan-and-apply-article-moto-refs",
       "runtimeArgs": [
         "-r",
         "ts-node/register"
       ],
       "args": [
-        "${workspaceFolder}/packages/migration/src/scan-article-moto-refs.ts"
+        "${workspaceFolder}/packages/migration/src/scan-and-apply-article-moto-refs.ts"
       ],
       "cwd": "${workspaceFolder}/packages/migration",
       "sourceMaps": true,
