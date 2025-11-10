@@ -12,6 +12,8 @@ export const NAV_LINKS = [
 
 export const SOCIAL_LINKS = {
   youtube: "https://www.youtube.com/@Moto125ccTV",
+  github: undefined,
+  facebook: undefined,
 } as const;
 
 export const GITHUB_REPO_URL = "https://github.com/QADRAX/moto125v3";

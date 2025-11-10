@@ -2,6 +2,8 @@ import Link from "next/link";
 import { isExternalUrl } from "@/utils/utils";
 import { SOCIAL_LINKS } from "@/constants";
 import { YouTubeIcon } from "../common/icons/YoutubeIcon";
+import GithubIcon from "../common/icons/GithubIcon";
+import FacebookIcon from "../common/icons/FacebookIcon";
 
 export default function FooterSocial({
   siteName,
@@ -14,7 +16,7 @@ export default function FooterSocial({
   heroTitle?: string | null;
   heroLink?: string | null;
 }) {
-  const { youtube } = SOCIAL_LINKS;
+  const { youtube, github, facebook } = SOCIAL_LINKS;
 
   return (
     <section className="lg:justify-self-end">
@@ -37,6 +39,37 @@ export default function FooterSocial({
             </a>
           </li>
         )}
+
+        {github && (
+          <li>
+            <a
+              href={github}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 hover:underline"
+              aria-label="Visitar nuestro repositorio en GitHub"
+            >
+              <GithubIcon className="w-5 h-5" />
+              <span>GitHub</span>
+            </a>
+          </li>
+        )}
+
+        {facebook && (
+          <li>
+            <a
+              href={facebook}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 hover:underline"
+              aria-label="Visitar nuestra página en Facebook"
+            >
+              <FacebookIcon className="w-5 h-5" />
+              <span>Facebook</span>
+            </a>
+          </li>
+        )}
+      </ul>
 
       {heroImg && (
         <div className="mt-5">
