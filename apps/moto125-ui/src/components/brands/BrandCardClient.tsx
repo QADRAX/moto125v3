@@ -1,17 +1,14 @@
-import "server-only";
+"use client";
+import React from "react";
 import type { Company } from "@moto125/api-client";
 import Link from "next/link";
 import { mediaUrl, slugify } from "@/utils/utils";
 
-export interface BrandCardProps {
+export interface BrandCardClientProps {
   company: Company;
 }
 
-export default async function BrandCard({
-  company,
-}: BrandCardProps) {
-  // No mostramos ni calculamos el número de motos aquí por diseño.
-
+export default function BrandCardClient({ company }: BrandCardClientProps) {
   const img = company.image?.url ? mediaUrl(company.image.url) : undefined;
   const href = `/marcas/${slugify(company.name)}`;
 
@@ -23,6 +20,7 @@ export default async function BrandCard({
       aria-label={company.name}
     >
       <div className="relative flex h-32 w-full items-center justify-center bg-neutral-100 dark:bg-neutral-800">
+        {/* Badge intentionally removed: do not show moto count */}
         {img ? (
           <img
             src={img}

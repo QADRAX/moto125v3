@@ -24,7 +24,7 @@ export default function ArticleContent({
   companies
 }: ArticleContentProps) {
   if (!blocks?.length) {
-    return <p className="opacity-70">No content available.</p>;
+    return <p className="opacity-70"></p>;
   }
 
   return (
@@ -71,33 +71,33 @@ export default function ArticleContent({
           <section className="mb-6">
             <YouTubeEmbed src={youtubeLink} title={youtubeTitle} />
           </section>
-
-          {motos.length ? (
-            <section>
-              <SectionHeader title="Motos de este artículo" />
-              <div className="flex flex-wrap justify-center gap-4">
-                {motos.map((m) => (
-                  <div key={m.id} className="w-full max-w-[300px]">
-                    <MotoCard moto={m} />
-                  </div>
-                ))}
-              </div>
-            </section>
-          ) : null}
-
-          {companies.length ? (
-            <section>
-              <SectionHeader title="Marcas de este artículo" />
-              <div className="flex flex-wrap justify-center gap-4">
-                {companies.map((c) => (
-                  <div key={c.id} className="w-full max-w-[300px]">
-                    <BrandCard company={c} />
-                  </div>
-                ))}
-              </div>
-            </section>
-          ) : null}
         </>
+      ) : null}
+
+      {motos?.length ? (
+        <section>
+          <SectionHeader title="Motos de este artículo" />
+          <div className="flex flex-wrap justify-center gap-4">
+            {motos!.map((m) => (
+              <div key={m.id} className="w-full max-w-[300px]">
+                <MotoCard moto={m} />
+              </div>
+            ))}
+          </div>
+        </section>
+      ) : null}
+
+      {companies?.length ? (
+        <section>
+          <SectionHeader title="Marcas de este artículo" />
+          <div className="flex flex-wrap justify-center gap-4">
+            {companies!.map((c) => (
+              <div key={c.id} className="w-full max-w-[300px]">
+                <BrandCard company={c} />
+              </div>
+            ))}
+          </div>
+        </section>
       ) : null}
     </section>
   );
