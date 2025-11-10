@@ -1,7 +1,7 @@
 "use client";
 
 import { useGAEvent } from "@/hooks/useGAEvent";
-import { YouTubeIcon } from "./YoutubeIcon";
+import { YouTubeIcon } from "./icons/YoutubeIcon";
 import { normalizeYouTube } from "@/utils/normalizeYoutubeLink";
 
 export default function YouTubeLinkGA({
