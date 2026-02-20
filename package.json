@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/QADRAX/moto125v3#readme",
   "devDependencies": {
-    "lerna": "^8.2.3",
+    "lerna": "^9.0.4",
     "rimraf": "^6.0.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.2"
