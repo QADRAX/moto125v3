@@ -9,7 +9,7 @@ export const mdComponents: Components = {
     <TrackedHeading
       as="h1"
       className="mt-6 scroll-mt-24 text-3xl font-bold"
-      {...props}
+      {...(props as any)}
     >
       {children}
     </TrackedHeading>
@@ -18,7 +18,7 @@ export const mdComponents: Components = {
     <TrackedHeading
       as="h2"
       className="mt-6 scroll-mt-24 text-2xl font-bold"
-      {...props}
+      {...(props as any)}
     >
       {children}
     </TrackedHeading>
@@ -27,7 +27,7 @@ export const mdComponents: Components = {
     <TrackedHeading
       as="h3"
       className="mt-6 scroll-mt-24 text-xl font-bold"
-      {...props}
+      {...(props as any)}
     >
       {children}
     </TrackedHeading>
@@ -36,55 +36,55 @@ export const mdComponents: Components = {
     <TrackedHeading
       as="h4"
       className="mt-4 scroll-mt-24 text-lg font-semibold"
-      {...props}
+      {...(props as any)}
     >
       {children}
     </TrackedHeading>
   ),
   p: ({ children, ...props }) => (
-    <p className="my-4 leading-relaxed" {...props}>
+    <p className="my-4 leading-relaxed" {...(props as any)}>
       {children}
     </p>
   ),
   ul: ({ children, ...props }) => (
-    <ul className="my-4 list-disc pl-6" {...props}>
+    <ul className="my-4 list-disc pl-6" {...(props as any)}>
       {children}
     </ul>
   ),
   ol: ({ children, ...props }) => (
-    <ol className="my-4 list-decimal pl-6" {...props}>
+    <ol className="my-4 list-decimal pl-6" {...(props as any)}>
       {children}
     </ol>
   ),
   li: ({ children, ...props }) => (
-    <li className="my-1" {...props}>
+    <li className="my-1" {...(props as any)}>
       {children}
     </li>
   ),
   blockquote: ({ children, ...props }) => (
-    <blockquote className="my-4 border-l-4 pl-4 italic opacity-80" {...props}>
+    <blockquote className="my-4 border-l-4 pl-4 italic opacity-80" {...(props as any)}>
       {children}
     </blockquote>
   ),
   table: ({ children, ...props }) => (
     <div className="my-4 overflow-x-auto">
-      <table className="w-full border-collapse" {...props}>
+      <table className="w-full border-collapse" {...(props as any)}>
         {children}
       </table>
     </div>
   ),
   th: ({ children, ...props }) => (
-    <th className=" py-2 pr-4 text-left font-medium" {...props}>
+    <th className=" py-2 pr-4 text-left font-medium" {...(props as any)}>
       {children}
     </th>
   ),
   td: ({ children, ...props }) => (
-    <td className=" py-2" {...props}>
+    <td className=" py-2" {...(props as any)}>
       {children}
     </td>
   ),
   a: ({ children, href, ...props }) => {
-    if (!href) return <span {...props}>{children}</span>;
+    if (!href) return <span {...(props as any)}>{children}</span>;
     return (
       <TrackableLink href={href} {...(props as any)}>
         {children}

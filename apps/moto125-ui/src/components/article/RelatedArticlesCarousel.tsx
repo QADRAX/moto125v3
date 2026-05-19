@@ -32,7 +32,7 @@ export default async function RelatedArticlesCarousel({
   const safeMax = Math.max(safeMin, Math.min(maxItems, 64));
 
   const cookieName = viewedCookieNameToday();
-  const raw = cookies().get(cookieName)?.value;
+  const raw = (await cookies()).get(cookieName)?.value;
   const viewed = parseSlugCsv(raw);
 
   const pool = allArticles.filter((a) => !viewed.has(a.slug));

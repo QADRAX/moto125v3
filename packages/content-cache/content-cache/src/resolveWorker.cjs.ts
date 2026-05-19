@@ -1,5 +1,7 @@
+import { createRequire } from "node:module";
+import { resolveWorkerFilesystemPath } from "./resolveWorkerPath.js";
+
 export async function resolveWorkerEntry(): Promise<string> {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const spec = require.resolve("@moto125/content-cache-worker/worker");
-  return spec;
+  const require = createRequire(__filename);
+  return resolveWorkerFilesystemPath(require);
 }

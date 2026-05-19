@@ -2,8 +2,7 @@ import "server-only";
 import { getMirrorState } from "@/server/dataMirror";
 import { getThumbnailUrl, mediaUrl } from "@/utils/utils";
 
-export const dynamic = "force-dynamic";
-export const revalidate = 60 * 30; // 30 min
+export const revalidate = 1800; // 30 min
 
 function abs(base: string, path: string) {
   const clean = base.endsWith("/") ? base.slice(0, -1) : base;

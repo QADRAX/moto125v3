@@ -9,13 +9,12 @@ import ArticleView from "@/components/article/ArticleView";
 import { computeArticleDescription } from "@/utils/extractArticleDescription";
 import { ArticleJsonLdFromArticle } from "@/components/seo/ArticleJsonLd";
 
-export const revalidate = 60;
-
-export async function generateMetadata({
-  params,
-}: {
-  params: { slug: string };
-}) {
+export async function generateMetadata(
+  props: {
+    params: Promise<{ slug: string }>;
+  }
+) {
+  const params = await props.params;
   const state = await getMirrorState();
   const article = pickArticleBySlug(state, params.slug);
   if (!article) return { title: "Artículo no encontrado" };
@@ -42,11 +41,12 @@ export async function generateMetadata({
   };
 }
 
-export default async function ArticlePage({
-  params,
-}: {
-  params: { slug: string };
-}) {
+export default async function ArticlePage(
+  props: {
+    params: Promise<{ slug: string }>;
+  }
+) {
+  const params = await props.params;
   const state: ContentCacheRootState = await getMirrorState();
   const article = pickArticleBySlug(state, params.slug);
   if (!article) notFound();

@@ -8,8 +8,6 @@ import ClassGrid from "@/components/motos/ClassGrid";
 import Breadcrumbs from "@/components/common/Breadcrumbs";
 import { Container } from "@/components/common/Container";
 
-export const revalidate = 60;
-
 function getClasses(state: ContentCacheRootState): MotoClass[] {
   return state?.data?.taxonomies?.motoClasses ?? [];
 }

@@ -10,14 +10,10 @@ import { paginate } from "@/server/pagination";
 import { Container } from "@/components/common/Container";
 import { PAGE_SIZE } from "@/constants";
 
-export const revalidate = 60;
+type Props = { params: Promise<{ page: string }> };
 
-type Props = { params: { page: string } };
-
-export async function generateMetadata(
-  { params }: Props,
-  _parent: ResolvingMetadata
-): Promise<Metadata> {
+export async function generateMetadata(props: Props, _parent: ResolvingMetadata): Promise<Metadata> {
+  const params = await props.params;
   const pageNum = Number(params.page);
   const title = pageNum > 1 ? `Artículos (Página ${pageNum})` : "Artículos";
   const canonical = pageNum <= 1 ? "/articulos" : `/articulos/p/${pageNum}`;
@@ -29,7 +25,8 @@ export async function generateMetadata(
   };
 }
 
-export default async function ArticulosPagedPage({ params }: Props) {
+export default async function ArticulosPagedPage(props: Props) {
+  const params = await props.params;
   const pageNum = Number(params.page);
   if (!Number.isFinite(pageNum) || pageNum < 1) notFound();
 

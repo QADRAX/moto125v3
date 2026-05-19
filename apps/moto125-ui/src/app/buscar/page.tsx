@@ -7,14 +7,13 @@ import { mediaUrl } from "@/utils/utils";
 import { PAGE_SIZE } from "@/constants";
 
 export const dynamic = "force-dynamic";
-export const revalidate = 0;
 
 export const metadata = {
   title: "Buscar",
   robots: { index: false, follow: false },
 };
 
-type Props = { searchParams: { q?: string; p?: string } };
+type Props = { searchParams: Promise<{ q?: string; p?: string }> };
 
 function getPublicationISO(a: Article): string {
   return a.publicationDate || a.publishedAt || a.createdAt;
@@ -227,7 +226,8 @@ function Pages({
 }
 
 // ---- Page ----
-export default async function SearchPage({ searchParams }: Props) {
+export default async function SearchPage(props: Props) {
+  const searchParams = await props.searchParams;
   const q = (searchParams.q || "").trim();
   // página solicitada (>=1)
   let page = Math.max(1, Number(searchParams.p) || 1);

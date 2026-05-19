@@ -8,8 +8,6 @@ import { paginate } from "@/server/pagination";
 import { Container } from "@/components/common/Container";
 import { PAGE_SIZE } from "@/constants";
 
-export const revalidate = 60;
-
 export const metadata: Metadata = {
   title: "Artículos",
   description: "Listado de artículos de moto125.cc",

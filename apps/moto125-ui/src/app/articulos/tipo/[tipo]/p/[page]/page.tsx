@@ -10,14 +10,10 @@ import { slugify, toUpperCamelCase } from "@/utils/utils";
 import { Container } from "@/components/common/Container";
 import { PAGE_SIZE } from "@/constants";
 
-export const revalidate = 60;
+type Props = { params: Promise<{ tipo: string; page: string }> };
 
-type Props = { params: { tipo: string; page: string } };
-
-export async function generateMetadata(
-  { params }: Props,
-  _parent: ResolvingMetadata
-): Promise<Metadata> {
+export async function generateMetadata(props: Props, _parent: ResolvingMetadata): Promise<Metadata> {
+  const params = await props.params;
   const pageNum = Number(params.page);
   const human = toUpperCamelCase(params.tipo);
   return {
@@ -31,7 +27,8 @@ export async function generateMetadata(
   };
 }
 
-export default async function ArticulosTipoPagedPage({ params }: Props) {
+export default async function ArticulosTipoPagedPage(props: Props) {
+  const params = await props.params;
   const pageNum = Number(params.page);
   if (!Number.isFinite(pageNum) || pageNum < 1) notFound();
 

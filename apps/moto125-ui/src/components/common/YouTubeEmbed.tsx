@@ -2,7 +2,7 @@ import { cookies } from "next/headers";
 import YouTubeIframeClient from "./YouTubeIframeClient";
 import { normalizeYouTube } from "@/utils/normalizeYoutubeLink";
 
-export default function YouTubeEmbed({
+export default async function YouTubeEmbed({
   src,
   title = "YouTube video",
   className,
@@ -13,7 +13,7 @@ export default function YouTubeEmbed({
   className?: string;
   cookieName?: string;
 }) {
-  const consent = cookies().get(cookieName)?.value as
+  const consent = (await cookies()).get(cookieName)?.value as
     | "all"
     | "analytics"
     | "deny"

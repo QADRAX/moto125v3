@@ -8,8 +8,6 @@ import TypeGrid from "@/components/motos/TypeGrid";
 import Breadcrumbs from "@/components/common/Breadcrumbs";
 import { Container } from "@/components/common/Container";
 
-export const revalidate = 60;
-
 function findClassBySlug(
   state: ContentCacheRootState,
   classSlug: string
@@ -28,11 +26,12 @@ function getTypesByClass(
   );
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { class: string };
-}) {
+export async function generateMetadata(
+  props: {
+    params: Promise<{ class: string }>;
+  }
+) {
+  const params = await props.params;
   const state = await getMirrorState();
   const mc = findClassBySlug(state, params.class);
   if (!mc) return { title: "Clase no encontrada" };
@@ -43,11 +42,12 @@ export async function generateMetadata({
   };
 }
 
-export default async function MotosTypesByClassPage({
-  params,
-}: {
-  params: { class: string };
-}) {
+export default async function MotosTypesByClassPage(
+  props: {
+    params: Promise<{ class: string }>;
+  }
+) {
+  const params = await props.params;
   const state: ContentCacheRootState = await getMirrorState();
   const mc = findClassBySlug(state, params.class);
   if (!mc) notFound();

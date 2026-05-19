@@ -4,7 +4,9 @@
   "type": "commonjs",
   "main": "./dist/cache.worker.js",
   "exports": {
-    "./worker": "./dist/cache.worker.js"
+    ".": "./dist/cache.worker.js",
+    "./worker": "./dist/cache.worker.js",
+    "./package.json": "./package.json"
   },
   "files": ["dist"],
   "scripts": {
