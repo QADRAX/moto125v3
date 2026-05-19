@@ -75,10 +75,10 @@ La UI consume datos desde Strapi a través de la capa de **Content Cache**, lo q
 
 ## Scripts
 
-- `npm run dev` → Levanta la UI en modo desarrollo en `http://localhost:1338`  
-- `npm run build` → Compila la aplicación y prepara la versión standalone  
-- `npm start` → Inicia la UI en producción en el puerto `3000`  
-- `npm run typecheck` → Verificación de tipos con TypeScript  
+- `pnpm dev` (desde la raíz: `pnpm dev:ui`) → Levanta la UI en `http://localhost:1338`  
+- `pnpm build` (desde la raíz: `pnpm build:ui`) → Compila la aplicación y prepara standalone  
+- `pnpm start` (desde la raíz: `pnpm start:ui`) → Producción en el puerto `3000`  
+- `pnpm typecheck` (desde la raíz: `pnpm typecheck:ui`) → Verificación de tipos  
 
 ---
 

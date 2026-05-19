@@ -14,11 +14,12 @@
     "clean": "rimraf dist"
   },
   "dependencies": {
-    "@moto125/api-client": "*",
-    "@moto125/content-cache-core": "*"
+    "@moto125/api-client": "workspace:*",
+    "@moto125/content-cache-core": "workspace:*"
   },
   "devDependencies": {
-    "typescript": "^5.6.0",
-    "rimraf": "^6.0.0"
+    "@types/node": "^22.0.0",
+    "rimraf": "^6.0.0",
+    "typescript": "^5.9.0"
   }
 }

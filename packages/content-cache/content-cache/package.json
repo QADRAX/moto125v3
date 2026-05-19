@@ -30,8 +30,13 @@
     "lint": "echo \"(lint shared)\""
   },
   "dependencies": {
-    "@moto125/content-cache-core": "*",
-    "@moto125/content-cache-worker": "*",
+    "@moto125/content-cache-core": "workspace:*",
+    "@moto125/content-cache-worker": "workspace:*",
     "cron-parser": "^5.4.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "rimraf": "^6.0.0",
+    "typescript": "^5.9.0"
   }
 }

@@ -11,7 +11,24 @@ Tras pasar por **Joomla** y **WordPress**, esta tercera versión usa **Strapi v5
 
 ## Estructura del monorepo
 
-Monorepo con **npm workspaces**. Cada paquete tiene su propio README con detalles.
+Monorepo con **pnpm workspaces** y **Turborepo**. Cada paquete tiene su propio README con detalles.
+
+### Requisitos
+
+- **Node.js 22** (ver `.nvmrc`; `corepack enable` activa pnpm vía `packageManager` en `package.json`)
+- **pnpm** 9+
+
+### Comandos habituales
+
+```bash
+pnpm install
+pnpm build              # todo el monorepo
+pnpm build:ui           # UI + dependencias
+pnpm build:strapi       # Strapi
+pnpm dev:ui             # Next.js en :1338
+pnpm dev:strapi         # Strapi develop
+pnpm start:ui           # producción local UI
+```
 
 ```
 moto125v3/
@@ -22,7 +39,7 @@ moto125v3/
     ├── admin-api-client/    # Cliente Admin API de Strapi
     ├── api-client/          # SDK tipado para API pública
     ├── content-cache/       # Sistema de caché
-    └── migration/           # Scripts internos de migración/backfill
+    └── migration/           # Scripts migración (fuera del workspace; ver su README)
 ```
 
 ### Documentación por módulo
@@ -38,7 +55,7 @@ moto125v3/
     - Cliente (Next/Node) → [`packages/content-cache/content-cache/README.md`](packages/content-cache/content-cache/README.md)
     - Núcleo (tipos + hydrate + snapshots) → [`packages/content-cache/content-cache-core/README.md`](packages/content-cache/content-cache-core/README.md)
     - Worker thread (hidratación + IO) → [`packages/content-cache/content-cache-worker/README.md`](packages/content-cache/content-cache-worker/README.md)
-  - **Migración / backfill** → [`packages/migration/README.md`](packages/migration/README.md)
+  - **Migración / backfill** (archivado, no en workspace) → [`packages/migration/README.md`](packages/migration/README.md)
 
 
 ## Licencia
