@@ -1,4 +1,5 @@
 import "server-only";
+
 import type { MetadataRoute } from "next";
 import { getMirrorState } from "@/server/dataMirror";
 import {
@@ -12,9 +13,6 @@ import {
   buildStatic,
 } from "@/utils/sitemapUtils";
 
-/**
- * Convierte items de MetadataRoute.Sitemap a XML
- */
 function toXML(items: MetadataRoute.Sitemap) {
   const escape = (s: string) =>
     s
@@ -28,15 +26,19 @@ function toXML(items: MetadataRoute.Sitemap) {
         it.lastModified instanceof Date
           ? it.lastModified.toISOString()
           : typeof it.lastModified === "string"
-          ? new Date(it.lastModified).toISOString()
-          : undefined;
+            ? new Date(it.lastModified).toISOString()
+            : undefined;
 
       return [
         "<url>",
         `  <loc>${escape(it.url)}</loc>`,
         lastmod ? `  <lastmod>${lastmod}</lastmod>` : "",
-        it.changeFrequency ? `  <changefreq>${it.changeFrequency}</changefreq>` : "",
-        typeof it.priority === "number" ? `  <priority>${it.priority.toFixed(1)}</priority>` : "",
+        it.changeFrequency
+          ? `  <changefreq>${it.changeFrequency}</changefreq>`
+          : "",
+        typeof it.priority === "number"
+          ? `  <priority>${it.priority.toFixed(1)}</priority>`
+          : "",
         "</url>",
       ]
         .filter(Boolean)
@@ -44,21 +46,22 @@ function toXML(items: MetadataRoute.Sitemap) {
     })
     .join("\n");
 
-  return `<?xml version="1.0" encoding="UTF-8"?>\n` +
+  return (
+    `<?xml version="1.0" encoding="UTF-8"?>\n` +
     `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n` +
     rows +
-    `\n</urlset>\n`;
+    `\n</urlset>\n`
+  );
 }
 
-export const dynamic = "force-dynamic";
-export const revalidate = 60 * 60 * 24;
+export const revalidate = 86400;
 
 export async function GET(
   _req: Request,
-  { params }: { params: { id: string } }
+  props: { params: Promise<{ id: string }> }
 ) {
+  const params = await props.params;
   const idRaw = params.id || "";
-  // Soporta .xml en la URL: /sitemap/static.xml -> "static"
   const id = idRaw.replace(/\.xml$/i, "");
 
   const state = await getMirrorState();
@@ -69,7 +72,9 @@ export async function GET(
   const now = new Date();
 
   const articles = state?.data?.articles ?? [];
-  const companies = (state?.data?.companies ?? []).filter((c) => c && c.active !== false);
+  const companies = (state?.data?.companies ?? []).filter(
+    (c) => c && c.active !== false
+  );
   const classes = state?.data?.taxonomies?.motoClasses ?? [];
   const types = state?.data?.taxonomies?.motoTypes ?? [];
   const articleTypes = state?.data?.taxonomies?.articleTypes ?? [];
@@ -77,19 +82,17 @@ export async function GET(
 
   let items: MetadataRoute.Sitemap = [];
 
-  if (id === "static")         items = buildStatic(base, now, articles.length);
-  else if (id === "articles")  items = buildArticles(base, now, articles);
+  if (id === "static") items = buildStatic(base, now, articles.length);
+  else if (id === "articles") items = buildArticles(base, now, articles);
   else if (id === "article-types")
-                              items = buildArticleTypes(base, now, articleTypes, articles);
+    items = buildArticleTypes(base, now, articleTypes, articles);
   else if (id === "companies") items = buildCompanies(base, now, companies);
   else if (id === "moto-classes")
-                              items = buildMotoClasses(base, now, classes);
-  else if (id === "moto-types")
-                              items = buildMotoTypes(base, now, types);
-  else if (id === "motos")     items = buildMotos(base, now, motos);
-  else if (id === "latest")    items = buildLatest(base, now, articles);
+    items = buildMotoClasses(base, now, classes);
+  else if (id === "moto-types") items = buildMotoTypes(base, now, types);
+  else if (id === "motos") items = buildMotos(base, now, motos);
+  else if (id === "latest") items = buildLatest(base, now, articles);
   else if (id === "all") {
-    // alias del general por si lo quieres: /sitemap/all.xml
     items = [
       ...buildStatic(base, now, articles.length),
       ...buildArticles(base, now, articles),

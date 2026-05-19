@@ -12,8 +12,6 @@ import { Container } from "@/components/common/Container";
 import { BrandJsonLdFromCompany } from "@/components/seo/BrandJsonLd";
 import RelatedArticles from "@/components/articles/RelatedArticles";
 
-export const revalidate = 60;
-
 function findCompanyBySlug(
   state: ContentCacheRootState,
   brandSlug: string
@@ -32,11 +30,12 @@ function getMotosByCompany(
   );
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { brand: string };
-}) {
+export async function generateMetadata(
+  props: {
+    params: Promise<{ brand: string }>;
+  }
+) {
+  const params = await props.params;
   const state = await getMirrorState();
   const company = findCompanyBySlug(state, params.brand);
   if (!company) return { title: "Marca no encontrada" };
@@ -48,11 +47,12 @@ export async function generateMetadata({
   };
 }
 
-export default async function BrandDetailPage({
-  params,
-}: {
-  params: { brand: string };
-}) {
+export default async function BrandDetailPage(
+  props: {
+    params: Promise<{ brand: string }>;
+  }
+) {
+  const params = await props.params;
   const state: ContentCacheRootState = await getMirrorState();
   const company = findCompanyBySlug(state, params.brand);
   if (!company) notFound();

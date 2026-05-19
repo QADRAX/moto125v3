@@ -7,10 +7,10 @@ import { cookies } from "next/headers";
  * - Default denied (GDPR-friendly).
  * - Apply saved choice from cookie BEFORE GA loads.
  */
-export default function ConsentBootstrap({
+export default async function ConsentBootstrap({
   cookieName = "m125-consent",
 }: { cookieName?: string }) {
-  const choice = cookies().get(cookieName)?.value ?? "";
+  const choice = (await cookies()).get(cookieName)?.value ?? "";
 
   const choiceJs = JSON.stringify(choice);
 

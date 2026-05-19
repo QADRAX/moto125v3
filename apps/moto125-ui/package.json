@@ -1,9 +1,8 @@
 {
   "name": "@moto125/moto125-ui",
-  "version": "3.0.9",
-  "type": "commonjs",
+  "version": "3.0.10",
   "engines": {
-    "node": ">=20"
+    "node": ">=22 <23"
   },
   "scripts": {
     "dev": "next dev -p 1338",
@@ -13,23 +12,25 @@
     "typecheck:scripts": "tsc -p tsconfig.scripts.json --noEmit"
   },
   "dependencies": {
-    "@moto125/content-cache-worker": "*",
-    "@moto125/content-cache": "*",
-    "next": "^14",
-    "react": "^18",
-    "react-dom": "^18",
+    "@moto125/content-cache": "workspace:*",
+    "@moto125/content-cache-worker": "workspace:*",
+    "next": "^16.2.6",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6",
     "react-markdown": "^10.1.0",
-    "remark-gfm": "^4.0.1",
-    "remark-smartypants": "^3.0.2",
+    "rehype-autolink-headings": "^7.1.0",
     "rehype-slug": "^6.0.0",
-    "rehype-autolink-headings": "^7.1.0"
+    "remark-gfm": "^4.0.1",
+    "remark-smartypants": "^3.0.2"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.13",
     "@tailwindcss/typography": "^0.5.16",
     "@types/node": "^20.12.12",
+    "@types/react": "^19.2.15",
+    "@types/react-dom": "^19.2.3",
     "autoprefixer": "^10.4.21",
-    "postcss": "^8.5.6",
+    "postcss": "^8.5.15",
     "tailwindcss": "^4.1.13",
     "tailwindcss-animate": "^1.0.7",
     "tsx": "^4.15.7"

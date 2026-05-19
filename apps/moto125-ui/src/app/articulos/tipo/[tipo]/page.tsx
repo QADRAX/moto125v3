@@ -9,14 +9,10 @@ import { slugify, toUpperCamelCase } from "@/utils/utils";
 import { Container } from "@/components/common/Container";
 import { PAGE_SIZE } from "@/constants";
 
-export const revalidate = 60;
+type Props = { params: Promise<{ tipo: string }> };
 
-type Props = { params: { tipo: string } };
-
-export async function generateMetadata(
-  { params }: Props,
-  _parent: ResolvingMetadata
-): Promise<Metadata> {
+export async function generateMetadata(props: Props, _parent: ResolvingMetadata): Promise<Metadata> {
+  const params = await props.params;
   const human = toUpperCamelCase(params.tipo);
   return {
     title: `Artículos de ${human}`,
@@ -24,7 +20,8 @@ export async function generateMetadata(
   };
 }
 
-export default async function ArticulosTipoIndexPage({ params }: Props) {
+export default async function ArticulosTipoIndexPage(props: Props) {
+  const params = await props.params;
   const state: ContentCacheRootState = await getMirrorState();
   const wanted = params.tipo.toLowerCase();
 

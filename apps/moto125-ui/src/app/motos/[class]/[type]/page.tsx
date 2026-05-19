@@ -8,8 +8,6 @@ import MotoList from "@/components/motos/MotoList";
 import Breadcrumbs from "@/components/common/Breadcrumbs";
 import { Container } from "@/components/common/Container";
 
-export const revalidate = 60;
-
 function findClassBySlug(
   state: ContentCacheRootState,
   classSlug: string
@@ -33,11 +31,12 @@ function getMotosByType(state: ContentCacheRootState, type: MotoType): Moto[] {
   );
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { class: string; type: string };
-}) {
+export async function generateMetadata(
+  props: {
+    params: Promise<{ class: string; type: string }>;
+  }
+) {
+  const params = await props.params;
   const state = await getMirrorState();
   const mc = findClassBySlug(state, params.class);
   const mt = findTypeBySlug(state, params.type);
@@ -49,11 +48,12 @@ export async function generateMetadata({
   };
 }
 
-export default async function MotosByTypePage({
-  params,
-}: {
-  params: { class: string; type: string };
-}) {
+export default async function MotosByTypePage(
+  props: {
+    params: Promise<{ class: string; type: string }>;
+  }
+) {
+  const params = await props.params;
   const state: ContentCacheRootState = await getMirrorState();
   const mc = findClassBySlug(state, params.class);
   const mt = findTypeBySlug(state, params.type);

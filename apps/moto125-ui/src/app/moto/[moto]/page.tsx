@@ -12,8 +12,6 @@ import { MotoProductJsonLdFromMoto } from "@/components/seo/MotoProductJsonLd";
 import MotoImageGallery from "@/components/motos/MotoImageGallery";
 import RelatedArticles from "@/components/articles/RelatedArticles";
 
-export const revalidate = 60;
-
 function findMotoByParam(
   state: ContentCacheRootState,
   param: string
@@ -22,11 +20,12 @@ function findMotoByParam(
   return motos.find((m) => m.moto125Id === param) ?? null;
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { moto: string };
-}) {
+export async function generateMetadata(
+  props: {
+    params: Promise<{ moto: string }>;
+  }
+) {
+  const params = await props.params;
   const state = await getMirrorState();
   const moto = findMotoByParam(state, params.moto);
   if (!moto) return { title: "Moto no encontrada" };
@@ -50,11 +49,12 @@ export async function generateMetadata({
   };
 }
 
-export default async function MotoDetailPage({
-  params,
-}: {
-  params: { moto: string };
-}) {
+export default async function MotoDetailPage(
+  props: {
+    params: Promise<{ moto: string }>;
+  }
+) {
+  const params = await props.params;
   const state: ContentCacheRootState = await getMirrorState();
   const moto = findMotoByParam(state, params.moto);
 

@@ -2,6 +2,8 @@
 
 Paquete de **scripts de migración** y **backfill** utilizados para mover contenido de **WordPress** a **Strapi v5** en **moto125.cc**.
 
+> **Fuera del workspace pnpm/turbo:** este directorio no participa en `pnpm install` ni en `pnpm build` del monorepo (evita conflictos de tipos con `jsdom` bajo pnpm). El código en `src/` se conserva. Para volver a usarlo como paquete, renombra `package.json.off-workspace` → `package.json` y quita `!packages/migration` de [`pnpm-workspace.yaml`](../../pnpm-workspace.yaml).
+
 ---
 
 ## Propósito

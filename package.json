@@ -2,22 +2,23 @@
   "name": "@moto125/moto125cc",
   "version": "1.0.0",
   "description": "",
-  "workspaces": [
-    "packages/*",
-    "packages/content-cache/*",
-    "apps/*"
-  ],
   "private": true,
+  "packageManager": "pnpm@10.12.1",
+  "engines": {
+    "node": ">=22 <23",
+    "pnpm": ">=9"
+  },
   "scripts": {
-    "build": "lerna run build --stream",
-    "dev": "lerna run dev --parallel --stream",
-    "lint": "lerna run lint --stream",
-    "clean": "lerna run clean --stream",
-    "list": "lerna list",
-    "changed": "lerna changed",
-    "dev:strapi": "lerna run develop --scope=@moto125/strapi --stream",
-    "dev:ui": "lerna run dev --scope=@moto125/moto125-ui --stream",
-    "start:ui": "npm run start -w @moto125/moto125-ui"
+    "build": "turbo run build",
+    "build:ui": "turbo run build --filter=@moto125/moto125-ui...",
+    "build:strapi": "turbo run build --filter=@moto125/strapi...",
+    "dev": "turbo run dev --parallel",
+    "lint": "turbo run lint",
+    "clean": "turbo run clean",
+    "dev:strapi": "turbo run develop --filter=@moto125/strapi",
+    "dev:ui": "turbo run dev --filter=@moto125/moto125-ui",
+    "start:ui": "pnpm --filter @moto125/moto125-ui start",
+    "typecheck:ui": "turbo run typecheck --filter=@moto125/moto125-ui"
   },
   "repository": {
     "type": "git",
@@ -28,13 +29,23 @@
   },
   "homepage": "https://github.com/QADRAX/moto125v3#readme",
   "devDependencies": {
-    "lerna": "^8.2.3",
     "rimraf": "^6.0.1",
     "ts-node": "^10.9.2",
+    "turbo": "^2.5.4",
     "typescript": "^5.9.2"
   },
-  "overrides": {
-    "@strapi/design-system": "2.0.0-rc.29",
-    "@strapi/helper-plugin": "5.0.0-rc.29"
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@apollo/protobufjs",
+      "@swc/core",
+      "core-js-pure",
+      "esbuild",
+      "sharp"
+    ],
+    "overrides": {
+      "@strapi/design-system": "2.0.0-rc.29",
+      "@strapi/helper-plugin": "5.0.0-rc.29",
+      "postcss": "^8.5.15"
+    }
   }
 }

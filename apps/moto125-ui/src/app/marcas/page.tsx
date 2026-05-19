@@ -7,8 +7,6 @@ import Breadcrumbs from "@/components/common/Breadcrumbs";
 import BrandGrid from "@/components/brands/BrandGrid";
 import { Container } from "@/components/common/Container";
 
-export const revalidate = 60;
-
 function getCompanies(state: ContentCacheRootState): Company[] {
   const list = state?.data?.companies ?? [];
   return list

@@ -1,45 +1,45 @@
 # -----------------------------
 # Builder: instala deps y build
 # -----------------------------
-FROM node:20-alpine AS builder
+FROM node:22-alpine AS builder
 ENV CI=1 NEXT_TELEMETRY_DISABLED=1 NODE_ENV=production
 WORKDIR /repo
 
 RUN apk add --no-cache python3 make g++ libc6-compat
 
-RUN npm i -g npm@11.3.0
+RUN corepack enable
 
-COPY package*.json ./
-COPY lerna.json ./
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json ./
 COPY apps ./apps
 COPY packages ./packages
 
-RUN --mount=type=cache,target=/root/.npm npm ci
+RUN --mount=type=cache,id=pnpm,target=/root/.local/share/pnpm/store \
+    pnpm install --frozen-lockfile
 
-RUN npx lerna run build --scope @moto125/strapi --include-dependencies --stream
-
-RUN npm prune --omit=dev
+RUN pnpm turbo run build --filter=@moto125/strapi...
 
 # -----------------------------
 # Runner: imagen final
 # -----------------------------
-FROM node:20-alpine AS runner
+FROM node:22-alpine AS runner
 ENV NODE_ENV=production \
     PORT=1337 \
     HOST=0.0.0.0
 
 RUN apk add --no-cache tini
 
+RUN corepack enable
+
 WORKDIR /repo
 
-COPY --from=builder /repo/node_modules           ./node_modules
-COPY --from=builder /repo/packages               ./packages
-COPY --from=builder /repo/apps/moto125-strapi    ./apps/moto125-strapi
-COPY --from=builder /repo/package.json           ./package.json
-COPY --from=builder /repo/lerna.json             ./lerna.json
+COPY --from=builder /repo/node_modules ./node_modules
+COPY --from=builder /repo/packages ./packages
+COPY --from=builder /repo/apps/moto125-strapi ./apps/moto125-strapi
+COPY --from=builder /repo/package.json ./package.json
+COPY --from=builder /repo/pnpm-workspace.yaml ./pnpm-workspace.yaml
 
 USER node
 EXPOSE 1337
 
 ENTRYPOINT ["/sbin/tini","--"]
-CMD ["npm", "run", "start", "-w", "@moto125/strapi"]
+CMD ["pnpm", "--filter", "@moto125/strapi", "start"]
