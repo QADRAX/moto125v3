@@ -149,5 +149,75 @@ export const MODELO_RECURSOS = `
 ## UI
 - Idioma: es. Rutas: /marcas, /motos, /sobre-nosotros, artículos por slug.
 - Listados públicos filtran visible !== false.
+- Ficha técnica: ver moto125://docs/ficha-tecnica (unidades fijas para el comparador).
+`.trim();
+
+/**
+ * Unidades canónicas = MotoSpecs / MotoProductJsonLd.
+ * El valor en JSON NO lleva unidad; la unidad es implícita por campo.
+ */
+export const FICHA_TECNICA = `
+# fichaTecnica = MotoFichaTecnica (api-client entities)
+
+Fuente de verdad tipada: packages/api-client/src/types/entities.ts
+Write path: MotoCreateInput / MotoUpdateInput.fichaTecnica (mismo tipo).
+UI: apps/moto125-ui/src/components/motos/MotoSpecs.tsx
+
+## Reglas de precisión (comparador)
+
+1. Nunca convertir unidades al guardar (ni mm↔cm, ni CV↔kW, ni kWh↔Ah).
+2. 0 o vacío = “sin dato” en UI; no uses 0 como valor real salvo que sea legítimo.
+3. Potencia combustión = horsePower en CV; eléctrica = powerKW / powerPM en kW.
+4. compressionRatio = número X (la UI muestra "X:1"); no guardar "10.5:1" como string.
+5. Neumáticos = string de balón (ej. "110/70-16"), no diámetro suelto.
+6. frontTrainDistribution + rearTrainDistribution ≈ 100 si ambos existen.
+7. Typos históricos del schema: Break (brake), Ballon (balloon), longitude (length) — usar esos nombres.
+
+## Chasis / dimensiones
+
+| Campo | Unidad | Etiqueta UI |
+|---|---|---|
+| width, height, longitude, wheelbase, seatHeight | mm | Ancho, Alto, Longitud, Dist. ejes, Alt. asiento |
+| totalWeight | kg | Peso total |
+| depositCapacity | L | Depósito |
+| frontWheelBallon, rearWheelBallon | texto | Neumático (balón) |
+| front/rearBreakDiameter | mm | Diámetro freno |
+| front/rearBreakTypeName | texto | Tipo freno |
+| rearNumSuspensions | entero | Nº suspensiones traseras |
+| front/rearSuspensionTravel | mm | Recorrido suspensión |
+| front/rearTrainDistribution | % | Reparto tren |
+| frontSuspensionTypeName, motorcycleFrameTypeName, motorcycleFrameMaterialName | texto | |
+
+## combustionEngine
+
+| Campo | Unidad |
+|---|---|
+| engineDisplacement | cc |
+| horsePower | CV |
+| powerRPM | rpm |
+| maxTorqueNP | N·m |
+| maxTorqueRPM | rpm |
+| pistonDiameter, pistonStroke | mm |
+| compressionRatio | ratio X (:1 en UI) |
+| numberOfCylinders | entero |
+| fuelFeedingName, distributionName, refrigerationName, ignitionType, gearboxName | texto |
+
+## electricEngine
+
+| Campo | Unidad |
+|---|---|
+| powerKW | kW (continuo) |
+| powerPM | kW (pico) |
+| torque | N·m |
+| rpm | rpm |
+| batteryVolts | V |
+| batteryCapacity | kWh |
+| numberOfMotors | entero |
+| batteryName | texto |
+
+## Update parcial
+
+motos_update con fichaTecnica sustituye el JSON completo del campo.
+Para merge: leer moto → fusionar objeto → update con ficha completa.
 `.trim();
 

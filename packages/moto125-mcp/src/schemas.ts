@@ -15,6 +15,7 @@ import type {
   MotoClassCreateInput,
   MotoClassUpdateInput,
   MotoCreateInput,
+  MotoFichaTecnica,
   MotoTypeCreateInput,
   MotoTypeUpdateInput,
   MotoUpdateInput,
@@ -22,6 +23,8 @@ import type {
   PaginaOfertasUpdateInput,
   StrapiQueryParams,
   TagItemInput,
+  CombustionEngineSpec,
+  ElectricEngineSpec,
 } from "@moto125/api-client";
 import type { Id, UploadOptions } from "@moto125/admin-api-client";
 
@@ -194,6 +197,72 @@ const motoEngineTypeSchema = z.enum([
   "hibrido",
 ]);
 
+/** Unidades = las que pinta MotoSpecs / MotoProductJsonLd (UI). No convertir. */
+const combustionEngineSchema: z.ZodType<CombustionEngineSpec> = z.object({
+  powerRPM: z.number().optional().describe("rpm a potencia máx."),
+  horsePower: z.number().optional().describe("CV (no kW)"),
+  gearboxName: z.string().optional(),
+  maxTorqueNP: z.number().optional().describe("N·m"),
+  ignitionType: z.string().nullable().optional(),
+  maxTorqueRPM: z.number().optional().describe("rpm a par máx."),
+  pistonStroke: z.number().optional().describe("mm"),
+  pistonDiameter: z.number().optional().describe("mm"),
+  fuelFeedingName: z.string().optional(),
+  compressionRatio: z
+    .number()
+    .optional()
+    .describe("ratio X (UI muestra X:1)"),
+  distributionName: z.string().optional(),
+  numberOfCylinders: z.number().optional(),
+  refrigerationName: z.string().optional(),
+  engineDisplacement: z.number().optional().describe("cc"),
+});
+
+const electricEngineSchema: z.ZodType<ElectricEngineSpec> = z.object({
+  rpm: z.number().optional().describe("rpm"),
+  torque: z.number().optional().describe("N·m"),
+  powerKW: z.number().optional().describe("kW continuo"),
+  powerPM: z.number().optional().describe("kW pico"),
+  batteryName: z.string().optional(),
+  batteryVolts: z.number().optional().describe("V"),
+  numberOfMotors: z.number().optional(),
+  batteryCapacity: z.number().optional().describe("kWh (no Ah)"),
+});
+
+export const motoFichaTecnicaSchema: z.ZodType<MotoFichaTecnica> = z.object({
+  width: z.number().optional().describe("mm"),
+  height: z.number().optional().describe("mm"),
+  longitude: z.number().optional().describe("mm (longitud)"),
+  wheelbase: z.number().optional().describe("mm"),
+  seatHeight: z.number().optional().describe("mm"),
+  totalWeight: z.number().optional().describe("kg"),
+  depositCapacity: z.number().optional().describe("L"),
+  rearWheelBallon: z.string().optional().describe("ej. 140/70-14"),
+  frontWheelBallon: z.string().optional().describe("ej. 110/70-16"),
+  rearBreakDiameter: z.number().optional().describe("mm"),
+  rearBreakTypeName: z.string().optional(),
+  frontBreakDiameter: z.number().optional().describe("mm"),
+  frontBreakTypeName: z.string().optional(),
+  rearNumSuspensions: z.number().optional(),
+  rearSuspensionTravel: z.number().optional().describe("mm"),
+  frontSuspensionTravel: z.number().optional().describe("mm"),
+  rearTrainDistribution: z
+    .number()
+    .nullable()
+    .optional()
+    .describe("% peso tren trasero"),
+  frontTrainDistribution: z
+    .number()
+    .nullable()
+    .optional()
+    .describe("% peso tren delantero"),
+  frontSuspensionTypeName: z.string().optional(),
+  motorcycleFrameTypeName: z.string().optional(),
+  motorcycleFrameMaterialName: z.string().optional(),
+  combustionEngine: combustionEngineSchema.optional(),
+  electricEngine: electricEngineSchema.optional(),
+});
+
 const motoCreateObject = z.object({
   modelName: z.string(),
   moto125Id: z.string().describe("Id externo estable"),
@@ -215,7 +284,12 @@ const motoCreateObject = z.object({
     .describe("Precio (nombre histórico priece en el SDK)"),
   description: z.string().nullable().optional(),
   fullName: z.string().nullable().optional(),
-  fichaTecnica: z.record(z.unknown()).nullable().optional(),
+  fichaTecnica: motoFichaTecnicaSchema
+    .nullable()
+    .optional()
+    .describe(
+      "MotoFichaTecnica (UI). Unidades fijas: mm/kg/L/CV/N·m/cc/kW/kWh/%. Ver moto125://docs/ficha-tecnica."
+    ),
   normativa: motoNormativaSchema.nullable().optional(),
   images: z.array(mediaIdSchema).optional(),
   company: z.string().nullable().optional().describe("documentId marca"),

@@ -60,7 +60,7 @@ export function registerMotoTools(server: McpServer) {
     {
       title: "Crear moto",
       description:
-        "sdk.motos.create — modelName + moto125Id obligatorios; year, engineType, normativa, priece, fichaTecnica, images, company, motoType.",
+        "sdk.motos.create — modelName + moto125Id; year, engineType, normativa, priece, fichaTecnica (MotoFichaTecnica + unidades UI), images, company, motoType. Ver moto125://docs/ficha-tecnica.",
       inputSchema: { data: motoCreateInputSchema },
       annotations: { openWorldHint: true },
     },

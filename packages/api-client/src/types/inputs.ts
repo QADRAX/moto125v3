@@ -1,7 +1,10 @@
+import type { MotoFichaTecnica } from "./entities";
+
 export type ConnectList =
   | { connect: string[]; disconnect?: string[] }
   | { disconnect: string[]; connect?: string[] }
   | { set: string[] };
+
 
 export type MediaId = number | string;
 export type MediaIdList = Array<number | string>;
@@ -80,7 +83,7 @@ export interface MotoCreateInput {
   priece?: number | null;
   description?: string | null;
   fullName?: string | null;
-  fichaTecnica?: Record<string, unknown> | null;
+  fichaTecnica?: MotoFichaTecnica | null;
   normativa?: MotoNormativaInput | null;
   images?: MediaIdList;
   company?: string | null;

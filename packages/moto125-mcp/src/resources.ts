@@ -1,6 +1,7 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import {
   BLOQUES_CONTENIDO,
+  FICHA_TECNICA,
   FILTROS_ARTICULOS,
   FILTROS_MARCAS,
   FILTROS_MOTOS,
@@ -81,6 +82,26 @@ export function registerResources(server: McpServer) {
           uri: uri.href,
           mimeType: "text/markdown",
           text: `# Bloques de contenido\n\n${BLOQUES_CONTENIDO}\n\n# Flujo crear\n\n${FLUJO_CREAR_ARTICULO}`,
+        },
+      ],
+    })
+  );
+
+  server.registerResource(
+    "ficha_tecnica",
+    "moto125://docs/ficha-tecnica",
+    {
+      title: "Ficha técnica de moto (unidades)",
+      description:
+        "MotoFichaTecnica: campos y unidades canónicas para el comparador",
+      mimeType: "text/markdown",
+    },
+    async (uri) => ({
+      contents: [
+        {
+          uri: uri.href,
+          mimeType: "text/markdown",
+          text: FICHA_TECNICA,
         },
       ],
     })
