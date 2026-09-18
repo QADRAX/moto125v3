@@ -21,6 +21,7 @@ Defaults Content SDK: `publicationState: preview`, `locale: es`.
 | Área | Tools |
 |---|---|
 | Artículos | `articles_list\|get_by_id\|get_by_slug\|create\|update` |
+| Content health | `articles_list_broken_content` (HTML residual / tablas GFM rotas; solo lectura) |
 | Motos | `motos_list\|get_by_id\|get_by_moto125_id\|create\|update` |
 | Marcas | `companies_*` |
 | Taxonomías | `article_types_*`, `moto_types_*`, `moto_classes_*` |

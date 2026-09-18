@@ -1,6 +1,6 @@
 {
   "name": "@moto125/mcp",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "private": true,
   "type": "module",
   "description": "MCP moto125.cc: api-client + admin media, tools/prompts/resources en español",

@@ -5,12 +5,13 @@ import { registerPrompts } from "./prompts.js";
 import { registerResources } from "./resources.js";
 import { registerArticleTools } from "./tools/articles.js";
 import { registerCompanyTools } from "./tools/companies.js";
+import { registerContentHealthTools } from "./tools/contentHealth.js";
 import { registerConfigAndPageTools } from "./tools/pages.js";
 import { registerMediaTools } from "./tools/media.js";
 import { registerMotoTools } from "./tools/motos.js";
 import { registerTaxonomyTools } from "./tools/taxonomies.js";
 
-const PACKAGE_VERSION = "0.2.1";
+const PACKAGE_VERSION = "0.2.2";
 
 function createServer(): McpServer {
   const server = new McpServer({
@@ -19,6 +20,7 @@ function createServer(): McpServer {
   });
 
   registerArticleTools(server);
+  registerContentHealthTools(server);
   registerMotoTools(server);
   registerCompanyTools(server);
   registerTaxonomyTools(server);
