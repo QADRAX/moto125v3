@@ -1,3 +1,3 @@
-export * from './http';
-export * from './types/admin';
-export * from './client/media';
+export * from './http.js';
+export * from './types/admin.js';
+export * from './client/media.js';

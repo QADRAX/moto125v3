@@ -68,11 +68,15 @@ export interface CompanyCreateInput {
 }
 export type CompanyUpdateInput = Partial<CompanyCreateInput>;
 export type MotoNormativaInput = "Euro 1" | "Euro 2" | "Euro 3" | "Euro 4" | "Euro 5" | "Euro 5plus";
+export type MotoEngineTypeInput = "combustión" | "eléctrico" | "hibrido";
 
 export interface MotoCreateInput {
   modelName: string;
   moto125Id: string;
   active?: boolean;
+  /** Model/generation year. Keep modelName free of year suffixes. */
+  year?: number | null;
+  engineType?: MotoEngineTypeInput | null;
   priece?: number | null;
   description?: string | null;
   fullName?: string | null;

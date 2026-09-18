@@ -1,4 +1,4 @@
-import { ArticlePrestaciones } from '../types/entities';
+import { ArticlePrestaciones } from '../types/entities.js';
 
 /**
  * Parse strings like "4,84 s (52,9 km/h)" into numeric value + unit.

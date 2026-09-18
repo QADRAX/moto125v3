@@ -1,9 +1,9 @@
-import { ApiClient, type ApiClientOptions } from "./http";
+import { ApiClient, type ApiClientOptions } from "./http.js";
 import type {
   StrapiCollectionResponse,
   StrapiQueryParams,
   StrapiSingleResponse,
-} from "./types/strapi";
+} from "./types/strapi.js";
 
 import {
   getArticles,
@@ -11,7 +11,7 @@ import {
   getArticleByDocumentId,
   createArticle,
   updateArticleByDocumentId,
-} from "./client/articles";
+} from "./client/articles.js";
 
 import {
   getMotos,
@@ -19,14 +19,14 @@ import {
   getMotoByDocumentId,
   createMoto,
   updateMotoByDocumentId,
-} from "./client/motos";
+} from "./client/motos.js";
 
 import {
   getCompanies,
   getCompanyById,
   createCompany,
   updateCompanyByDocumentId,
-} from "./client/companies";
+} from "./client/companies.js";
 
 import {
   getArticleTypes,
@@ -38,15 +38,15 @@ import {
   updateMotoTypeByDocumentId,
   createMotoClass,
   updateMotoClassByDocumentId,
-} from "./client/taxonomies";
+} from "./client/taxonomies.js";
 
-import { getConfig, updateConfig } from "./client/config";
+import { getConfig, updateConfig } from "./client/config.js";
 
-import { getHomePage, updateHomePage } from "./client/home-page";
+import { getHomePage, updateHomePage } from "./client/home-page.js";
 
-import { getPaginaOfertas, updatePaginaOfertas } from "./client/pagina-ofertas";
+import { getPaginaOfertas, updatePaginaOfertas } from "./client/pagina-ofertas.js";
 
-import { getAboutUsPage, updateAboutUsPage } from "./client/about-us-page";
+import { getAboutUsPage, updateAboutUsPage } from "./client/about-us-page.js";
 import {
   AboutUsPage,
   Article,
@@ -58,7 +58,7 @@ import {
   MotoClass,
   MotoType,
   PaginaOfertas,
-} from "./types/entities";
+} from "./types/entities.js";
 import {
   AboutUsPageUpdateInput,
   ArticleCreateInput,
@@ -76,7 +76,7 @@ import {
   MotoTypeUpdateInput,
   MotoUpdateInput,
   PaginaOfertasUpdateInput,
-} from "./types/inputs";
+} from "./types/inputs.js";
 
 /**
  * Options to create the Moto125 SDK.
