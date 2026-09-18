@@ -4,6 +4,7 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { registerPrompts } from "./prompts.js";
 import { registerResources } from "./resources.js";
 import { registerArticleTools } from "./tools/articles.js";
+import { registerCacheTools } from "./tools/cache.js";
 import { registerCompanyTools } from "./tools/companies.js";
 import { registerContentHealthTools } from "./tools/contentHealth.js";
 import { registerConfigAndPageTools } from "./tools/pages.js";
@@ -11,7 +12,7 @@ import { registerMediaTools } from "./tools/media.js";
 import { registerMotoTools } from "./tools/motos.js";
 import { registerTaxonomyTools } from "./tools/taxonomies.js";
 
-const PACKAGE_VERSION = "0.2.2";
+const PACKAGE_VERSION = "0.2.3";
 
 function createServer(): McpServer {
   const server = new McpServer({
@@ -21,6 +22,7 @@ function createServer(): McpServer {
 
   registerArticleTools(server);
   registerContentHealthTools(server);
+  registerCacheTools(server);
   registerMotoTools(server);
   registerCompanyTools(server);
   registerTaxonomyTools(server);
