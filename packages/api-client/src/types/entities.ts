@@ -1,4 +1,4 @@
-import { StrapiEntry, StrapiFile } from "./strapi";
+import { StrapiEntry, StrapiFile } from "./strapi.js";
 
 export interface DZBase {
   id: number;
@@ -159,6 +159,8 @@ export interface MotoFichaTecnica {
 export type MotoNormativa =
   | "Euro 1" | "Euro 2" | "Euro 3" | "Euro 4" | "Euro 5" | "Euro 5plus";
 
+export type MotoEngineType = "combustión" | "eléctrico" | "hibrido";
+
 export interface Moto {
   id: number;
   documentId: string;
@@ -167,6 +169,9 @@ export interface Moto {
   fichaTecnica?: MotoFichaTecnica | null;
   moto125Id: string;
   active: boolean;
+  /** Model/generation year (Strapi integer). Not part of modelName. */
+  year?: number | null;
+  engineType?: MotoEngineType | null;
   description?: string | null;
   fullName?: string | null;
   createdAt: string;

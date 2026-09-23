@@ -1,8 +1,8 @@
 import FormData from 'form-data';
 import fs from 'node:fs';
 import path from 'node:path';
-import { StrapiAdminHttp } from '../http';
-import { AdminFile, AdminFolder, Id, Page, UploadOptions } from '../types/admin';
+import { StrapiAdminHttp } from '../http.js';
+import { AdminFile, AdminFolder, Id, Page, UploadOptions } from '../types/admin.js';
 
 function normList<T = any>(raw: any): T[] {
   const d = raw?.data ?? raw;
@@ -119,6 +119,35 @@ export class MediaLibrary {
     await this.http.del(`/upload/files/${fileId}`);
   }
 
+  async uploadBuffer(buffer: Buffer, filename: string, opts: UploadOptions = {}): Promise<AdminFile[]> {
+    const form = new FormData();
+    form.append('files', buffer, { filename: opts.filename ?? filename });
+
+    if (opts.fileInfo) form.append('fileInfo', JSON.stringify(opts.fileInfo));
+    if (typeof opts.folderId !== 'undefined' && opts.folderId !== null) {
+      form.append('folder', String(opts.folderId));
+    }
+
+    const headers = form.getHeaders();
+    const data = await this.http.post('/upload', form, { headers });
+    const arr = Array.isArray(data) ? data : data?.data ?? [];
+    return arr.map((f: any) => ({
+      id: f.id,
+      name: f.name,
+      alternativeText: f.alternativeText ?? null,
+      caption: f.caption ?? null,
+      folderId: f.folder?.id ?? null,
+      url: f.url,
+      ext: f.ext,
+      mime: f.mime,
+      size: f.size,
+      width: f.width ?? null,
+      height: f.height ?? null,
+      createdAt: f.createdAt,
+      updatedAt: f.updatedAt,
+    })) as AdminFile[];
+  }
+
   async uploadLocalFile(filePath: string, opts: UploadOptions = {}): Promise<AdminFile[]> {
     const stat = fs.statSync(filePath);
     if (!stat.isFile()) throw new Error(`No es un fichero: ${filePath}`);
@@ -128,7 +157,9 @@ export class MediaLibrary {
     form.append('files', stream, { filename: opts.filename ?? path.basename(filePath) });
 
     if (opts.fileInfo) form.append('fileInfo', JSON.stringify(opts.fileInfo));
-    if (typeof opts.folderId !== 'undefined') form.append('folder', String(opts.folderId ?? ''));
+    if (typeof opts.folderId !== 'undefined' && opts.folderId !== null) {
+      form.append('folder', String(opts.folderId));
+    }
 
     const headers = form.getHeaders();
     const data = await this.http.post('/upload', form, { headers });
@@ -136,6 +167,8 @@ export class MediaLibrary {
     return arr.map((f: any) => ({
       id: f.id,
       name: f.name,
+      alternativeText: f.alternativeText ?? null,
+      caption: f.caption ?? null,
       folderId: f.folder?.id ?? null,
       url: f.url,
       ext: f.ext,
@@ -148,3 +181,4 @@ export class MediaLibrary {
     })) as AdminFile[];
   }
 }
+

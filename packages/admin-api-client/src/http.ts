@@ -1,5 +1,5 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
-import { AdminLoginPayload } from './types/admin';
+import { AdminLoginPayload } from './types/admin.js';
 
 export class StrapiAdminHttp {
   private ax: AxiosInstance;

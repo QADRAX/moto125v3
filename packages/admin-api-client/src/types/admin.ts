@@ -38,8 +38,16 @@ export interface Page<T> {
   total: number;
 }
 
+export interface AdminFileInfo {
+  alternativeText?: string | null;
+  caption?: string | null;
+  name?: string | null;
+  [key: string]: any;
+}
+
 export interface UploadOptions {
   folderId?: Id | null;
   filename?: string;
-  fileInfo?: Record<string, any>;
+  fileInfo?: AdminFileInfo;
 }
+
