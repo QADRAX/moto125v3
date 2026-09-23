@@ -6,6 +6,8 @@ import { createDiskStore } from "@moto125/sdk-disk-cache";
 import {
   brokenScanCacheKey,
   getOrRunBrokenScan,
+  getOrRunImageIssuesScan,
+  imageIssuesScanCacheKey,
 } from "./brokenScanCache.js";
 
 describe("brokenScanCache", () => {
@@ -29,6 +31,16 @@ describe("brokenScanCache", () => {
     ).toBe("scan.articles_broken:preview:s50:p20");
   });
 
+  it("imageIssuesScanCacheKey usa prefijo propio", () => {
+    expect(
+      imageIssuesScanCacheKey({
+        publicationState: "preview",
+        pageSize: 50,
+        maxPages: 20,
+      })
+    ).toBe("scan.articles_image_issues:preview:s50:p20");
+  });
+
   it("1ª run ejecuta; 2ª hit de caché", async () => {
     const store = createDiskStore({ dir, defaultTtlMs: 60_000, enabled: true });
     const run = vi.fn(async () => ({ brokenCount: 1 }));
@@ -43,6 +55,24 @@ describe("brokenScanCache", () => {
     expect(b.fromCache).toBe(true);
     expect(run).toHaveBeenCalledTimes(1);
     expect(b.result).toEqual({ brokenCount: 1 });
+  });
+
+  it("image issues cache es independiente del broken", async () => {
+    const store = createDiskStore({ dir, defaultTtlMs: 60_000, enabled: true });
+    const brokenRun = vi.fn(async () => ({ kind: "broken" }));
+    const imageRun = vi.fn(async () => ({ kind: "images" }));
+    const opts = {
+      publicationState: "preview" as const,
+      pageSize: 10,
+      maxPages: 1,
+    };
+    await getOrRunBrokenScan(store, opts, brokenRun);
+    const img = await getOrRunImageIssuesScan(store, opts, imageRun);
+    expect(img.fromCache).toBe(false);
+    expect(imageRun).toHaveBeenCalledTimes(1);
+    const img2 = await getOrRunImageIssuesScan(store, opts, imageRun);
+    expect(img2.fromCache).toBe(true);
+    expect(imageRun).toHaveBeenCalledTimes(1);
   });
 
   it("force: true salta caché", async () => {

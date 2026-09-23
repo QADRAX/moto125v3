@@ -27,7 +27,7 @@ Con varios agentes/redactores en paralelo: usa `MOTO125_MCP_CACHE=0`, `cache_cle
 | Área | Tools |
 |---|---|
 | Artículos | `articles_list\|get_by_id\|get_by_slug\|create\|update` |
-| Content health | `articles_list_broken_content` (HTML residual / tablas GFM; `force` salta caché del informe) |
+| Content health | `articles_list_broken_content` (HTML residual / tablas GFM); `articles_list_image_issues` (saltos MD + chrome v1); `force` salta caché |
 | Caché | `cache_clear`, `cache_stats` |
 | Motos | `motos_list\|get_by_id\|get_by_moto125_id\|create\|update` |
 | Marcas | `companies_*` |

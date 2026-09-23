@@ -11,7 +11,7 @@ export function registerCacheTools(server: McpServer) {
       description: [
         "Borra todas las entradas de la caché disco del Content SDK y scans auxiliares.",
         "Útil con varios agentes/redactores o tras cambios externos en Strapi.",
-        "Ver también MOTO125_MCP_CACHE=0 y force en articles_list_broken_content.",
+        "Ver también MOTO125_MCP_CACHE=0 y force en articles_list_broken_content / articles_list_image_issues.",
       ].join(" "),
       inputSchema: {},
       annotations: {

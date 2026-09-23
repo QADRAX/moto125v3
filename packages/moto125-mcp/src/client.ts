@@ -7,7 +7,10 @@ import {
 } from "@moto125/sdk-disk-cache";
 import { homedir } from "node:os";
 import { join } from "node:path";
-import { SCAN_ARTICLES_BROKEN_PREFIX } from "./brokenScanCache.js";
+import {
+  SCAN_ARTICLES_BROKEN_PREFIX,
+  SCAN_ARTICLES_IMAGE_ISSUES_PREFIX,
+} from "./brokenScanCache.js";
 import { loadAdminEnv, loadContentEnv } from "./config.js";
 
 let sdk: Moto125Sdk | null = null;
@@ -64,7 +67,10 @@ export function getSdk(): Moto125Sdk {
     store,
     enabled: cacheEnabled(),
     extraInvalidateOn: {
-      articles: [SCAN_ARTICLES_BROKEN_PREFIX],
+      articles: [
+        SCAN_ARTICLES_BROKEN_PREFIX,
+        SCAN_ARTICLES_IMAGE_ISSUES_PREFIX,
+      ],
     },
   });
   return sdk;
